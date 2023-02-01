@@ -28,6 +28,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index');
+        Route::post('/create', [UserController::class, 'create'])->name('user.create');
+        Route::post('/update', [UserController::class, 'index'])->name('user.update');
+        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+        Route::post('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
     });
 });
 
