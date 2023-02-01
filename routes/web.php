@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Clear cache
+Route::get('clear', function () {
+    Artisan::call('optimize:clear');
+    return "Optimize clear has been successfully";
 });
+
+Route::get('/', [AuthController::class, 'login'])->name('admin.login');
+Route::post('/login-check', [AuthController::class, 'loginCheck'])->name('admin.login.check');  //login check
+
+Route::prefix('admin')->middleware('admin')->group(function () {
+    Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
+    Route::prefix('user')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('user.index');
+    });
+});
+
+
