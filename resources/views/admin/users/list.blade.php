@@ -5,7 +5,7 @@
 @push('styles')
 <style type="text/css">
     .loading {
-        z-index: 20;
+        z-index: 9999;
         position: absolute;
         top: 0;
         left:-5px;
@@ -23,6 +23,8 @@
         top: 40%;
         left:50%;
         animation: spin 2s linear infinite;
+        /* filter: blur(1px);
+        z-index: 9999; */
         }
           
         @keyframes spin {
@@ -35,7 +37,7 @@
 @section('content')
 <section id="loading">
     <div id="loading-content"></div>
-</section>  
+</section> 
     <div class="page-wrapper">
 
         <div class="content container-fluid">
@@ -254,6 +256,7 @@
         </div>
 
     </div>
+ 
 @endsection
 
 @push('scripts')
@@ -341,16 +344,17 @@
                         id: id,
                     },
                     dataType: 'JSON',
-                    success: function(data) {
-                        // console.log(data);
-                       
-                        $('#hidden_id').val(data.user.uid);
-                        $('#edit_name').val(data.user.value.name);
-                        $('#edit_email').val(data.user.auth.email);
-                        
-                        $('#loading').removeClass('loading');
-                        $('#loading-content').removeClass('loading-content');
-
+                    success: async function(data) {
+                            try {
+                                console.log(data);
+                                // await $('#hidden_id').val(data.user.uid);
+                                // await $('#edit_name').val(data.user.value.name);
+                                await $('#edit_email').val(data.user.auth.email);
+                                await $('#loading').removeClass('loading');
+                                await $('#loading-content').removeClass('loading-content');
+                            } catch (error) {
+                                console.log(error);
+                            }
                     }
                 });
             });

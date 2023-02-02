@@ -34,14 +34,19 @@ class UserController extends Controller
             $name = $request->name;
             $email = $request->email;
             $password = $request->password;
-            $newUser = $this->auth->createUserWithEmailAndPassword($email, $password);
+            $userProperties = [
+                'email' => $email,
+                'password' => $request->password,
+                'displayName' => $name,
+             ];
+             $createdUser = $this->auth->createUser($userProperties);
             
             $data = app('firebase.firestore')->database()->collection('users')->newDocument();
             $data->set([
                 'name'=>$request->name,
                 'email'=>$request->email,
                 'status'=>'Unavalible',
-                'uid'=>$newUser->uid,
+                'uid'=>$createdUser->uid,
             ]);
             $maildata = [
                 'name' => $request->name,
@@ -59,7 +64,7 @@ class UserController extends Controller
     public function delete($id)
     {
         try {
-            $updatedUser = app('firebase.auth')->disableUser($id);
+            $updatedUser = app('firebase.auth')->deleteUser($id);
             $data = app('firebase.firestore')->database()->collection('users')->documents(); 
             foreach ($data as $key => $value) {
                if ($value->data()['uid'] == $id) {
@@ -79,7 +84,7 @@ class UserController extends Controller
         $data = app('firebase.firestore')->database()->collection('users')->documents(); 
             foreach ($data as $key => $value) {
                if ($value->data()['uid'] == $request->id) {
-                $user['value'] = app('firebase.firestore')->database()->collection('users')->document($value->id())->snapshot(); 
+                $user['value'] = app('firebase.firestore')->database()->collection('users')->document('p5OSMGwaU4XPu0qenMgdr5sOCyv1')->snapshot(); 
                }
             }
         return response()->json(['user'=>$user, 'message'=>'User details found successfully.']);
