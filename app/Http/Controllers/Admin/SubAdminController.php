@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;                                                                                                                                                                                                                                                        
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationMail;
 use Kreait\Firebase\Factory;
 
-class UserController extends Controller
+class SubAdminController extends Controller
 {
     protected $auth;
 
@@ -23,8 +23,8 @@ class UserController extends Controller
     public function index()
     {
         $data = app('firebase.firestore')->database()->collection('users')->documents();  
-        $users = $data->rows();
-        return view('admin.users.list')->with(compact('users'));
+        $admins = $data->rows();
+        return view('admin.sub-admin.list')->with(compact('admins'));
     }
 
 
@@ -53,7 +53,7 @@ class UserController extends Controller
                 'email'=>$request->email,
                 'status'=>'Unavalible',
                 'uid'=>$createdUser->uid,
-                'isAdmin' => false,
+                'isAdmin'=> true
             ]);
             $maildata = [
                 'name' => $request->name,
@@ -62,7 +62,7 @@ class UserController extends Controller
             ];
     
             Mail::to($request->email)->send(new RegistrationMail($maildata));
-            return redirect()->back()->with('message', 'User account has been successfully created.');
+            return redirect()->back()->with('message', 'Admin account has been successfully created.');
         } catch (\Throwable $e) {
             return redirect()->back()->with('error',  $e->getMessage());
         }
@@ -78,7 +78,7 @@ class UserController extends Controller
                 $data = app('firebase.firestore')->database()->collection('users')->document($value->id())->delete();
                }
             }
-            return redirect()->back()->with('error',  'User account has been deleted!');
+            return redirect()->back()->with('error',  'Admin account has been deleted!');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error',  $th->getMessage());
         }
@@ -87,8 +87,8 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $auth = app('firebase.auth');
-        $user = $auth->getUser($request->id);
-        return response()->json(['user'=>$user, 'message'=>'User details found successfully.']);
+        $admin = $auth->getUser($request->id);
+        return response()->json(['admin'=>$admin, 'message'=>'Admin details found successfully.']);
     }
 
     public function update(Request $request)
@@ -105,13 +105,13 @@ class UserController extends Controller
           $data = app('firebase.firestore')->database()->collection('users')->documents(); 
             foreach ($data as $key => $value) {
                if ($value->data()['uid'] == $request->id) {
-                $user = app('firebase.firestore')->database()->collection('users')->document($value->id())
+                $admin = app('firebase.firestore')->database()->collection('users')->document($value->id())
                         ->update([
                             ['path' => 'name', 'value' => $request->edit_name],
                             ['path' => 'email', 'value' => $request->edit_email],
                         ]);
                }
             }
-          return redirect()->back()->with('message',  'User account has been successfully updated.');
+          return redirect()->back()->with('message',  'Admin account has been successfully updated.');
     }
 }

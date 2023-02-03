@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    All user Details - CPSCOM admin
+    All sub admin Details - CPSCOM admin
 @endsection
 @push('styles')
     <style type="text/css">
@@ -51,23 +51,23 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Users Information</h3>
+                        <h3 class="page-title">Sub admin Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Users</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Sub admin</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i
-                                class="fa fa-plus"></i> Add User</a>
+                                class="fa fa-plus"></i> Add Sub Admin</a>
                     </div>
                 </div>
             </div>
 
 
             <div class="row staff-grid-row">
-                @foreach ($users as $user)
-                        @if (isset($user->data()['isAdmin']))
+                @foreach ($admins as $admin)
+                        @if (!isset($admin->data()['isAdmin']))
                             <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
                                 <div class="profile-widget">
                                     <div class="profile-img">
@@ -78,41 +78,41 @@
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                             aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit-users" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#edit_employee" data-id="{{ $user->data()['uid'] }}"
-                                                data-route="{{ route('user.edit', $user->data()['uid']) }}"><i
+                                            <a class="dropdown-item edit-admins" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#edit_employee" data-id="{{ $admin->data()['uid'] }}"
+                                                data-route="{{ route('sub-admin.edit', $admin->data()['uid']) }}"><i
                                                     class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a class="dropdown-item user_delete" data-id="{{ $user->data()['uid'] }}"
-                                                data-route="{{ route('user.delete', $user->data()['uid']) }}" href="#"
+                                            <a class="dropdown-item admin_delete" data-id="{{ $admin->data()['uid'] }}"
+                                                data-route="{{ route('sub-admin.delete', $admin->data()['uid']) }}" href="#"
                                                 data-bs-toggle="modal" data-bs-target="#delete_employee"><i
                                                     class="fa fa-trash-o m-r-5"></i> Delete</a>
                                         </div>
                                     </div>
-                                    <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a
-                                            href="jsavscript:void(0);">{{ $user->data()['name'] }}</a></h4>
-                                    <div class="small text-muted">{{ $user->data()['email'] }}</div>
+                                    <h4 class="admin-name m-t-10 mb-0 text-ellipsis"><a
+                                            href="jsavscript:void(0);">{{ $admin->data()['name'] }}</a></h4>
+                                    <div class="small text-muted">{{ $admin->data()['email'] }}</div>
                                 </div>
                             </div>
-                            @endif
+                    @endif
                 @endforeach
             </div>
             <div id="add_employee" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">User Information</h5>
+                            <h5 class="modal-title">Sub Admin Information</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('user.create') }}" method="POST" id="createForm"
+                            <form action="{{ route('sub-admin.create') }}" method="POST" id="createForm"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="profile-img-wrap edit-img">
-                                            <img class="inline-block" alt="user"
+                                            <img class="inline-block" alt="admin"
                                                 src="{{ asset('admin_assets/img/profiles/avatar-02.jpg') }}">
                                             <div class="fileupload btn">
                                                 <span class="btn-text">upload</span>
@@ -171,14 +171,14 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('user.update') }}" method="POST" id="editForm"
+                            <form action="{{ route('sub-admin.update') }}" method="POST" id="editForm"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" id="hidden_id" name="id" value="">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="profile-img-wrap edit-img">
-                                            <img class="inline-block" alt="user">
+                                            <img class="inline-block" alt="admin">
                                             <div class="fileupload btn">
                                                 <span class="btn-text">edit</span>
                                                 <input class="upload" type="file" name="profile_picture"
@@ -223,7 +223,7 @@
                             </div>
                             <div class="modal-btn delete-action">
                                 <div class="row">
-                                    <div class="col-6" id="user_destroy">
+                                    <div class="col-6" id="admin_destroy">
 
                                     </div>
                                     <div class="col-6">
@@ -293,14 +293,14 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('.user_delete').on('click', function() {
+            $('.admin_delete').on('click', function() {
                 var id = $(this).data('id');
                 var route = $(this).data('route');
-                $('#user_destroy').html('<a href="' + route +
+                $('#admin_destroy').html('<a href="' + route +
                     '" class="btn btn-primary continue-btn">Delete</a>')
             });
 
-            $('.edit-users').on('click', function() {
+            $('.edit-admins').on('click', function() {
                 var id = $(this).data('id');
                 var route = $(this).data('route');
                 $('#loading').addClass('loading');
@@ -320,9 +320,9 @@
                     success: async function(data) {
                         try {
                             console.log(data);
-                            await $('#hidden_id').val(data.user.uid);
-                            await $('#edit_name').val(data.user.displayName);
-                            await $('#edit_email').val(data.user.email);
+                            await $('#hidden_id').val(data.admin.uid);
+                            await $('#edit_name').val(data.admin.displayName);
+                            await $('#edit_email').val(data.admin.email);
                             await $('#loading').removeClass('loading');
                             await $('#loading-content').removeClass('loading-content');
                         } catch (error) {

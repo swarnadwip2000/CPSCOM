@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SubAdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,9 +30,17 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index');
         Route::post('/create', [UserController::class, 'create'])->name('user.create');
-        Route::post('/update', [UserController::class, 'index'])->name('user.update');
+        Route::post('/update', [UserController::class, 'update'])->name('user.update');
         Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
         Route::post('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+    });
+
+    Route::prefix('sub-admin')->group(function () {
+        Route::get('/', [SubAdminController::class, 'index'])->name('sub-admin.index');
+        Route::post('/create', [SubAdminController::class, 'create'])->name('sub-admin.create');
+        Route::post('/update', [SubAdminController::class, 'update'])->name('sub-admin.update');
+        Route::get('/delete/{id}', [SubAdminController::class, 'delete'])->name('sub-admin.delete');
+        Route::post('/edit/{id}', [SubAdminController::class, 'edit'])->name('sub-admin.edit');
     });
 });
 
