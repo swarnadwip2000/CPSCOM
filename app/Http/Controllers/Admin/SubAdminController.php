@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationMail;
 use Kreait\Firebase\Factory;
+use App\Models\User;
 
 class SubAdminController extends Controller
 {
@@ -47,6 +48,19 @@ class SubAdminController extends Controller
              ];
              $createdUser = $this->auth->createUser($userProperties);
             
+             $user = new User;
+             $user->uid =  $createdUser->uid;
+             $user->name =  $request->name;
+             $user->email =  $request->email;
+             $user->password =  bcrypt($request->password);
+             if ($request->hasFile('profile_picture')) {
+                $file= $request->file('profile_picture');
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $image_path = $request->file('profile_picture')->store('user', 'public');
+                $user->profile_picture = $image_path;
+            }
+            $user->save();
+
             $data = app('firebase.firestore')->database()->collection('users')->newDocument();
             $data->set([
                 'name'=>$request->name,
@@ -71,6 +85,7 @@ class SubAdminController extends Controller
     public function delete($id)
     {
         try {
+            User::where('uid', $id)->delete();
             $updatedUser = app('firebase.auth')->deleteUser($id);
             $data = app('firebase.firestore')->database()->collection('users')->documents(); 
             foreach ($data as $key => $value) {
@@ -87,7 +102,8 @@ class SubAdminController extends Controller
     public function edit(Request $request)
     {
         $auth = app('firebase.auth');
-        $admin = $auth->getUser($request->id);
+        $admin['detail'] = $auth->getUser($request->id);
+        $admin['profile'] = User::where('uid', $request->uid)->first();
         return response()->json(['admin'=>$admin, 'message'=>'Admin details found successfully.']);
     }
 
@@ -98,7 +114,7 @@ class SubAdminController extends Controller
             'edit_email' => 'required',
         ]);
         $properties =[
-            'displayName' => $request->edit_email,
+            'displayName' => $request->edit_name,
             'email' => $request->edit_email,
           ];
           $updatedUser = $this->auth->updateUser($request->id, $properties);
@@ -112,6 +128,23 @@ class SubAdminController extends Controller
                         ]);
                }
             }
+            $count = User::where('uid', $request->id)->count();
+            if($count > 0) {
+                $user = User::where('uid', $request->id)->first();
+            } else {
+                $user = new User();
+                $user->uid =  $request->id;
+            }
+            
+            $user->name =  $request->edit_name;
+            $user->email =  $request->edit_email;
+            if ($request->hasFile('profile_picture')) {
+                $file= $request->file('profile_picture');
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $image_path = $request->file('profile_picture')->store('user', 'public');
+                $user->profile_picture = $image_path;
+            }
+            $user->save();
           return redirect()->back()->with('message',  'Admin account has been successfully updated.');
     }
 }

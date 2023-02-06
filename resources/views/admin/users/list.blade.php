@@ -41,6 +41,9 @@
 @endpush
 
 @section('content')
+@php
+    use App\Models\User;
+@endphp
     <section id="loading">
         <div id="loading-content"></div>
     </section>
@@ -71,8 +74,16 @@
                             <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
                                 <div class="profile-widget">
                                     <div class="profile-img">
-                                        <a href="javascript:void(0);" class="avatar"><img
-                                                src="assets/img/profiles/avatar-02.jpg" alt=""></a>
+                                        @php
+                                            $profile = User::profile_picture($user->data()['uid']);
+                                        @endphp
+                                        <a href="javascript:void(0);" class="avatar">
+                                            @if ( isset($profile->profile_picture))
+                                            <img src="{{ Storage::url($profile->profile_picture) }}" alt="profiole" id="img-{{ $user->data()['uid'] }}" data-url="{{ Storage::url($profile->profile_picture) }}"></a>
+                                            @else
+                                            <img src="{{ asset('admin_assets/img/profiles/avatar-02.jpg') }}" alt="" id="img-{{ $user->data()['uid'] }}" data-url="{{ asset('frontend_assets/img/profiles/avatar-02.jpg') }}"></a>
+                                            @endif
+                                            
                                     </div>
                                     <div class="dropdown profile-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
@@ -177,8 +188,8 @@
                                 <input type="hidden" id="hidden_id" name="id" value="">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="profile-img-wrap edit-img">
-                                            <img class="inline-block" alt="user">
+                                        <div class="profile-img-wrap edit-img" >
+                                            <div class="show-image"></div>
                                             <div class="fileupload btn">
                                                 <span class="btn-text">edit</span>
                                                 <input class="upload" type="file" name="profile_picture"
@@ -303,6 +314,9 @@
             $('.edit-users').on('click', function() {
                 var id = $(this).data('id');
                 var route = $(this).data('route');
+                var img_url = $('#img-'+id).data('url');
+                // console.log(route);
+                // console.log(img_url);
                 $('#loading').addClass('loading');
                 $('#loading-content').addClass('loading-content');
                 $.ajaxSetup({
@@ -320,9 +334,10 @@
                     success: async function(data) {
                         try {
                             console.log(data);
-                            await $('#hidden_id').val(data.user.uid);
-                            await $('#edit_name').val(data.user.displayName);
-                            await $('#edit_email').val(data.user.email);
+                            await $('#hidden_id').val(data.user.detail.uid);
+                            await $('#edit_name').val(data.user.detail.displayName);
+                            await $('#edit_email').val(data.user.detail.email);
+                            await $('.show-image').html('<img src="'+img_url+'" class="inline-block" alt="user">');
                             await $('#loading').removeClass('loading');
                             await $('#loading-content').removeClass('loading-content');
                         } catch (error) {

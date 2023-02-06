@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationMail;
 use Kreait\Firebase\Factory;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -46,7 +47,21 @@ class UserController extends Controller
                 'displayName' => $name,
              ];
              $createdUser = $this->auth->createUser($userProperties);
-            
+
+            //  dd($createdUser);
+             $user = new User;
+             $user->uid =  $createdUser->uid;
+             $user->name =  $request->name;
+             $user->email =  $request->email;
+             $user->password =  bcrypt($request->password);
+             if ($request->hasFile('profile_picture')) {
+                $file= $request->file('profile_picture');
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $image_path = $request->file('profile_picture')->store('user', 'public');
+                $user->profile_picture = $image_path;
+            }
+            $user->save();
+
             $data = app('firebase.firestore')->database()->collection('users')->newDocument();
             $data->set([
                 'name'=>$request->name,
@@ -71,6 +86,7 @@ class UserController extends Controller
     public function delete($id)
     {
         try {
+            User::where('uid', $id)->delete();
             $updatedUser = app('firebase.auth')->deleteUser($id);
             $data = app('firebase.firestore')->database()->collection('users')->documents(); 
             foreach ($data as $key => $value) {
@@ -87,7 +103,9 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $auth = app('firebase.auth');
-        $user = $auth->getUser($request->id);
+        $user['detail'] = $auth->getUser($request->id);
+        $user['profile'] = User::where('uid', $request->uid)->first();
+        
         return response()->json(['user'=>$user, 'message'=>'User details found successfully.']);
     }
 
@@ -98,7 +116,7 @@ class UserController extends Controller
             'edit_email' => 'required',
         ]);
         $properties =[
-            'displayName' => $request->edit_email,
+            'displayName' => $request->edit_name,
             'email' => $request->edit_email,
           ];
           $updatedUser = $this->auth->updateUser($request->id, $properties);
@@ -112,6 +130,18 @@ class UserController extends Controller
                         ]);
                }
             }
+
+            $user = User::where('uid', $request->id)->first();
+            $user->name =  $request->edit_name;
+            $user->email =  $request->edit_email;
+            if ($request->hasFile('profile_picture')) {
+               $file= $request->file('profile_picture');
+               $filename= date('YmdHi').$file->getClientOriginalName();
+               $image_path = $request->file('profile_picture')->store('user', 'public');
+               $user->profile_picture = $image_path;
+           }
+           $user->save();
+
           return redirect()->back()->with('message',  'User account has been successfully updated.');
     }
 }
