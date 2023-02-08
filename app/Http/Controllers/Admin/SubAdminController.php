@@ -25,6 +25,7 @@ class SubAdminController extends Controller
     {
         $data = app('firebase.firestore')->database()->collection('users')->documents();  
         $admins = $data->rows();
+        //  dd($admins);
         return view('admin.sub-admin.list')->with(compact('admins'));
     }
 
@@ -61,14 +62,14 @@ class SubAdminController extends Controller
             }
             $user->save();
 
-            $data = app('firebase.firestore')->database()->collection('users')->newDocument();
+            $data = app('firebase.firestore')->database()->collection('users')->document($createdUser->uid);
             $data->set([
-                'name'=>$request->name,
                 'email'=>$request->email,
                 'status'=>'Unavalible',
+                'name'=>$request->name,
                 'uid'=>$createdUser->uid,
-                'isAdmin'=> true
             ]);
+
             $maildata = [
                 'name' => $request->name,
                 'email' => $request->email,

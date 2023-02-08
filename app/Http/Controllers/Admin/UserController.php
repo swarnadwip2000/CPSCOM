@@ -62,7 +62,7 @@ class UserController extends Controller
             }
             $user->save();
 
-            $data = app('firebase.firestore')->database()->collection('users')->newDocument();
+            $data = app('firebase.firestore')->database()->collection('users')->document($createdUser->uid);
             $data->set([
                 'name'=>$request->name,
                 'email'=>$request->email,
