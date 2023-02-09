@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SubAdminController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\GroupController;
+use App\Http\Controllers\Admin\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,7 +49,23 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('admin.profile');
         Route::post('/update', [ProfileController::class, 'update'])->name('admin.profile.update');
+        
     });
+
+    Route::prefix('password')->group(function () {
+        Route::get('/', [ProfileController::class, 'password'])->name('admin.password');
+        Route::post('/update', [ProfileController::class, 'passwordUpdate'])->name('admin.password.update');
+    });    
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/',[AdminController::class,'index'])->name('admin.index');
+        Route::post('/store',[AdminController::class,'store'])->name('admin.store');
+        Route::post('/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+        Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+        Route::post('/update',[AdminController::class, 'update'])->name('admin.update');
+
+        
+    });    
 
     Route::prefix('group')->group(function () {
         Route::get('/', [GroupController::class, 'index'])->name('group.index');

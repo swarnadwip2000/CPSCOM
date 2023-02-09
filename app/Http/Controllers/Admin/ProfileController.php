@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -24,12 +26,6 @@ class ProfileController extends Controller
         $data = User::find(Auth::user()->id);
         $data->name = $request->name;
         $data->email = $request->email;
-        if ($request->password) {
-            $request->validate([
-                'password' => 'required|min:8',
-            ]);
-            $data->password = bcrypt($request->password);
-        }
 
         if ($request->hasFile('profile_picture')) {
             $request->validate([
@@ -43,5 +39,28 @@ class ProfileController extends Controller
         }
         $data->save();
         return redirect()->back()->with('message', 'Profile updated successfully.');
+    }
+
+    public function password()
+    {
+        return view('admin.password');
+    }
+
+    public function passwordUpdate(Request $request)
+    {
+        
+        $request->validate([
+            'old_password' => 'required|min:8|password',
+            'new_password' => 'required|min:8|different:old_password',
+            'confirm_password' => 'required|min:8|same:new_password', 
+        
+        ],[
+            'old_password.password'=> 'Old password is not correct',
+        ]);
+
+        $data = User::find(Auth::user()->id);
+        $data->password = Hash::make($request->new_password);
+        $data->update();
+        return redirect()->back()->with('message', 'Password updated successfully.');
     }
 }
