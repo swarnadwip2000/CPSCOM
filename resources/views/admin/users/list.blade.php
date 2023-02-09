@@ -70,7 +70,7 @@
 
             <div class="row staff-grid-row">
                 @foreach ($users as $user)
-                        @if (isset($user->data()['isAdmin']))
+                        @if ($user->data()['isAdmin'] == false)
                             <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
                                 <div class="profile-widget">
                                     <div class="profile-img">

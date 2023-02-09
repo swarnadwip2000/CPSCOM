@@ -22,40 +22,43 @@ class GroupController extends Controller
 
     public function index()
     {
-       
-        $users = app('firebase.firestore')->database()->collection('users');
-        $query = $users->where('isAdmin', '=', false);
-        $documents = $query->documents();
-        $allUsers = $documents->rows();
-        foreach($allUsers as $data) { 
-        if($data->exists()){            
-            $users_id = $data['uid']; 
-            $document = app('firebase.firestore')->database()
-                        ->collection('users')
-                        ->document($users_id)
-                        ->collection('groups')
-                        ->documents();
-            }
-
-           
-        }
-       
-        $groups = $document->rows();
-        
+        $groups = app('firebase.firestore')->database()->collection('groups')->documents();
+        // dd($groups->rows());
         return view('admin.group.list',compact('groups'));
     }
 
     public function viewChat($id)
     {
         // return $id;
-        $groups = app('firebase.firestore')->database()
+        $chats = app('firebase.firestore')->database()
                     ->collection('groups')
                     ->document($id)
                     ->collection('chats')
                     ->documents();
-        $allUsers = $groups->rows();
-        dd($allUsers);
+        // $chats = $group_chats->rows();
+        // dd( $group_chats);
+        $group_id = $id;
+       return view('admin.group.view-chat')->with(compact('chats','group_id'));
+    }
 
+    public function chatDelete($chatId, $groupId)
+    {
+        $delete_chat = app('firebase.firestore')->database()
+                        ->collection('groups')
+                        ->document($groupId)
+                        ->collection('chats')
+                        ->document($chatId)
+                    ->delete();
+        // dd($delete_chat);
+        return redirect()->back()->with('error', 'Chart has been deleted!!');
+    }
 
+    public function delete($id)
+    {
+        $delete_chat = app('firebase.firestore')->database()
+        ->collection('groups')
+        ->document($id)
+        ->delete();
+    return redirect()->back()->with('error', 'Group has been deleted!!');
     }
 }

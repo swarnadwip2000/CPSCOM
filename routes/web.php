@@ -53,6 +53,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::prefix('group')->group(function () {
         Route::get('/', [GroupController::class, 'index'])->name('group.index');
         Route::get('/chat/{id}', [GroupController::class, 'viewChat'])->name('group.chat');
+        Route::get('/delete/{id}', [GroupController::class, 'delete'])->name('group.delete');
+        Route::get('/chat/delete/{chatId}/{groupId}', [GroupController::class, 'chatDelete'])->name('group.chat.delete');
     });
 });
 

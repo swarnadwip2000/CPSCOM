@@ -68,6 +68,7 @@ class SubAdminController extends Controller
                 'status'=>'Unavalible',
                 'name'=>$request->name,
                 'uid'=>$createdUser->uid,
+                'isAdmin'=>true,
             ]);
 
             $maildata = [
