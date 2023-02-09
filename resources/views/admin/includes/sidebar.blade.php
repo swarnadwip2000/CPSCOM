@@ -11,6 +11,9 @@
                 <li class="{{ Request::is('admin/sub-admin*') ? 'active' : ' ' }}">
                     <a href="{{ route('sub-admin.index') }}"><i class="fa fa-user"></i> <span>Sub Admin</span></a>
                 </li>
+                <li class="{{ Request::is('admin/group*') ? 'active' : ' ' }}">
+                    <a href="{{ route('group.index') }}"><i class="fa fa-list"></i> <span>Groups</span></a>
+                </li>
             </ul>
         </div>
     </div>

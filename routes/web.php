@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SubAdminController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\GroupController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -47,6 +48,11 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('admin.profile');
         Route::post('/update', [ProfileController::class, 'update'])->name('admin.profile.update');
+    });
+
+    Route::prefix('group')->group(function () {
+        Route::get('/', [GroupController::class, 'index'])->name('group.index');
+        Route::get('/chat/{id}', [GroupController::class, 'viewChat'])->name('group.chat');
     });
 });
 
