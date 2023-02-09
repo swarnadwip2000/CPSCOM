@@ -6,7 +6,7 @@
                     <span>Main</span>
                 </li>
                 <li class="submenu">
-                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-user"></i> <span>Manage Account </span> <span
+                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Manage Account </span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         <li class="{{ Request::is('admin/profile*') ? 'active' : ' ' }}">
@@ -26,10 +26,10 @@
                 
 
                 <li class="{{ Request::is('admin/sub-admin*') ? 'active' : ' ' }}">
-                    <a href="{{ route('sub-admin.index') }}"><i class="fa fa-user"></i> <span>Sub Admin List</span></a>
+                    <a href="{{ route('sub-admin.index') }}"><i class="la la-user"></i> <span>Sub Admin List</span></a>
                 </li>
                 <li class="{{ Request::is('admin/group*') ? 'active' : ' ' }}">
-                    <a href="{{ route('group.index') }}"><i class="fa fa-list"></i> <span>Groups</span></a>
+                    <a href="{{ route('group.index') }}"><i class="la la-list"></i> <span>Groups</span></a>
                 </li>
                 
             </ul> 
