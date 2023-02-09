@@ -82,13 +82,7 @@ CPSCOM | Profile
                                                             <div class="error" style="color:red;">{{ $errors->first('email') }}</div>
                                                             @endif
                                                         </div>
-                                                        <div class="col-12">
-                                                            <label class="form-label">Password</label>
-                                                            <input type="password" value="" class="form-control" name="password">
-                                                            @if($errors->has('password'))
-                                                            <div class="error" style="color:red;">{{ $errors->first('password') }}</div>
-                                                            @endif
-                                                        </div>
+                                                        
                                                         <div class="col-6">
                                                             <button type="submit" class="btn btn-primary">Update</button>
                                                         </div>

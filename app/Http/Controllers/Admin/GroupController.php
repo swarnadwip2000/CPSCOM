@@ -35,13 +35,10 @@ class GroupController extends Controller
                         ->document($users_id)
                         ->collection('groups')
                         ->documents();
-            }
-
-           
+            }   
         }
        
         $groups = $document->rows();
-        
         return view('admin.group.list',compact('groups'));
     }
 
