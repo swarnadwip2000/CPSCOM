@@ -5,6 +5,7 @@
                 <li class="menu-title">
                     <span>Main</span>
                 </li>
+
                 <li class="submenu">
                     <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Manage Account </span> <span
                             class="menu-arrow"></span></a>
@@ -31,7 +32,29 @@
                 <li class="{{ Request::is('admin/group*') ? 'active' : ' ' }}">
                     <a href="{{ route('group.index') }}"><i class="la la-list"></i> <span>Groups</span></a>
                 </li>
+
+                <li class="menu-title">
+                    <span>Content Management System</span>
+                </li>
                 
+                <li class="submenu">
+                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>User Panel </span> <span
+                            class="menu-arrow"></span></a>
+                    <ul style="display: none;">
+                        <li class="{{ Request::is('admin/profile*') ? 'active' : ' ' }}">
+                            <a href="{{ route('admin.profile') }}">Get Started Page</a>
+                        </li>                  
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Admin Panel </span> <span
+                            class="menu-arrow"></span></a>
+                    <ul style="display: none;">
+                        <li class="{{ Request::is('admin/profile*') ? 'active' : ' ' }}">
+                            <a href="{{ route('admin.profile') }}">Get Started Page</a>
+                        </li>                   
+                    </ul>
+                </li>
             </ul> 
         </div>
     </div>

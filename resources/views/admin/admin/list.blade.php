@@ -50,7 +50,7 @@
 
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Date</th>
+                                    <th>Created Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -67,7 +67,7 @@
                                         <a class="edit-admins" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#edit_admin" data-id="{{ $admin->id }}"
                                                 data-route="{{ route('admin.edit', $admin->id) }}"><i
-                                                    class="fas fa-edit"></i></a>
+                                                    class="fas fa-edit"></i></a> &nbsp;&nbsp;
                                                     
                                         <a href="{{route('admin.delete', $admin->id)}}" onclick="return confirm('Are you sure to delete this admin?')"><i class="fas fa-trash"></i></a>
                                         
