@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    All Group Details - CPSCOM admin
+    All Group Details - Derick Veliz admin
 @endsection
 @push('styles')
 @endpush
@@ -60,7 +60,7 @@
                                     @foreach ($group->data()['members'] as $member)
                                         @if ($member['isAdmin'] == true)
                                             @php
-                                                $group_name = $member['name'];
+                                                $group_admin_name = $member['name'];
                                                 $group_datas = app('firebase.firestore')
                                                     ->database()
                                                     ->collection('users')
@@ -70,7 +70,7 @@
                                             @endphp
                                             @foreach ($group_datas->rows() as $group_data)
                                                 @php
-                                                    $group_admin_name = $group_data->data()['name'];
+                                                    $group_name = $group_data->data()['name'];
                                                 @endphp
                                             @endforeach
                                         @endif

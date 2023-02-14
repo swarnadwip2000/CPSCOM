@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    Group Chat - CPSCOM admin
+    Group Chat - Derick Veliz admin
 @endsection
 @push('styles')
 @endpush

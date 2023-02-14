@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    All user Details - CPSCOM admin
+    All user Details - Derick Veliz admin
 @endsection
 @push('styles')
     <style type="text/css">

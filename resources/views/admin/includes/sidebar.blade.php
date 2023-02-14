@@ -7,7 +7,7 @@
                 </li>
 
                 <li class="submenu">
-                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Manage Account </span> <span
+                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-user-cog"></i> <span>Manage Account </span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         <li class="{{ Request::is('admin/profile*') ? 'active' : ' ' }}">
@@ -38,20 +38,20 @@
                 </li>
                 
                 <li class="submenu">
-                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>User Panel </span> <span
+                    <a href="#" class="{{ Request::is('cms/user*') ? 'active' : ' '}}"><i class="la la-newspaper"></i> <span>User Panel </span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li class="{{ Request::is('admin/profile*') ? 'active' : ' ' }}">
-                            <a href="{{ route('admin.profile') }}">Get Started Page</a>
+                        <li class="{{ Request::is('cms/user*') ? 'active' : ' ' }}">
+                            <a href="{{ route('cms.user.get-started') }}">Get Started Page</a>
                         </li>                  
                     </ul>
                 </li>
                 <li class="submenu">
-                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Admin Panel </span> <span
+                    <a href="#" class="{{ Request::is('cms/sub-admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Sub Admin Panel </span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li class="{{ Request::is('admin/profile*') ? 'active' : ' ' }}">
-                            <a href="{{ route('admin.profile') }}">Get Started Page</a>
+                        <li class="{{ Request::is('cms/sub-admin*') ? 'active' : ' ' }}">
+                            <a href="{{ route('cms.sub-admin.get-started') }}">Get Started Page</a>
                         </li>                   
                     </ul>
                 </li>

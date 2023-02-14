@@ -15,8 +15,9 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call([
-            AssignRoleSeeder::class,
-            AssignAdminSeeder::class,
+            // AssignRoleSeeder::class,
+            // AssignAdminSeeder::class,
+            addGetStartedPageCms::class,
         ]);
     }
 }

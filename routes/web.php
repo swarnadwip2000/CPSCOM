@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SubAdminController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CmsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -72,6 +73,12 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/chat/{id}', [GroupController::class, 'viewChat'])->name('group.chat');
         Route::get('/delete/{id}', [GroupController::class, 'delete'])->name('group.delete');
         Route::get('/chat/delete/{chatId}/{groupId}', [GroupController::class, 'chatDelete'])->name('group.chat.delete');
+    });
+
+    Route::prefix('cms')->group(function () {
+        Route::get('/user/get-started', [CmsController::class, 'userGetStarted'])->name('cms.user.get-started');
+        Route::post('/get-started/update', [CmsController::class, 'userGetStartedUpdate'])->name('cms.get-started.update');
+        Route::get('/sub-admin/get-started', [CmsController::class, 'adminGetStarted'])->name('cms.sub-admin.get-started');
     });
 });
 

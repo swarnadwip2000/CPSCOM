@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    All Admin Details - CPSCOM admin
+    All Admin Details - Derick Veliz admin
 @endsection
 
 

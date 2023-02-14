@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-CPSCOM | Profile
+Derick Veliz | Profile
 @endsection
 @push('styles')
 @endpush
