@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use App\Models\User;
+use App\Models\Group;
 
 class GroupController extends Controller
 {
@@ -60,5 +61,46 @@ class GroupController extends Controller
         ->document($id)
         ->delete();
     return redirect()->back()->with('error', 'Group has been deleted!!');
+    }
+
+    public function groupImageUpdate($id)
+    {
+        $group_id = $id;
+        $group = Group::where('group_id',$id)->first();
+        return view('admin.group.image-upload')->with(compact('group','group_id'));                                                                                                                                                     
+    }
+
+    public function groupImageUpload(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
+        ]);
+
+         $count = Group::where('group_id',$request->group_id)->count();
+        if($count > 0){
+
+            $group = Group::where('group_id',$request->group_id)->first();
+            if ($request->hasFile('image')) {
+                $file= $request->file('image');
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $image_path = $request->file('image')->store('group', 'public');
+                $group->profile_picture = $image_path;
+            }
+            $group->save();
+
+        }else{
+            
+            $group = new Group();
+            $group->group_id = $request->group_id;
+            
+            if ($request->hasFile('image')) {
+                $file= $request->file('image');
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $image_path = $request->file('image')->store('group', 'public');
+                $group->profile_picture = $image_path;
+            }
+            $group->save();
+        }
+        return redirect()->back()->with('success', 'Group Image has been updated!!');
     }
 }

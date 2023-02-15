@@ -73,6 +73,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/chat/{id}', [GroupController::class, 'viewChat'])->name('group.chat');
         Route::get('/delete/{id}', [GroupController::class, 'delete'])->name('group.delete');
         Route::get('/chat/delete/{chatId}/{groupId}', [GroupController::class, 'chatDelete'])->name('group.chat.delete');
+        Route::get('/group-image-update/{id}', [GroupController::class, 'groupImageUpdate'])->name('group.image.update');
+        Route::post('/group-image-upload', [GroupController::class, 'groupImageUpload'])->name('group.image.upload');
     });
 
     Route::prefix('cms')->group(function () {
@@ -83,3 +85,4 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 });
 
 
+   

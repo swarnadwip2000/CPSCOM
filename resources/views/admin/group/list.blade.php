@@ -83,9 +83,11 @@
                                         <td><a href="{{ route('group.chat', $group->data()['id']) }}"><i
                                                     class="fas fa-eye"></i></a></td>
                                         <td align="center">
-                                            <a data-route="{{ route('group.delete', $group_data->id()) }}" href="javascipt:void(0);"
-                                               id="delete" ><i
-                                                    class="fas fa-trash"></i></a>
+                                            <a title="Update Group Image" 
+                                                href="{{ route('group.image.update', $group->data()['id']) }}"><i class="fa fa-image"></i></a> &nbsp;&nbsp;
+
+                                            <a title="Delete Group" data-route="{{ route('group.delete', $group_data->id()) }}"
+                                                href="javascipt:void(0);" id="delete"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -123,25 +125,25 @@
         });
     </script>
     <script>
-         $(document).on('click', '#delete', function(e) {
-		    swal({
-				title: "Are you sure?",
-				text: "To delete this group.",
-				type: "warning",
-				confirmButtonText: "Yes",
-				showCancelButton: true
-		    })
-		    	.then((result) => {
-					if (result.value) {
-					    window.location = $(this).data('route');
-					} else if (result.dismiss === 'cancel') {
-					    swal(
-					      'Cancelled',
-					      'Your stay here :)',
-					      'error'
-					    )
-					}
-				})
-		});
+        $(document).on('click', '#delete', function(e) {
+            swal({
+                    title: "Are you sure?",
+                    text: "To delete this group.",
+                    type: "warning",
+                    confirmButtonText: "Yes",
+                    showCancelButton: true
+                })
+                .then((result) => {
+                    if (result.value) {
+                        window.location = $(this).data('route');
+                    } else if (result.dismiss === 'cancel') {
+                        swal(
+                            'Cancelled',
+                            'Your stay here :)',
+                            'error'
+                        )
+                    }
+                })
+        });
     </script>
 @endpush
