@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CmsController;
+use App\Http\Controllers\Admin\ForgetPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,10 +29,14 @@ Route::get('clear', function () {
 
 Route::get('/', [AuthController::class, 'login'])->name('admin.login');
 Route::post('/login-check', [AuthController::class, 'loginCheck'])->name('admin.login.check');  //login check
+Route::post('forget-password', [ForgetPasswordController::class, 'forgetPassword'])->name('admin.forget.password');
+Route::post('change-password', [ForgetPasswordController::class, 'changePassword'])->name('admin.change.password');
+Route::get('forget-password/show', [ForgetPasswordController::class, 'forgetPasswordShow'])->name('admin.forget.password.show');
+Route::get('reset-password/{id}/{token}', [ForgetPasswordController::class, 'resetPassword'])->name('admin.reset.password');
 
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
-    Route::prefix('user')->group(function () {
+    Route::prefix('team-x-members')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index');
         Route::post('/create', [UserController::class, 'create'])->name('user.create');
         Route::post('/update', [UserController::class, 'update'])->name('user.update');
@@ -39,7 +44,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
     });
 
-    Route::prefix('sub-admin')->group(function () {
+    Route::prefix('teams')->group(function () {
         Route::get('/', [SubAdminController::class, 'index'])->name('sub-admin.index');
         Route::post('/create', [SubAdminController::class, 'create'])->name('sub-admin.create');
         Route::post('/update', [SubAdminController::class, 'update'])->name('sub-admin.update');
@@ -68,7 +73,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         
     });    
 
-    Route::prefix('group')->group(function () {
+    Route::prefix('team-x-group')->group(function () {
         Route::get('/', [GroupController::class, 'index'])->name('group.index');
         Route::get('/chat/{id}', [GroupController::class, 'viewChat'])->name('group.chat');
         Route::get('/delete/{id}', [GroupController::class, 'delete'])->name('group.delete');

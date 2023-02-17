@@ -21,8 +21,8 @@
                     <div class="col">
                         <h3 class="page-title">Group Chat</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('group.index') }}">Group</a></li>
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Group Chat</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('group.index') }}">Team x Groups</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Team x Groups Chat</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
@@ -38,7 +38,7 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-0">Group Chart</h4>
+                                <h4 class="mb-0">Team x Groups Chart</h4>
                             </div>
 
                         </div>
@@ -50,10 +50,10 @@
                             <thead>
                                 <tr>
                                     <th>Chat By</th>
-                                    <th>Message</th>
                                     <th>Delivered Date</th>
                                     <th>Delivered Time</th>
-                                    <th>Action</th>
+                                    <th>Message</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,16 +63,17 @@
                                     <td>@if (isset($chat->data()['sendBy']))
                                         {{ $chat->data()['sendBy'] }}
                                     @endif </td>
+                                    <td> {{ date('d M Y',strtotime($chat->data()['time'])) }}</td>
+                                    <td> {{ date('h : m A',strtotime($chat->data()['time'])) }}</td>
                                     <td>
                                         @if (isset( $chat->data()['message']))
                                         {{ $chat->data()['message'] }}
                                     @endif</td>
-                                    <td> {{ date('d M Y',strtotime($chat->data()['time'])) }}</td>
-                                    <td> {{ date('h : m A',strtotime($chat->data()['time'])) }}</td>
-                                    <td align="center">
+                                    
+                                    {{-- <td align="center">
                                         <a href="javascript:void(0);" id="delete" data-route="{{ route('group.chat.delete',['chatId'=> $chat->id(), 'groupId'=> $group_id]) }}"><i
                                                 class="fas fa-trash"></i></a>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                                 @endif
                                 @endforeach
@@ -96,7 +97,7 @@
                 "aaSorting": [],
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [4]
+                        "targets": []
                     },
                     {
                         "orderable": true,

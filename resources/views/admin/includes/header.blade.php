@@ -17,7 +17,7 @@
         </a>
 
         <div class="page-title-box">
-            <h3>Welcome to Derick Veliz</h3>
+            <h3>Welcome Derick Veliz</h3>
         </div>
 
         <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>

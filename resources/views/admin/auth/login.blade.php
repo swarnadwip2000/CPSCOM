@@ -81,9 +81,9 @@
                             <div class="form-group text-center">
                                 <button class="btn btn-primary account-btn" type="submit">Login</button>
                             </div>
-                            {{-- <div class="account-footer">
-                                <p>Don't have an account yet? <a href="register.html">Register</a></p>
-                            </div> --}}
+                            <div class="account-footer">
+                                <p><a href="{{ route('admin.forget.password.show') }}">Forgot Password?</a></p>
+                            </div>
                         </form>
 
                     </div>

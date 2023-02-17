@@ -56,6 +56,27 @@ class GroupController extends Controller
 
     public function delete($id)
     {
+        // return $id;
+       $dat = app('firebase.firestore')->database()
+                    ->collection('users')
+                    ->documents();
+        foreach ($dat as $key => $value) {
+              $ss =  app('firebase.firestore')->database()
+                ->collection('users')
+                ->document($value->data()['uid'])
+                ->collection('groups')
+                ->documents();
+            if (!$ss->isEmpty()) {
+                $ss =  app('firebase.firestore')->database()
+                ->collection('users')
+                ->document($value->data()['uid'])
+                ->collection('groups')
+                ->document($id)
+                ->delete();
+            }
+            // dd($ss);
+        }
+
         $delete_chat = app('firebase.firestore')->database()
         ->collection('groups')
         ->document($id)

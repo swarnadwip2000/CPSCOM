@@ -19,9 +19,9 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Group Information</h3>
+                        <h3 class="page-title">Team x Groups Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Group</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Team x Groups</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-0">Group Details</h4>
+                                <h4 class="mb-0">Team x Groups Details</h4>
                             </div>
 
                         </div>
@@ -50,6 +50,7 @@
                                 <tr>
                                     <th>Group Name</th>
                                     <th>Group Admin Name</th>
+                                    <th>Name of Group Members</th>
                                     <th>No. of Group Member</th>
                                     <th>Chat</th>
                                     <th>Action</th>
@@ -57,37 +58,29 @@
                             </thead>
                             <tbody>
                                 @foreach ($groups as $key => $group)
-                                    @foreach ($group->data()['members'] as $member)
-                                        @if ($member['isAdmin'] == true)
-                                            @php
-                                                $group_admin_name = $member['name'];
-                                                $group_datas = app('firebase.firestore')
-                                                    ->database()
-                                                    ->collection('users')
-                                                    ->document($member['uid'])
-                                                    ->collection('groups')
-                                                    ->documents();
-                                            @endphp
-                                            @foreach ($group_datas->rows() as $group_data)
-                                                @php
-                                                    $group_name = $group_data->data()['name'];
-                                                @endphp
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-
+                                {{-- @dd($group) --}}
                                     <tr>
-                                        <td>{{ $group_name }}</td>
-                                        <td>{{ $group_admin_name }}</td>
+                                        <td>{{ $group->data()['name'] }}</td>
+                                        <td>@foreach ($group->data()['members'] as $isAdmin)
+                                            @if($isAdmin['isAdmin'] == true)
+                                            {{ $isAdmin['name'] }}
+                                            @endif
+                                        @endforeach</td>
+                                        @php
+                                            $count = count($group->data()['members']);
+                                        @endphp
+                                        <td>@foreach ($group->data()['members'] as $key => $isAdmin)
+                                            {{ $isAdmin['name'] }} @if($key < $count - 1), @endif
+                                        @endforeach</td>
                                         <td>{{ count($group->data()['members']) }}</td>
                                         <td><a href="{{ route('group.chat', $group->data()['id']) }}"><i
                                                     class="fas fa-eye"></i></a></td>
-                                        <td align="center">
+                                        <td >
                                             <a title="Update Group Image" 
-                                                href="{{ route('group.image.update', $group->data()['id']) }}"><i class="fa fa-image"></i></a> &nbsp;&nbsp;
+                                                href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-primary" style="border-radius: 20px"><i class="fa fa-plus"></i> Add Image</button></a> &nbsp;&nbsp;
 
-                                            <a title="Delete Group" data-route="{{ route('group.delete', $group_data->id()) }}"
-                                                href="javascipt:void(0);" id="delete"><i class="fas fa-trash"></i></a>
+                                            {{-- <a title="Delete Group" data-route="{{ route('group.delete', $group->id()) }}"
+                                                href="javascipt:void(0);" id="delete"><i class="fas fa-trash"></i></a> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -113,11 +106,11 @@
                 "aaSorting": [],
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [3, 4]
+                        "targets": [4, 5]
                     },
                     {
                         "orderable": true,
-                        "targets": [0, 1, 2]
+                        "targets": [0, 1, 2, 3]
                     }
                 ]
             });

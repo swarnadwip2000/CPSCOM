@@ -54,15 +54,15 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Users Information</h3>
+                        <h3 class="page-title">Team x Members Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Users</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Team x Members</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i
-                                class="fa fa-plus"></i> Add User</a>
+                            class="fa fa-plus"></i> Add a Team</a>
                     </div>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">User Information</h5>
+                            <h5 class="modal-title">Team x Members Information</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -176,7 +176,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Profile Information</h5>
+                            <h5 class="modal-title">Team x Members Information Update</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

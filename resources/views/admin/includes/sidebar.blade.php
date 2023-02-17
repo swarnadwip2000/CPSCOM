@@ -21,16 +21,16 @@
                         </li>                     
                     </ul>
                 </li>
-                <li class="{{ Request::is('admin/user*') ? 'active' : ' ' }}">
-                    <a href="{{ route('user.index') }}" ><i class="la la-users"></i> <span>User List</span></a>                 
+                <li class="{{ Request::is('admin/teams*') ? 'active' : ' ' }}">
+                    <a href="{{ route('sub-admin.index') }}" ><i class="la la-users"></i> <span>Teams</span></a>                 
                 </li>
                 
 
-                <li class="{{ Request::is('admin/sub-admin*') ? 'active' : ' ' }}">
-                    <a href="{{ route('sub-admin.index') }}"><i class="la la-user"></i> <span>Sub Admin List</span></a>
+                <li class="{{ Request::is('admin/team-x-members*') ? 'active' : ' ' }}">
+                    <a href="{{ route('user.index') }}"><i class="la la-user"></i> <span>Team x Members</span></a>
                 </li>
-                <li class="{{ Request::is('admin/group*') ? 'active' : ' ' }}">
-                    <a href="{{ route('group.index') }}"><i class="la la-list"></i> <span>Groups</span></a>
+                <li class="{{ Request::is('admin/team-x-group*') ? 'active' : ' ' }}">
+                    <a href="{{ route('group.index') }}"><i class="la la-list"></i> <span>Team x Groups</span></a>
                 </li>
 
                 <li class="menu-title">
