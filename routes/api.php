@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\CmsController;
 use App\Http\Controllers\Api\ForgetPasswordController;
+use App\Http\Controllers\Api\GroupController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,4 +31,10 @@ Route::prefix('v1')->group(function () {
     Route::prefix('cms')->group(function () {
         Route::post('get-started', [CmsController::class, 'getStarted']);
     });
+
+    Route::prefix('group')->group(function () {
+        Route::post('image-upload', [GroupController::class, 'imageUpload']);
+    });
+
+
 });

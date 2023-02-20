@@ -96,16 +96,25 @@ class GroupController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
         ]);
-
+        $image = app('firebase.firestore')->database()->collection('groups')
+                ->where('id', '=', $request->group_id)
+                ->documents();
+        
          $count = Group::where('group_id',$request->group_id)->count();
         if($count > 0){
-
             $group = Group::where('group_id',$request->group_id)->first();
+            
             if ($request->hasFile('image')) {
                 $file= $request->file('image');
                 $filename= date('YmdHi').$file->getClientOriginalName();
                 $image_path = $request->file('image')->store('group', 'public');
                 $group->profile_picture = $image_path;
+
+                foreach ($image->rows()[0]->data()['members'] as $key => $value) {
+                    app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($request->group_id)->update([
+                        ['path' => 'profile_picture', 'value' => $image_path]
+                    ]);
+                }
             }
             $group->save();
 
@@ -113,12 +122,21 @@ class GroupController extends Controller
             
             $group = new Group();
             $group->group_id = $request->group_id;
-            
+            $image = app('firebase.firestore')->database()->collection('groups')
+            ->where('id', '=', $request->group_id)
+            ->documents();
+
             if ($request->hasFile('image')) {
                 $file= $request->file('image');
                 $filename= date('YmdHi').$file->getClientOriginalName();
                 $image_path = $request->file('image')->store('group', 'public');
                 $group->profile_picture = $image_path;
+                
+                foreach ($image->rows()[0]->data()['members'] as $key => $value) {
+                    app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($request->group_id)->update([
+                        ['path' => 'profile_picture', 'value' => $image_path]
+                    ]);
+                }
             }
             $group->save();
         }

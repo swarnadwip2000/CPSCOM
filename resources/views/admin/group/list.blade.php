@@ -58,9 +58,11 @@
                             </thead>
                             <tbody>
                                 @foreach ($groups as $key => $group)
-                                {{-- @dd($group) --}}
+                                {{-- @dd($groups)    --}}
                                     <tr>
-                                        <td>{{ $group->data()['name'] }}</td>
+                                        <td>@if (isset($group->data()['name']))
+                                            {{ $group->data()['name'] }}
+                                        @endif</td>
                                         <td>@foreach ($group->data()['members'] as $isAdmin)
                                             @if($isAdmin['isAdmin'] == true)
                                             {{ $isAdmin['name'] }}

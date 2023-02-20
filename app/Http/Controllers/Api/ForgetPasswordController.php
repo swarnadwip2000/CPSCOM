@@ -11,10 +11,21 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpVerificationMail;
+use Kreait\Firebase\Factory;
 
 class ForgetPasswordController extends Controller
 {
     public $successStatus = 200;
+    protected $auth;
+
+    public function __construct()
+    {
+        $factory = (new Factory)
+                    ->withServiceAccount(__DIR__.'/firebase_credential.json')
+                    ->withDataBaseUri('https://cpscom-acb3c.firebaseio.com');
+        $this->auth = $factory->createAuth();
+    }
+    
     public function submitForgetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -133,11 +144,18 @@ class ForgetPasswordController extends Controller
             $query = $data->where('email', '=', $request->email);
             $documents = $query->documents();
             $count = count($documents->rows());
+           
+                foreach ($documents as $document) {
+                    $documentId = $document->id();
+                    // Do something with the document ID, such as store it in an array or use it in a subsequent query
+                }
+                
             if ($count > 0) {
                 $properties =[
                     'password' => $request->password,
                   ];
-                  $updatedUser = $this->auth->updateUser($data->id, $properties);
+                  
+                  $updatedUser = $this->auth->updateUser($documentId, $properties);
 
                 return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Password reset successfully.'], $this->successStatus);
             } else {
