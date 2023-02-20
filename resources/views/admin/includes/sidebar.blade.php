@@ -36,18 +36,8 @@
                 <li class="menu-title">
                     <span>Content Management System</span>
                 </li>
-                
                 <li class="submenu">
-                    <a href="#" class="{{ Request::is('cms/user*') ? 'active' : ' '}}"><i class="la la-newspaper"></i> <span>User Panel </span> <span
-                            class="menu-arrow"></span></a>
-                    <ul style="display: none;">
-                        <li class="{{ Request::is('cms/user*') ? 'active' : ' ' }}">
-                            <a href="{{ route('cms.user.get-started') }}">Get Started Page</a>
-                        </li>                  
-                    </ul>
-                </li>
-                <li class="submenu">
-                    <a href="#" class="{{ Request::is('cms/sub-admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Sub Admin Panel </span> <span
+                    <a href="#" class="{{ Request::is('cms/sub-admin*') ? 'active' : ' ' }}"><i class="la la-address-card"></i> <span>Team Panel </span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         <li class="{{ Request::is('cms/sub-admin*') ? 'active' : ' ' }}">
@@ -55,6 +45,17 @@
                         </li>                   
                     </ul>
                 </li>
+
+                <li class="submenu">
+                    <a href="#" class="{{ Request::is('cms/user*') ? 'active' : ' '}}"><i class="la la-newspaper"></i> <span>Team x Member Panel </span> <span
+                            class="menu-arrow"></span></a>
+                    <ul style="display: none;">
+                        <li class="{{ Request::is('cms/user*') ? 'active' : ' ' }}">
+                            <a href="{{ route('cms.user.get-started') }}">Get Started Page</a>
+                        </li>                  
+                    </ul>
+                </li>
+               
             </ul> 
         </div>
     </div>

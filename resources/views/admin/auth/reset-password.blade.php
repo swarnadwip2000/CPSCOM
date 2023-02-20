@@ -34,7 +34,6 @@
             align-items: center;
             justify-content: center;
             background-color: #f9f9f9;
-            font-family: 'Open Sans', sans-serif;
         }
 
         .cardStyle {
@@ -62,18 +61,18 @@
         }
 
         .inputLabel {
-            font-size: 12px;
+            /* font-size: 12px; */
             color: #555;
             margin-bottom: 6px;
             margin-top: 24px;
         }
 
-        .inputDiv {
+        /* .inputDiv {
             width: 70%;
             display: flex;
             flex-direction: column;
             margin: auto;
-        }
+        } */
 
         input {
             height: 40px;
@@ -128,6 +127,28 @@
             animation: spin 2s linear infinite;
         }
 
+        .field-icon {
+            float: right;
+            margin-left: -25px;
+            margin-top: -25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .container {
+            padding-top: 50px;
+            margin: auto;
+        }
+
+        .eye {
+            float: right;
+            margin-left: -25px;
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+            padding: 0px 30px 0px 0px;
+        }
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -143,29 +164,48 @@
 <body>
     <div class="mainDiv">
         <div class="cardStyle">
-            <form action="" method="post" name="signupForm" id="signupForm">
-
-                <img src="" id="signupLogo" />
+            <form action="{{ route('admin.change.password') }}" method="post" name="signupForm" id="signupForm">
+                @csrf
+                
+                <img src="{{ asset('admin_assets/img/logo2.png') }}" id="signupLogo" />
 
                 <h2 class="formTitle">
-                    Login to your account
+                    Reset Password
                 </h2>
-
-                <div class="inputDiv">
-                    <label class="inputLabel" for="password">New Password</label>
-                    <input type="password" id="password" name="password" required>
+                <input type="hidden" name="id" value="{{ $id }}">
+                <div class="form-wrap" style="padding: 0px 30px">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Password</label>
+                        <div class="col-md-12">
+                            <input type="password" id="password-field1" class="form-control" name="password" value="">
+                            <span toggle="#password-field1" class="fa fa-fw fa-eye field-icon toggle-password eye"
+                                id="ds"></span>
+                                @if ($errors->has('password'))
+                                <div class="error" style="color:red;">{{ $errors->first('password') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Confirm Password</label>
+                        <div class="col-md-12">
+                            <input id="password-field" type="password" class="form-control" name="confirm_password"
+                                value="secret">
+                            <span toggle="#password-field"
+                                class="fa fa-fw fa-eye field-icon toggle-password eye" id="ps"></span>
+                                @if ($errors->has('confirm_password'))
+                                <div class="error" style="color:red;">{{ $errors->first('confirm_password') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-
-                <div class="inputDiv">
-                    <label class="inputLabel" for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword">
-                </div>
-
                 <div class="buttonWrapper">
                     <button type="submit" id="submitButton" onclick="validateSignupForm()"
-                        class="submitButton pure-button pure-button-primary">
+                        class="submitButton pure-button pure-button-primary"
+                        style="background: linear-gradient(to right, #10acff 0%, #1f1f1f 100%); border-color:white;">
                         <span>Continue</span>
-                        <span id="loader"></span>
+                        {{-- <span id="loader"></span> --}}
                     </button>
                 </div>
 
@@ -173,75 +213,8 @@
         </div>
     </div>
 </body>
-<script>
-    var password = document.getElementById("password"),
-        confirm_password = document.getElementById("confirmPassword");
 
-    document.getElementById('signupLogo').src =
-        "https://s3-us-west-2.amazonaws.com/shipsy-public-assets/shipsy/SHIPSY_LOGO_BIRD_BLUE.png";
-    enableSubmitButton();
 
-    function validatePassword() {
-        if (password.value != confirm_password.value) {
-            confirm_password.setCustomValidity("Passwords Don't Match");
-            return false;
-        } else {
-            confirm_password.setCustomValidity('');
-            return true;
-        }
-    }
-
-    password.onchange = validatePassword;
-    confirm_password.onkeyup = validatePassword;
-
-    function enableSubmitButton() {
-        document.getElementById('submitButton').disabled = false;
-        document.getElementById('loader').style.display = 'none';
-    }
-
-    function disableSubmitButton() {
-        document.getElementById('submitButton').disabled = true;
-        document.getElementById('loader').style.display = 'unset';
-    }
-
-    function validateSignupForm() {
-        var form = document.getElementById('signupForm');
-
-        for (var i = 0; i < form.elements.length; i++) {
-            if (form.elements[i].value === '' && form.elements[i].hasAttribute('required')) {
-                console.log('There are some required fields!');
-                return false;
-            }
-        }
-
-        if (!validatePassword()) {
-            return false;
-        }
-
-        onSignup();
-    }
-
-    function onSignup() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-
-            disableSubmitButton();
-
-            if (this.readyState == 4 && this.status == 200) {
-                enableSubmitButton();
-            } else {
-                console.log('AJAX call failed!');
-                setTimeout(function() {
-                    enableSubmitButton();
-                }, 1000);
-            }
-
-        };
-
-        xhttp.open("GET", "ajax_info.txt", true);
-        xhttp.send();
-    }
-</script>
 <script src="{{ asset('admin_assets/js/jquery-3.6.0.min.js') }}"></script>
 
 <script src="{{ asset('admin_assets/js/bootstrap.bundle.min.js') }}"></script>
@@ -285,7 +258,27 @@
         toastr.warning("{{ session('warning') }}");
     @endif
 </script>
-
 <script src="{{ asset('admin_assets/js/app.js') }}"></script>
+<script>
+    $("#ds").click(function() {
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+
+    $("#ps").click(function() {
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+</script>
 
 </html>

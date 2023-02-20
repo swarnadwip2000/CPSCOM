@@ -43,7 +43,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="text-center">
-                            <h3><i class="fa fa-lock fa-4x"></i></h3>
+                            <h3><i class="fa fa-lock fa-4x" style="color: goldenrod;"></i></h3>
                             <h2 class="text-center">Forgot Password?</h2>
                             <p>You can reset your password here.</p>
                             <div class="panel-body">
@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <div class="form-group">
-                                        <input name="recover-submit" class="btn btn-lg btn-primary btn-block"
+                                        <input name="recover-submit" style="background: linear-gradient(to right, #10acff 0%, #1f1f1f 100%); border:white;" class="btn btn-lg btn-primary btn-block"
                                             value="Reset Password" type="submit">
                                     </div>
                                 </form>

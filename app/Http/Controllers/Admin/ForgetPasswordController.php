@@ -57,7 +57,7 @@ class ForgetPasswordController extends Controller
         // return "dfs";
         $user = User::findOrFail(Crypt::decrypt($id));
         $resetPassword = PasswordReset::where('email', $user->email)->first();
-         $newTime =  date('h:i A', strtotime( $resetPassword->created_at->addHour()));
+        $newTime =  date('h:i A', strtotime( $resetPassword->created_at->addHour()));
         
         if ($newTime > date('h:i A')) {
              
@@ -83,8 +83,6 @@ class ForgetPasswordController extends Controller
                 $id = Crypt::decrypt($request->id);
                 User::where('id', $id)->update(['password' => bcrypt($request->password)]);
                 $now_time = Carbon::now()->toDateTimeString();    
-                User::where('id', $id)->update(['password_update_time'=>$now_time]);
-                
                 return redirect()->route('admin.login')->with('message', 'Password has been changed successfully.');
             } else {
                 abort(404);

@@ -16,5 +16,6 @@ class PasswordReset extends Model
     ];
 
     public $timestamps = false;
+    protected $dates = ['created_at'];
 
 }

@@ -134,9 +134,11 @@ class ForgetPasswordController extends Controller
             $documents = $query->documents();
             $count = count($documents->rows());
             if ($count > 0) {
-                $documents->rows()[0]->reference()->update([
-                    ['path' => 'password', 'value' => Hash::make($request->password)]
-                ]);
+                $properties =[
+                    'password' => $request->password,
+                  ];
+                  $updatedUser = $this->auth->updateUser($data->id, $properties);
+
                 return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Password reset successfully.'], $this->successStatus);
             } else {
                 return response()->json(['message' => 'Email not found!', 'status' => false], 401);

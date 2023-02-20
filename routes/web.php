@@ -33,6 +33,7 @@ Route::post('forget-password', [ForgetPasswordController::class, 'forgetPassword
 Route::post('change-password', [ForgetPasswordController::class, 'changePassword'])->name('admin.change.password');
 Route::get('forget-password/show', [ForgetPasswordController::class, 'forgetPasswordShow'])->name('admin.forget.password.show');
 Route::get('reset-password/{id}/{token}', [ForgetPasswordController::class, 'resetPassword'])->name('admin.reset.password');
+Route::post('change-password', [ForgetPasswordController::class, 'changePassword'])->name('admin.change.password');
 
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
@@ -90,4 +91,12 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 });
 
 
-   
+// Terms and Conditions
+Route::get('/terms-and-conditions', function () {
+    return view('frontend.terms-and-conditions');
+});
+
+// Privacy Policy
+Route::get('/privacy-policy', function () {
+    return view('frontend.privacy-policy');
+});
