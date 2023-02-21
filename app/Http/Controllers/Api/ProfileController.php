@@ -90,6 +90,16 @@ class ProfileController extends Controller
                 $user->profile_picture = $image_path;
             }
             $user->update();
+            $data = app('firebase.firestore')->database()->collection('users')->documents(); 
+            foreach ($data as $key => $value) {
+                if ($value->data()['uid'] == $request->uid) {
+                $user = app('firebase.firestore')->database()->collection('users')->document($value->id())
+                        ->update([
+                            ['path' => 'profile_picture', 'value' => $image_path],
+                        ]);
+                }
+            }
+
         } else {
              $data = $this->auth->getUser($request->uid);
              $user = new User;
@@ -104,6 +114,15 @@ class ProfileController extends Controller
                 $user->profile_picture = $image_path;
             }
             $user->save();
+            $data = app('firebase.firestore')->database()->collection('users')->documents(); 
+            foreach ($data as $key => $value) {
+                if ($value->data()['uid'] == $request->uid) {
+                $user = app('firebase.firestore')->database()->collection('users')->document($value->id())
+                        ->update([
+                            ['path' => 'profile_picture', 'value' => $image_path],
+                        ]);
+                }
+            }
         }
             return response()->json(['status' => true,'statusCode' => 200, 'data' => $user, 'message' => 'Profile picture updated successfully'], $this->successStatus);
         } catch (Exception $e) {
