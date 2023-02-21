@@ -71,6 +71,13 @@ class SubAdminController extends Controller
                 'isAdmin'=>true,
             ]);
 
+            if ($request->hasFile('profile_picture')) {
+                $data = app('firebase.firestore')->database()->collection('users')->document($createdUser->uid);
+                $data->set([
+                    'profile_picture' => $image_path,
+                ], ['merge' => true]);
+            }
+
             $maildata = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -119,17 +126,7 @@ class SubAdminController extends Controller
             'displayName' => $request->edit_name,
             'email' => $request->edit_email,
           ];
-          $updatedUser = $this->auth->updateUser($request->id, $properties);
-          $data = app('firebase.firestore')->database()->collection('users')->documents(); 
-            foreach ($data as $key => $value) {
-               if ($value->data()['uid'] == $request->id) {
-                $admin = app('firebase.firestore')->database()->collection('users')->document($value->id())
-                        ->update([
-                            ['path' => 'name', 'value' => $request->edit_name],
-                            ['path' => 'email', 'value' => $request->edit_email],
-                        ]);
-               }
-            }
+          
             $count = User::where('uid', $request->id)->count();
             if($count > 0) {
                 $user = User::where('uid', $request->id)->first();
@@ -147,6 +144,20 @@ class SubAdminController extends Controller
                 $user->profile_picture = $image_path;
             }
             $user->save();
+
+            $updatedUser = $this->auth->updateUser($request->id, $properties);
+            $data = app('firebase.firestore')->database()->collection('users')->documents(); 
+                foreach ($data as $key => $value) {
+                if ($value->data()['uid'] == $request->id) {
+                    $admin = app('firebase.firestore')->database()->collection('users')->document($value->id())
+                            ->update([
+                                ['path' => 'name', 'value' => $request->edit_name],
+                                ['path' => 'email', 'value' => $request->edit_email],
+                                ['path' => 'profile_picture', 'value' => $image_path],
+                            ]);
+                    }
+            }
+
           return redirect()->back()->with('message',  'Admin account has been successfully updated.');
     }
 }

@@ -70,6 +70,13 @@ class UserController extends Controller
                 'uid'=>$createdUser->uid,
                 'isAdmin' => false,
             ]);
+            if ($request->hasFile('profile_picture')) {
+                $data = app('firebase.firestore')->database()->collection('users')->document($createdUser->uid);
+                $data->set([
+                    'profile_picture' => $image_path,
+                ], ['merge' => true]);
+            }
+
             $maildata = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -119,28 +126,57 @@ class UserController extends Controller
             'displayName' => $request->edit_name,
             'email' => $request->edit_email,
           ];
-          $updatedUser = $this->auth->updateUser($request->id, $properties);
-          $data = app('firebase.firestore')->database()->collection('users')->documents(); 
+          $count = User::where('uid',  $request->id)->count();
+            if ($count > 0) {
+                $user = User::where('uid', $request->id)->first();
+                $user->name =  $request->edit_name;
+                $user->email =  $request->edit_email;
+                if ($request->hasFile('profile_picture')) {
+                $file= $request->file('profile_picture');
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $image_path = $request->file('profile_picture')->store('user', 'public');
+                $user->profile_picture = $image_path;
+            }
+            $user->save();
+            
+            $updatedUser = $this->auth->updateUser($request->id, $properties);
+            $data = app('firebase.firestore')->database()->collection('users')->documents(); 
             foreach ($data as $key => $value) {
-               if ($value->data()['uid'] == $request->id) {
+                if ($value->data()['uid'] == $request->id) {
                 $user = app('firebase.firestore')->database()->collection('users')->document($value->id())
                         ->update([
                             ['path' => 'name', 'value' => $request->edit_name],
                             ['path' => 'email', 'value' => $request->edit_email],
+                            ['path' => 'profile_picture', 'value' => $image_path],
                         ]);
-               }
+                }
             }
-
-            $user = User::where('uid', $request->id)->first();
+          } else {
+            $user = new User;
+            $user->uid =  $request->id;
             $user->name =  $request->edit_name;
             $user->email =  $request->edit_email;
             if ($request->hasFile('profile_picture')) {
-               $file= $request->file('profile_picture');
-               $filename= date('YmdHi').$file->getClientOriginalName();
-               $image_path = $request->file('profile_picture')->store('user', 'public');
-               $user->profile_picture = $image_path;
-           }
-           $user->save();
+                $file= $request->file('profile_picture');
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $image_path = $request->file('profile_picture')->store('user', 'public');
+                $user->profile_picture = $image_path;
+            }
+            $user->save();
+            $updatedUser = $this->auth->updateUser($request->id, $properties);
+            $data = app('firebase.firestore')->database()->collection('users')->documents(); 
+            foreach ($data as $key => $value) {
+                if ($value->data()['uid'] == $request->id) {
+                $user = app('firebase.firestore')->database()->collection('users')->document($value->id())
+                        ->update([
+                            ['path' => 'name', 'value' => $request->edit_name],
+                            ['path' => 'email', 'value' => $request->edit_email],
+                            ['path' => 'profile_picture', 'value' => $image_path],
+                        ]);
+                }
+            }
+          }
+            
 
           return redirect()->back()->with('message',  'User account has been successfully updated.');
     }
