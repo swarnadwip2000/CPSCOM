@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    All sub admin Details - Derick Veliz admin
+    All Teams Details - Derick Veliz admin
 @endsection
 @push('styles')
     <style type="text/css">
