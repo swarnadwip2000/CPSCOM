@@ -105,12 +105,14 @@ class ForgetPasswordController extends Controller
                 ['email', $request->all()['email']],
                 ['token', $request->all()['otp']]
             ])->first();
-            
-            $newTime =  date('h:i A', strtotime( $verify->created_at->addHour()));
-            $currentTime = date('h:i A');
-            if ($newTime < $currentTime) {
+            // return $verify->created_at;
+            $newTime =  date('h:i A', strtotime(Carbon::parse($verify->created_at->addHour()) ));
+            $currentTime = Carbon::parse(date('h:i A'));
+            // condition between time which is greater than another time.
+            if ($currentTime->greaterThan($newTime)) {
                 return response()->json(['message' => 'OTP expired!', 'status' => false], 401);
             }
+            
             
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'OTP verified successfully.'], $this->successStatus);
         } else {

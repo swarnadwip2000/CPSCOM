@@ -64,7 +64,7 @@ class ForgetPasswordController extends Controller
             $id = $id;
             return view('admin.auth.reset-password')->with(compact('id'));
         } else {           
-            return redirect()->route('admin.errors.link-expire');
+            abort(404);
         }
 
         
