@@ -6,7 +6,7 @@
       <title>Privacy Policy</title>
       <style> body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding:1em; } </style>
     </head>
-    <body>
+    <body> 
        <center><h3>Privacy Policy for CPSCOM</h3> </center>
 
        <p>At CPSCOM, we value your privacy and are committed to protecting your personal information. This privacy policy outlines what information we collect, how we use it, and how we protect it.</p> 
