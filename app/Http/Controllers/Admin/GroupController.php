@@ -142,4 +142,63 @@ class GroupController extends Controller
         }
         return redirect()->back()->with('success', 'Group Image has been updated!!');
     }
+
+    public function create()
+    {
+        $data1 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',false)->documents();
+        $users = $data1->rows();
+
+        $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->documents();
+        $admins = $data2->rows();
+        return view('admin.group.create')->with(compact('users','admins'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'admin_id' => 'required',
+            'user_id' => 'required',
+            'name' => 'required',
+        ],[
+            'admin_id.required'=>'Please select a admin.',
+            'user_id.required'=>'Please select a user.'
+        ]);
+        $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $uid = substr(str_shuffle(str_repeat($pool, 36)), 0, 36);
+        $members = [];
+        for ($i=0; $i <=count($request->user_id) ; $i++) { 
+            
+            if ($i == count($request->user_id)) {
+                $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->admin_id)->documents();
+                $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
+                $members[$i]['isAdmin'] = true;
+                $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
+                $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->collection('groups')->document($uid)->set([
+                    'id'=>$uid,
+                    'name' => $request->name,
+                    'profile_picture'=>'',
+                ]);
+            }else {
+                $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->user_id[$i])->documents();
+                $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
+                $members[$i]['isAdmin'] = false;
+                $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
+                $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                app('firebase.firestore')->database()->collection('users')->document($request->user_id[$i])->collection('groups')->document($uid)->set([
+                    'id'=>$uid,
+                    'name' => $request->name,
+                    'profile_picture'=>'',
+                ]);
+            }
+        }
+        $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
+            $data->set([
+                'id'=>$uid,
+                'name' => $request->name,
+                'members'=>$members,
+            ]);
+        return redirect()->route('group.index')->with('message', 'Group has been created successfully.');
+    }
 }

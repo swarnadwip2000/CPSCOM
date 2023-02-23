@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    All Teams Details - Derick Veliz admin
+    All Admin Details - Derick Veliz admin
 @endsection
 @push('styles')
     <style type="text/css">
@@ -54,15 +54,15 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Teams Information</h3>
+                        <h3 class="page-title">Admin Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Teams</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i
-                                class="fa fa-plus"></i> Add A Teams</a>
+                                class="fa fa-plus"></i> Add A Admin</a>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Teams Information</h5>
+                            <h5 class="modal-title">Admin Information</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -133,14 +133,14 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Name<span class="text-danger">*</span></label>
+                                                    <label>Admin Name<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="name"
                                                         id="name">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Email<span class="text-danger">*</span></label>
+                                                    <label>Admin Email<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="email"
                                                         id="email">
                                                 </div>
@@ -175,7 +175,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Teams Information Update</h5>
+                            <h5 class="modal-title">Admin Information Update</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -198,14 +198,14 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Name<span class="text-danger">*</span></label>
+                                                    <label>Admin Name<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="edit_name"
                                                         id="edit_name">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Email<span class="text-danger">*</span></label>
+                                                    <label>Admin Email<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="edit_email"
                                                         id="edit_email">
                                                 </div>
@@ -228,7 +228,7 @@
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="form-header">
-                                <h3>Delete Employee</h3>
+                                <h3>Delete Admin</h3>
                                 <p>Are you sure want to delete?</p>
                             </div>
                             <div class="modal-btn delete-action">

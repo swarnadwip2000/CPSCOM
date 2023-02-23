@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    All Admin Details - Derick Veliz admin
+    All Super Admin Details - Derick Veliz admin
 @endsection
 
 
@@ -18,15 +18,15 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Admin Information</h3>
+                        <h3 class="page-title">Super Admin Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Super Admin</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_admin"><i
-                                class="fa fa-plus"></i> Add Admin</a>
+                                class="fa fa-plus"></i> Add Super Admin</a>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-0">Admin Details</h4>
+                                <h4 class="mb-0">Super Admin Details</h4>
                             </div>
                             
                         </div>
@@ -86,7 +86,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Admin Information</h5>
+                            <h5 class="modal-title">Super Admin Information</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -152,7 +152,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Admin Information</h5>
+                            <h5 class="modal-title">Super Admin Information</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

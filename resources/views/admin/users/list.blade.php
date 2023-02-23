@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    Team x Member Details - Derick Veliz admin
+    Member Details - Derick Veliz admin
 @endsection
 @push('styles')
     <style type="text/css">
@@ -54,15 +54,15 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Team x Members Information</h3>
+                        <h3 class="page-title">Members Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Team x Members</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Members</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i
-                            class="fa fa-plus"></i> Add a Team</a>
+                            class="fa fa-plus"></i> Add a Member</a>
                     </div>
                 </div>
             </div>
@@ -89,10 +89,16 @@
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                             aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" id="admin-permission" href="#" 
+                                                data-id="{{ $user->data()['uid'] }}"
+                                                data-route="{{ route('user.admin-permission', $user->data()['uid']) }}"><i
+                                                    class="fas fa-shield-alt m-r-5"></i>Admin Permission</a>
+
                                             <a class="dropdown-item edit-users" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#edit_employee" data-id="{{ $user->data()['uid'] }}"
                                                 data-route="{{ route('user.edit', $user->data()['uid']) }}"><i
                                                     class="fa fa-pencil m-r-5"></i> Edit</a>
+
                                             <a class="dropdown-item user_delete" data-id="{{ $user->data()['uid'] }}"
                                                 data-route="{{ route('user.delete', $user->data()['uid']) }}" href="#"
                                                 data-bs-toggle="modal" data-bs-target="#delete_employee"><i
@@ -111,7 +117,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Team x Members Information</h5>
+                            <h5 class="modal-title">Member Information</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -134,14 +140,14 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Name<span class="text-danger">*</span></label>
+                                                    <label>Member Name<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="name"
                                                         id="name">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Email<span class="text-danger">*</span></label>
+                                                    <label>Member Email<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="email"
                                                         id="email">
                                                 </div>
@@ -176,7 +182,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Team x Members Information Update</h5>
+                            <h5 class="modal-title">Member Information Update</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -199,14 +205,14 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Name<span class="text-danger">*</span></label>
+                                                    <label>Member Name<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="edit_name"
                                                         id="edit_name">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Email<span class="text-danger">*</span></label>
+                                                    <label>Member Email<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="edit_email"
                                                         id="edit_email">
                                                 </div>
@@ -229,7 +235,7 @@
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="form-header">
-                                <h3>Delete Employee</h3>
+                                <h3>Delete Member</h3>
                                 <p>Are you sure want to delete?</p>
                             </div>
                             <div class="modal-btn delete-action">
@@ -303,6 +309,28 @@
         });
     </script>
     <script>
+         $(document).on('click', '#admin-permission', function(e) {
+            swal({
+                    title: "Are you sure?",
+                    text: "To change the permission of member.",
+                    type: "warning",
+                    confirmButtonText: "Yes",
+                    showCancelButton: true
+                })
+                .then((result) => {
+                    if (result.value) {
+                        window.location = $(this).data('route');
+                    } else if (result.dismiss === 'cancel') {
+                        swal(
+                            'Cancelled',
+                            'Your stay here :)',
+                            'error'
+                        )
+                    }
+                })
+        });
+    </script>
+    <script>
         $(document).ready(function() {
             $('.user_delete').on('click', function() {
                 var id = $(this).data('id');
@@ -310,7 +338,7 @@
                 $('#user_destroy').html('<a href="' + route +
                     '" class="btn btn-primary continue-btn">Delete</a>')
             });
-
+            
             $('.edit-users').on('click', function() {
                 var id = $(this).data('id');
                 var route = $(this).data('route');

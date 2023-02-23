@@ -85,7 +85,7 @@ class SubAdminController extends Controller
             ];
     
             Mail::to($request->email)->send(new RegistrationMail($maildata));
-            return redirect()->back()->with('message', 'Admin account has been successfully created.');
+            return redirect()->back()->with('message', 'Team account has been successfully created.');
         } catch (\Throwable $e) {
             return redirect()->back()->with('error',  $e->getMessage());
         }
@@ -102,7 +102,7 @@ class SubAdminController extends Controller
                 $data = app('firebase.firestore')->database()->collection('users')->document($value->id())->delete();
                }
             }
-            return redirect()->back()->with('error',  'Admin account has been deleted!');
+            return redirect()->back()->with('error',  'Team account has been deleted!');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error',  $th->getMessage());
         }
@@ -113,7 +113,7 @@ class SubAdminController extends Controller
         $auth = app('firebase.auth');
         $admin['detail'] = $auth->getUser($request->id);
         $admin['profile'] = User::where('uid', $request->uid)->first();
-        return response()->json(['admin'=>$admin, 'message'=>'Admin details found successfully.']);
+        return response()->json(['admin'=>$admin, 'message'=>'Team details found successfully.']);
     }
 
     public function update(Request $request)
@@ -153,11 +153,17 @@ class SubAdminController extends Controller
                             ->update([
                                 ['path' => 'name', 'value' => $request->edit_name],
                                 ['path' => 'email', 'value' => $request->edit_email],
+                            ]);
+
+                            if ($request->hasFile('profile_picture')) {
+                                app('firebase.firestore')->database()->collection('users')->document($value->id())
+                            ->update([
                                 ['path' => 'profile_picture', 'value' => $image_path],
                             ]);
+                            }
                     }
             }
 
-          return redirect()->back()->with('message',  'Admin account has been successfully updated.');
+          return redirect()->back()->with('message',  'Team account has been successfully updated.');
     }
 }

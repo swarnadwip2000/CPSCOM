@@ -26,8 +26,8 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        {{-- <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_group"><i
-                                class="fa fa-plus"></i> Add Group</a> --}}
+                        <a href="{{ route('group.create') }}" class="btn add-btn" ><i
+                                class="fa fa-plus"></i> Add Group</a>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                                                     class="fas fa-eye"></i></a></td>
                                         <td >
                                             <a title="Update Group Image" 
-                                                href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-primary" style="border-radius: 20px"><i class="fa fa-plus"></i> Add Image</button></a> &nbsp;&nbsp;
+                                                href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-danger" style="border-radius: 20px"><i class="fa fa-plus"></i> Add Image</button></a> &nbsp;&nbsp;
 
                                             {{-- <a title="Delete Group" data-route="{{ route('group.delete', $group->id()) }}"
                                                 href="javascipt:void(0);" id="delete"><i class="fas fa-trash"></i></a> --}}

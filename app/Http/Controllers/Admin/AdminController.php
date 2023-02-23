@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationMail;
 
 class AdminController extends Controller
 {
@@ -35,7 +37,13 @@ class AdminController extends Controller
         }
         $admin->save();
         $admin->assignRole('ADMIN');   
-        
+        $maildata = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
+
+        Mail::to($request->email)->send(new RegistrationMail($maildata));
         return redirect()->route('admin.index')->with('message', 'Admin has been added successfully');
     }
 
@@ -64,7 +72,7 @@ class AdminController extends Controller
                 $user->profile_picture = $image_path;
             }
             $user->save();
-        
+            
         return redirect()->back()->with('message',  'Admin account has been successfully updated.');
     }
 

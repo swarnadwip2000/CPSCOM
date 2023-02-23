@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationMail;
 use Kreait\Firebase\Factory;
 use App\Models\User;
-
+use App\Mail\AdminPermission;
 class UserController extends Controller
 {
     protected $auth;
@@ -84,7 +84,7 @@ class UserController extends Controller
             ];
     
             Mail::to($request->email)->send(new RegistrationMail($maildata));
-            return redirect()->back()->with('message', 'User account has been successfully created.');
+            return redirect()->back()->with('message', 'Team x Member account has been successfully created.');
         } catch (\Throwable $e) {
             return redirect()->back()->with('error',  $e->getMessage());
         }
@@ -101,7 +101,7 @@ class UserController extends Controller
                 $data = app('firebase.firestore')->database()->collection('users')->document($value->id())->delete();
                }
             }
-            return redirect()->back()->with('error',  'User account has been deleted!');
+            return redirect()->back()->with('error',  'Team x Member account has been deleted!');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error',  $th->getMessage());
         }
@@ -113,7 +113,7 @@ class UserController extends Controller
         $user['detail'] = $auth->getUser($request->id);
         $user['profile'] = User::where('uid', $request->uid)->first();
         
-        return response()->json(['user'=>$user, 'message'=>'User details found successfully.']);
+        return response()->json(['user'=>$user, 'message'=>'Team x Member details found successfully.']);
     }
 
     public function update(Request $request)
@@ -147,8 +147,13 @@ class UserController extends Controller
                         ->update([
                             ['path' => 'name', 'value' => $request->edit_name],
                             ['path' => 'email', 'value' => $request->edit_email],
+                        ]);
+                if ($request->hasFile('profile_picture')) {
+                    app('firebase.firestore')->database()->collection('users')->document($value->id())
+                        ->update([
                             ['path' => 'profile_picture', 'value' => $image_path],
                         ]);
+                }
                 }
             }
           } else {
@@ -178,6 +183,22 @@ class UserController extends Controller
           }
             
 
-          return redirect()->back()->with('message',  'User account has been successfully updated.');
+          return redirect()->back()->with('message',  'Team x Member account has been successfully updated.');
+    }
+
+    public function adminPermission($id)
+    {
+        app('firebase.firestore')->database()->collection('users')->document($id)
+                        ->update([
+                            ['path' => 'isAdmin', 'value' => true],
+                        ]);
+        $user = $this->auth->getUser($id);
+        $maildata = [
+            'name' => $user->displayName,
+        ];
+
+        Mail::to($user->email)->send(new AdminPermission($maildata));
+
+        return redirect()->route('sub-admin.index')->with('message', 'User have been updated succesfully to admin.');
     }
 }

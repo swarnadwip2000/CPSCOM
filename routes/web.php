@@ -37,15 +37,16 @@ Route::post('change-password', [ForgetPasswordController::class, 'changePassword
 
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
-    Route::prefix('team-x-members')->group(function () {
+    Route::prefix('members')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index');
         Route::post('/create', [UserController::class, 'create'])->name('user.create');
         Route::post('/update', [UserController::class, 'update'])->name('user.update');
         Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
         Route::post('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::get('/admin-permission/{id}', [UserController::class, 'adminPermission'])->name('user.admin-permission');
     });
 
-    Route::prefix('teams')->group(function () {
+    Route::prefix('admins')->group(function () {
         Route::get('/', [SubAdminController::class, 'index'])->name('sub-admin.index');
         Route::post('/create', [SubAdminController::class, 'create'])->name('sub-admin.create');
         Route::post('/update', [SubAdminController::class, 'update'])->name('sub-admin.update');
@@ -64,7 +65,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/update', [ProfileController::class, 'passwordUpdate'])->name('admin.password.update');
     });    
 
-    Route::prefix('admin')->group(function () {
+    Route::prefix('super-admin')->group(function () {
         Route::get('/',[AdminController::class,'index'])->name('admin.index');
         Route::post('/store',[AdminController::class,'store'])->name('admin.store');
         Route::post('/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
@@ -74,8 +75,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         
     });    
 
-    Route::prefix('team-x-group')->group(function () {
+    Route::prefix('group')->group(function () {
         Route::get('/', [GroupController::class, 'index'])->name('group.index');
+        Route::get('/create', [GroupController::class, 'create'])->name('group.create');
+        Route::post('/store', [GroupController::class, 'store'])->name('group.store');
         Route::get('/chat/{id}', [GroupController::class, 'viewChat'])->name('group.chat');
         Route::get('/delete/{id}', [GroupController::class, 'delete'])->name('group.delete');
         Route::get('/chat/delete/{chatId}/{groupId}', [GroupController::class, 'chatDelete'])->name('group.chat.delete');
