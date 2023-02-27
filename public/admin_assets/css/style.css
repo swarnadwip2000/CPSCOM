@@ -3289,7 +3289,7 @@ input[type=file].form-control {
 
 .sidebar .sidebar-menu ul li a:hover,
 .two-col-bar .sidebar-menu ul li a:hover {
-    color: #fff
+    color: rgb(233 108 9);
 }
 
 .sidebar .sidebar-menu ul li a span,
@@ -3417,7 +3417,7 @@ input[type=file].form-control {
 .sidebar .sidebar-menu ul li.active a,
 .two-col-bar .sidebar-menu ul li.active a {
     color: #fff;
-    background-color: rgba(0, 0, 0, .2)
+    background-color: rgb(233 108 9);
 }
 
 .sidebar .sidebar-menu ul ul,
