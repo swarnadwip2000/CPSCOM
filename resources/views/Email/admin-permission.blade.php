@@ -1,7 +1,7 @@
 @component('mail::message')
 
 <p>Hi {{ $maildata['name'] }}</p> 
-<p>You have been upgraded to Admin.</p> 
+<p>{{ $maildata['content'] }}</p> 
 
 
 Thanks,<br>

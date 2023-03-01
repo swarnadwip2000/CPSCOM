@@ -14,7 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -133,6 +133,11 @@ return [
     | this array to grant expanded functionality to your applications.
     |
     */
+
+    // Member url of website
+    'member_url' => env('MEMBER_URL', 'http://localhost'),
+    // Admin url of website
+    'admin_url' => env('ADMIN_URL', 'http://localhost'),
 
     'providers' => [
 

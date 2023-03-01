@@ -52,6 +52,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/update', [SubAdminController::class, 'update'])->name('sub-admin.update');
         Route::get('/delete/{id}', [SubAdminController::class, 'delete'])->name('sub-admin.delete');
         Route::post('/edit/{id}', [SubAdminController::class, 'edit'])->name('sub-admin.edit');
+        Route::get('/demote-permission/{id}', [SubAdminController::class, 'demotePermission'])->name('sub-admin.demote-permission');
     });
 
     Route::prefix('profile')->group(function () {

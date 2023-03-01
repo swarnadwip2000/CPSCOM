@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationMail;
 use Kreait\Firebase\Factory;
 use App\Models\User;
-
+use App\Mail\AdminPermission;
 class SubAdminController extends Controller
 {
     protected $auth;
@@ -82,6 +82,7 @@ class SubAdminController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
+                'type' => 'Admin',
             ];
     
             Mail::to($request->email)->send(new RegistrationMail($maildata));
@@ -165,5 +166,27 @@ class SubAdminController extends Controller
             }
 
           return redirect()->back()->with('message',  'Team account has been successfully updated.');
+    }
+
+    public function demotePermission($id)
+    {
+        try {
+            app('firebase.firestore')->database()->collection('users')->document($id)
+                        ->update([
+                            ['path' => 'isAdmin', 'value' => false],
+                        ]);
+        $user = $this->auth->getUser($id);
+        $maildata = [
+            'name' => $user->displayName,
+            'content' => 'Sorry! You have been demoted as a member.'
+        ];
+        // Mail to user for demote permission as a member 
+        Mail::to($user->email)->send(new AdminPermission($maildata));
+
+        return redirect()->route('user.index')->with('message', 'Admin have been demoted as a member succesfully.');
+        } catch (\Throwable $th) {
+            return redirect()->route('user.index')->with('error', $th->getMessage());
+        }
+        
     }
 }

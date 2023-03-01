@@ -29,7 +29,7 @@ class RegistrationMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('admin.emails.RegistrationMail')
+        return $this->markdown('emails.RegistrationMail')
                     ->with('maildata', $this->maildata);
     }
 }

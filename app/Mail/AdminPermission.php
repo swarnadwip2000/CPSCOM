@@ -30,6 +30,6 @@ class AdminPermission extends Mailable
      */
     public function build()
     {
-        return $this->markdown('Email.admin-permission')->subject('Admin Permission')->with('maildata', $this->maildata);
+        return $this->markdown('emails.admin-permission')->subject('Admin Permission')->with('maildata', $this->maildata);
     }
 }
