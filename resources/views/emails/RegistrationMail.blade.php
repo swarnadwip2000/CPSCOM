@@ -5,7 +5,7 @@
 <p>For login please click on the link below </p>
 @if ($maildata['type'] == 'Admin')
 @component('mail::button', ['url' => config('app.admin_url')])
-Clic to Login
+Click to Login
 @endcomponent
 @else
 @component('mail::button', ['url' => config('app.member_url')])
