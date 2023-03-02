@@ -3,6 +3,12 @@
     Group Chat - Derick Veliz admin
 @endsection
 @push('styles')
+<style>
+    .dataTables_filter{
+        margin-bottom: 10px !important;
+    }
+
+</style>
 @endpush
 
 @section('content')
@@ -21,8 +27,8 @@
                     <div class="col">
                         <h3 class="page-title">Group Chat</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('group.index') }}">Team x Groups</a></li>
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Team x Groups Chat</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('group.index') }}">Groups</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Groups Chat</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
@@ -38,7 +44,7 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-0">Team x Groups Chart</h4>
+                                <h4 class="mb-0">Groups Chart</h4>
                             </div>
 
                         </div>
