@@ -19,9 +19,9 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Team x Groups Information</h3>
+                        <h3 class="page-title">Groups Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Team x Groups</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Groups</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-0">Team x Groups Details</h4>
+                                <h4 class="mb-0">Groups Details</h4>
                             </div>
 
                         </div>
