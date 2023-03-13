@@ -88,6 +88,9 @@
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                             aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item demote-permission" data-id="{{ $admin->data()['uid'] }}"
+                                                data-route="{{ route('sub-admin.demote-permission', $admin->data()['uid']) }}" href="#"><i
+                                                    class="fas fa-shield-alt m-r-5"></i> Demote as a member</a>
                                             <a class="dropdown-item edit-admins" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#edit_employee" data-id="{{ $admin->data()['uid'] }}"
                                                 data-route="{{ route('sub-admin.edit', $admin->data()['uid']) }}"><i
@@ -253,6 +256,28 @@
 @endsection
 
 @push('scripts')
+<script>
+    $(document).on('click', '.demote-permission', function(e) {
+       swal({
+               title: "Are you sure?",
+               text: "To demote this admin to user",
+               type: "warning",
+               confirmButtonText: "Yes",
+               showCancelButton: true
+           })
+           .then((result) => {
+               if (result.value) {
+                   window.location = $(this).data('route');
+               } else if (result.dismiss === 'cancel') {
+                   swal(
+                       'Cancelled',
+                       'Your stay here :)',
+                       'error'
+                   )
+               }
+           })
+   });
+</script>
     <script>
         $(document).ready(function() {
             jQuery.validator.addMethod("emailExt", function(value, element, param) {

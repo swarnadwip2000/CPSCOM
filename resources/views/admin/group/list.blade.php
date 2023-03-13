@@ -3,6 +3,11 @@
     All Group Details - Derick Veliz admin
 @endsection
 @push('styles')
+<style>
+    .dataTables_filter{
+        margin-bottom: 10px !important;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -19,9 +24,9 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Team x Groups Information</h3>
+                        <h3 class="page-title">Groups Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Team x Groups</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Groups</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
@@ -37,7 +42,7 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-0">Team x Groups Details</h4>
+                                <h4 class="mb-0">Groups Details</h4>
                             </div>
 
                         </div>
@@ -78,8 +83,9 @@
                                         <td><a href="{{ route('group.chat', $group->data()['id']) }}"><i
                                                     class="fas fa-eye"></i></a></td>
                                         <td >
-                                            <a title="Update Group Image" 
-                                                href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-danger" style="border-radius: 20px"><i class="fa fa-plus"></i> Add Image</button></a> &nbsp;&nbsp;
+                                            <a title="Upload Group Image" 
+                                                href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-danger" style="border-radius: 20px; background: linear-gradient(to right, #10acff 0%, #1f1f1f 100%);
+                                                border: none;"><i class="fa fa-upload"></i> Upload Image</button></a> &nbsp;&nbsp;
 
                                             {{-- <a title="Delete Group" data-route="{{ route('group.delete', $group->id()) }}"
                                                 href="javascipt:void(0);" id="delete"><i class="fas fa-trash"></i></a> --}}
