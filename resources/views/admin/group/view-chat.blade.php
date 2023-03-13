@@ -28,7 +28,7 @@
                         <h3 class="page-title">Group Chat</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('group.index') }}">Groups</a></li>
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Groups Chat</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">{{$groups->rows()[0]->data()['name'] }} Chat</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>

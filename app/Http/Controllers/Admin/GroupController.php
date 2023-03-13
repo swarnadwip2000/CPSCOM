@@ -39,7 +39,9 @@ class GroupController extends Controller
         // $chats = $group_chats->rows();
         // dd( $group_chats);
         $group_id = $id;
-       return view('admin.group.view-chat')->with(compact('chats','group_id'));
+        $groups = app('firebase.firestore')->database()->collection('groups')->where('id','=',$group_id)->documents();
+       
+       return view('admin.group.view-chat')->with(compact('chats','groups'));
     }
 
     public function chatDelete($chatId, $groupId)
@@ -159,6 +161,7 @@ class GroupController extends Controller
             'admin_id' => 'required',
             'user_id' => 'required',
             'name' => 'required',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
         ],[
             'admin_id.required'=>'Please select a admin.',
             'user_id.required'=>'Please select a user.'
@@ -167,19 +170,37 @@ class GroupController extends Controller
 
         $uid = substr(str_shuffle(str_repeat($pool, 36)), 0, 36);
         $members = [];
+
+        $group = new Group();
+        $group->group_id = $uid;
+        $image = app('firebase.firestore')->database()->collection('groups')
+        ->where('id', '=', $uid)
+        ->documents();
+
+        if ($request->hasFile('image')) {
+            $file= $request->file('image');
+            $filename= date('YmdHi').$file->getClientOriginalName();
+            $image_path = $request->file('image')->store('group', 'public');
+            $group->profile_picture = $image_path;
+        }
+        $group->save();
+
         for ($i=0; $i <=count($request->user_id) ; $i++) { 
-            
+
             if ($i == count($request->user_id)) {
                 $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->admin_id)->documents();
                 $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                 $members[$i]['isAdmin'] = true;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                
                 app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->collection('groups')->document($uid)->set([
                     'id'=>$uid,
                     'name' => $request->name,
-                    'profile_picture'=>'',
+                    'profile_picture'=>$group->profile_picture,
                 ]);
+
+                
             }else {
                 $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->user_id[$i])->documents();
                 $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
@@ -189,16 +210,143 @@ class GroupController extends Controller
                 app('firebase.firestore')->database()->collection('users')->document($request->user_id[$i])->collection('groups')->document($uid)->set([
                     'id'=>$uid,
                     'name' => $request->name,
-                    'profile_picture'=>'',
+                    'profile_picture'=>$group->profile_picture,
                 ]);
             }
         }
+            
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
-            $data->set([
-                'id'=>$uid,
-                'name' => $request->name,
-                'members'=>$members,
-            ]);
+        $data->set([
+            'id'=>$uid,
+            'name' => $request->name,
+            'members'=>$members,
+            'profile_picture'=> $group->profile_picture,
+        ]);
+            
+       
         return redirect()->route('group.index')->with('message', 'Group has been created successfully.');
+    }
+
+
+    public function edit($id)
+    {
+        $groups = app('firebase.firestore')->database()->collection('groups')->where('id','=',$id)->documents();
+        // dd($groups->rows()[0]->data()['members']);
+        $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->documents();
+        $admins = $data2->rows();
+
+        $data1 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',false)->documents();
+        $users = $data1->rows();
+        // dd($groups->rows()[0]->data()['profile_picture']);
+        // dd($groups->rows()[0]->data()['members']);
+        return view('admin.group.edit',compact('groups','admins','users'));
+    }
+
+    public function update(Request $request)
+    {
+        
+        $request->validate([
+            'name' => 'required',
+            'user_id' => 'required',
+            'admin_id' => 'required',
+            
+        ],[
+            'admin_id.required'=>'Please select a admin.',
+            'user_id.required'=>'Please select atleast one user.'
+        ]);
+        
+        // delete group from user table firebase
+        $image = app('firebase.firestore')->database()->collection('groups')
+        ->where('id', '=', $request->group_id)
+        ->documents();
+        // dd($image->rows()[0]->data()['members']);
+        foreach ($image->rows()[0]->data()['members'] as $key => $value) {
+            app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($request->group_id)->delete();
+        }
+
+        // delete old members from group table firebase
+        $group = app('firebase.firestore')->database()->collection('groups')->document($request->group_id);
+        $group->update([
+            ['path' => 'members', 'value' => null]
+        ]);
+
+        // return "sdf";
+        // update group name
+        $group->update([
+            ['path' => 'name', 'value' => $request->name]
+        ]);
+        // update group profile picture
+        if ($request->hasFile('image')) {
+            $file= $request->file('image');
+            $filename= date('YmdHi').$file->getClientOriginalName();
+            $image_path = $request->file('image')->store('group', 'public');
+            $group->update([
+                ['path' => 'profile_picture', 'value' => $image_path]
+            ]);
+        }
+        // update group members
+        $members = [];
+        $uid = $request->group_id;
+        $group = Group::where('group_id',$uid)->first();
+        $group->group_id = $uid;
+        $image = app('firebase.firestore')->database()->collection('groups')
+        ->where('id', '=', $uid)
+        ->documents();
+
+        if ($request->hasFile('image')) {
+            $file= $request->file('image');
+            $filename= date('YmdHi').$file->getClientOriginalName();
+            $image_path = $request->file('image')->store('group', 'public');
+            $group->profile_picture = $image_path;
+        }
+        $group->save();
+
+        for ($i=0; $i <=count($request->user_id) ; $i++) { 
+
+            if ($i == count($request->user_id)) {
+                $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->admin_id)->documents();
+                $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
+                $members[$i]['isAdmin'] = true;
+                $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
+                $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                
+                app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->collection('groups')->document($uid)->set([
+                    'id'=>$uid,
+                    'name' => $request->name,
+                    'profile_picture'=>$group->profile_picture,
+                ]);
+
+                
+            }else {
+                $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->user_id[$i])->documents();
+                $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
+                $members[$i]['isAdmin'] = false;
+                $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
+                $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                app('firebase.firestore')->database()->collection('users')->document($request->user_id[$i])->collection('groups')->document($uid)->set([
+                    'id'=>$uid,
+                    'name' => $request->name,
+                    'profile_picture'=>$group->profile_picture,
+                ]);
+            }
+        }
+            
+        $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
+        $data->update([
+            ['path' => 'members', 'value' => $members],
+            ['path' => 'name', 'value' => $request->name],
+            ['path' => 'profile_picture', 'value' => $group->profile_picture],
+        ]);
+            
+        return redirect()->route('group.index')->with('success', 'Group Details has been updated!!');
+    }
+
+    public function members($id)
+    {
+       
+        $data  = app('firebase.firestore')->database()->collection('groups')->where('id','=',$id)->documents();;
+        $members = $data->rows();
+        // dd($members[0]['members']);
+        return view('admin.group.member',compact('members'));
     }
 }

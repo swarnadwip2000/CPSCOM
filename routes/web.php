@@ -82,6 +82,9 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/store', [GroupController::class, 'store'])->name('group.store');
         Route::get('/chat/{id}', [GroupController::class, 'viewChat'])->name('group.chat');
         Route::get('/delete/{id}', [GroupController::class, 'delete'])->name('group.delete');
+        Route::get('/edit/{id}', [GroupController::class, 'edit'])->name('group.edit');
+        Route::post('/update', [GroupController::class, 'update'])->name('group.update');
+        Route::get('/members/{id}', [GroupController::class, 'members'])->name('group.members');
         Route::get('/chat/delete/{chatId}/{groupId}', [GroupController::class, 'chatDelete'])->name('group.chat.delete');
         Route::get('/group-image-update/{id}', [GroupController::class, 'groupImageUpdate'])->name('group.image.update');
         Route::post('/group-image-upload', [GroupController::class, 'groupImageUpload'])->name('group.image.upload');

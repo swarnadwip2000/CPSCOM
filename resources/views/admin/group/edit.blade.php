@@ -14,10 +14,10 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Create</h3>
+                        <h3 class="page-title">Edit</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Group</a></li>
-                            <li class="breadcrumb-item active">Create a New Group</li>
+                            <li class="breadcrumb-item active">Edit Group</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
@@ -32,22 +32,23 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-xl-12 mx-auto">
-                                <h6 class="mb-0 text-uppercase">Create Group</h6>
+                                <h6 class="mb-0 text-uppercase">Edit Group</h6>
                                 <hr>
                                 <div class="card border-0 border-4">
                                     <div class="card-body">
-                                        <form action="{{ route('group.store') }}" method="post"
+                                        <form action="{{ route('group.update') }}" method="post"
                                             enctype="multipart/form-data">
                                             @csrf
                                             <div class="border p-4 rounded">
-
+                                                <input type="hidden" name="group_id" value="{{ $groups->rows()[0]->id() }}">
                                                 {{-- <label for="inputEnterYourName" class="col-form-label"><h5>Section 1:- </h5></label> --}}
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <label for="inputEnterYourName" class="col-form-label">Group Name
                                                             <span style="color: red;">*</span></label>
                                                         <input type="text" name="name" id=""
-                                                            class="form-control" value="{{ old('name') }}">
+                                                            class="form-control"
+                                                            value="{{ $groups->rows()[0]->data()['name'] }}">
                                                         @if ($errors->has('name'))
                                                             <div class="error" style="color:red;">
                                                                 {{ $errors->first('name') }}</div>
@@ -56,11 +57,15 @@
                                                     <div class="col-md-6">
                                                         <label for="inputEnterYourName" class="col-form-label">Admin <span
                                                                 style="color: red;">*</span></label>
-                                                        <select name="admin_id" id="" class="form-control">
-                                                            <option value="">Select a Admin</option>
+                                                        <select name="admin_id" id="" class="form-control select2">
                                                             @foreach ($admins as $admin)
-                                                                <option value="{{ $admin->data()['uid'] }}">
-                                                                    {{ $admin->data()['name'] }}</option>
+                                                                @for ($i = 0; $i < count($groups->rows()[0]->data()['members']); $i++)
+                                                                    @if ($groups->rows()[0]->data()['members'][$i]['isAdmin'] == true)
+                                                                        <option value="{{ $admin->data()['uid'] }}"
+                                                                            @if ($groups->rows()[0]->data()['members'][$i]['uid'] == $admin->data()['uid']) selected @else disabled @endif>
+                                                                            {{ $admin->data()['name'] }}</option>
+                                                                    @endif
+                                                                @endfor
                                                             @endforeach
                                                         </select>
                                                         @if ($errors->has('admin_id'))
@@ -73,11 +78,16 @@
                                                         <label for="inputPhoneNo2" class="col-form-label">Members<span
                                                                 style="color:red">*<span></label>
                                                         <select name="user_id[]" id=""
-                                                            class="form-control multi-select" multiple>
-                                                            @foreach ($users as $user)
-                                                                <option value="{{ $user->data()['uid'] }}">
-                                                                    {{ $user->data()['name'] }}</option>
+                                                            class="form-control multi-select" multiple >
+                                                            @foreach ($users as $key => $user)
+                                                                    <option value="{{ $user->data()['uid'] }}" @foreach ($groups->rows()[0]->data()['members'] as $member)
+                                                                        @if ($member['uid'] == $user->data()['uid'])
+                                                                            selected 
+                                                                        @endif   
+                                                                    @endforeach>
+                                                                        {{ $user->data()['name'] }}</option>
                                                             @endforeach
+
                                                         </select>
                                                         @if ($errors->has('user_id'))
                                                             <div class="error" style="color:red;">
@@ -94,12 +104,22 @@
                                                             <div class="error" style="color:red;">
                                                                 {{ $errors->first('image') }}</div>
                                                         @endif
+
+                                                        @if (isset($groups->rows()[0]->data()['profile_picture']))
+                                                            <div class="col-sm-9" style="display: flex;">
+                                                                <div class="image-area m-4">
+                                                                    <img src="{{ Storage::url($groups->rows()[0]->data()['profile_picture']) }}"
+                                                                        alt="Preview">
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     </div>
+
 
                                                     <div class="row" style="margin-top: 10px;">
                                                         <div class="col-sm-9">
                                                             <button type="submit" class="btn btn-info px-5"
-                                                                style="color: white; background-color: #176d9b;">Save</button>
+                                                                style="color: white; background-color: #176d9b;">Update</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -125,4 +145,5 @@
             // maximumSelectionLength: 2
         });
     </script>
+
 @endpush

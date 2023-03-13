@@ -24,15 +24,15 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Groups Information</h3>
+                        <h3 class="page-title">Members Information</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Groups</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Member</a></li>
                             <li class="breadcrumb-item active">List</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
                         <a href="{{ route('group.create') }}" class="btn add-btn" ><i
-                                class="fa fa-plus"></i> Add Group</a>
+                                class="fa fa-plus"></i> Add Member</a>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                     <div class="card-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-0">Groups Details</h4>
+                                <h4 class="mb-0">Members Details</h4>
                             </div>
 
                         </div>
@@ -53,47 +53,22 @@
                         <table id="myTable" class="dd table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Group Name</th>
-                                    <th>Group Admin Name</th>
-                                    {{-- <th>Name of Group Members</th> --}}
-                                    <th>No. of Group Member</th>
-                                    <th>Member list</th>
-                                    <th>Chat</th>
+                                    <th>Member Name</th>
+                                    <th>Member Email</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($groups as $key => $group)
-                                {{-- @dd($groups)    --}}
+                                @foreach ($members[0]['members'] as $member)
+                                  
                                     <tr>
-                                        <td>@if (isset($group->data()['name']))
-                                            {{ $group->data()['name'] }}
-                                        @endif</td>
-                                        <td>@foreach ($group->data()['members'] as $isAdmin)
-                                            @if($isAdmin['isAdmin'] == true)
-                                            {{ $isAdmin['name'] }}
-                                            @endif
-                                        @endforeach</td>
-                                        @php
-                                            $count = count($group->data()['members']);
-                                        @endphp
-                                        {{-- <td>@foreach ($group->data()['members'] as $key => $isAdmin)
-                                            {{ $isAdmin['name'] }} @if($key < $count - 1), @endif
-                                        @endforeach</td> --}}
-                                        <td>{{ count($group->data()['members']) }}</td>
-                                        <td><a href="{{ route('group.members', $group->data()['id']) }}"><i
-                                            class="fas fa-edit"></i></a></td>
-                                        <td><a href="{{ route('group.chat', $group->data()['id']) }}"><i
-                                                    class="fas fa-eye"></i></a></td>
+                                        <td>{{ $member['name'] }}</td>
+                                        <td>{{ $member['email']  }}</td>
                                         <td >
-                                            {{-- <a title="Upload Group Image" 
-                                                href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-danger" style="border-radius: 20px; background: linear-gradient(to right, #10acff 0%, #1f1f1f 100%);
-                                                border: none;"><i class="fa fa-upload"></i> Upload Image</button></a> &nbsp;&nbsp; --}}
-
-                                            <a title="Edit Group" 
-                                                href="{{ route('group.edit', $group->id()) }}"><i class="fas fa-edit"></i></a>
+                                               <a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
+                                   
                                 @endforeach
 
 
@@ -117,11 +92,11 @@
                 "aaSorting": [],
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [4, 5]
+                        "targets": [3, 4]
                     },
                     {
                         "orderable": true,
-                        "targets": [0, 1, 2, 3]
+                        "targets": [0, 1, 2]
                     }
                 ]
             });
