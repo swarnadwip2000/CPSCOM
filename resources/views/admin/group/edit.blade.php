@@ -57,15 +57,14 @@
                                                     <div class="col-md-6">
                                                         <label for="inputEnterYourName" class="col-form-label">Admin <span
                                                                 style="color: red;">*</span></label>
+                                                                {{-- @dd($groups->rows()[0]->data()['members'] ) --}}
                                                         <select name="admin_id" id="" class="form-control select2">
-                                                            @foreach ($admins as $admin)
-                                                                @for ($i = 0; $i < count($groups->rows()[0]->data()['members']); $i++)
-                                                                    @if ($groups->rows()[0]->data()['members'][$i]['isAdmin'] == true)
-                                                                        <option value="{{ $admin->data()['uid'] }}"
-                                                                            @if ($groups->rows()[0]->data()['members'][$i]['uid'] == $admin->data()['uid']) selected @else disabled @endif>
-                                                                            {{ $admin->data()['name'] }}</option>
+                                                            @foreach ($admins as $key=>$admin)
+                                                                <option value="{{ $admin->data()['uid'] }}" @foreach($groups->rows()[0]->data()['members'] as $member) {{ $member['name'] }} @if ($member['uid'] == $admin->data()['uid'])
+                                                                    selected
                                                                     @endif
-                                                                @endfor
+                                                                @endforeach >
+                                                                    {{ $admin->data()['name'] }}</option>
                                                             @endforeach
                                                         </select>
                                                         @if ($errors->has('admin_id'))

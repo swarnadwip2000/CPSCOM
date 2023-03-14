@@ -71,7 +71,7 @@
                                         @endif</td>
                                         <td>@foreach ($group->data()['members'] as $isAdmin)
                                             @if($isAdmin['isAdmin'] == true)
-                                            {{ $isAdmin['name'] }}
+                                            <span class="badge bg-inverse-info"> {{ $isAdmin['name'] }} </span>
                                             @endif
                                         @endforeach</td>
                                         @php
@@ -81,8 +81,7 @@
                                             {{ $isAdmin['name'] }} @if($key < $count - 1), @endif
                                         @endforeach</td> --}}
                                         <td>{{ count($group->data()['members']) }}</td>
-                                        <td><a href="{{ route('group.members', $group->data()['id']) }}"><i
-                                            class="fas fa-edit"></i></a></td>
+                                        <td><a href="{{ route('group.members', $group->data()['id']) }}"><button class="btn btn-warning"><i class="fas fa-eye"></i> View </button></a></td>
                                         <td><a href="{{ route('group.chat', $group->data()['id']) }}"><i
                                                     class="fas fa-eye"></i></a></td>
                                         <td >
@@ -92,6 +91,8 @@
 
                                             <a title="Edit Group" 
                                                 href="{{ route('group.edit', $group->id()) }}"><i class="fas fa-edit"></i></a>
+                                                {{-- <a title="Edit Group" 
+                                                href="{{ route('group.delete', $group->id()) }}"><i class="fas fa-trash"></i></a> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -117,11 +118,11 @@
                 "aaSorting": [],
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [4, 5]
+                        "targets": [3, 4, 5]
                     },
                     {
                         "orderable": true,
-                        "targets": [0, 1, 2, 3]
+                        "targets": [0, 1, 2]
                     }
                 ]
             });

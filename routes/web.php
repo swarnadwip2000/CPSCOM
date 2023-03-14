@@ -88,6 +88,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/chat/delete/{chatId}/{groupId}', [GroupController::class, 'chatDelete'])->name('group.chat.delete');
         Route::get('/group-image-update/{id}', [GroupController::class, 'groupImageUpdate'])->name('group.image.update');
         Route::post('/group-image-upload', [GroupController::class, 'groupImageUpload'])->name('group.image.upload');
+        Route::post('/member-store', [GroupController::class, 'groupMemberStore'])->name('group.members.store');
+        Route::get('/member-delete/{user_id}/{group_id}', [GroupController::class, 'groupMemberDelete'])->name('group.members.delete');
     });
 
     Route::prefix('cms')->group(function () {

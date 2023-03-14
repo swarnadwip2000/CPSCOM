@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use App\Models\User;
 use App\Models\Group;
+use Auth;
 
 class GroupController extends Controller
 {
@@ -150,7 +151,7 @@ class GroupController extends Controller
         $data1 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',false)->documents();
         $users = $data1->rows();
 
-        $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->documents();
+        $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->where('isSuperAdmin','=',false)->documents();
         $admins = $data2->rows();
         return view('admin.group.create')->with(compact('users','admins'));
     }
@@ -214,12 +215,23 @@ class GroupController extends Controller
                 ]);
             }
         }
+
+        $count = count($request->user_id);
+        $admin_members[$count+1]['email'] = Auth::user()->email;
+        $admin_members[$count+1]['isAdmin'] = true;
+        $admin_members[$count+1]['name'] = Auth::user()->name;
+        $admin_members[$count+1]['uid'] = Auth::user()->uid;
+        app('firebase.firestore')->database()->collection('users')->document(Auth::user()->uid)->collection('groups')->document($uid)->set([
+            'id'=>$uid,
+            'name' => $request->name,
+            'profile_picture'=>$group->profile_picture,
+        ]);
             
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
         $data->set([
             'id'=>$uid,
             'name' => $request->name,
-            'members'=>$members,
+            'members'=>array_merge($members, $admin_members),
             'profile_picture'=> $group->profile_picture,
         ]);
             
@@ -232,7 +244,7 @@ class GroupController extends Controller
     {
         $groups = app('firebase.firestore')->database()->collection('groups')->where('id','=',$id)->documents();
         // dd($groups->rows()[0]->data()['members']);
-        $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->documents();
+        $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->where('isSuperAdmin','=',false)->documents();
         $admins = $data2->rows();
 
         $data1 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',false)->documents();
@@ -330,10 +342,20 @@ class GroupController extends Controller
                 ]);
             }
         }
-            
+
+        $count = count($request->user_id);
+        $admin_members[$count+1]['email'] = Auth::user()->email;
+        $admin_members[$count+1]['isAdmin'] = true;
+        $admin_members[$count+1]['name'] = Auth::user()->name;
+        $admin_members[$count+1]['uid'] = Auth::user()->uid;
+        app('firebase.firestore')->database()->collection('users')->document(Auth::user()->uid)->collection('groups')->document($uid)->set([
+            'id'=>$uid,
+            'name' => $request->name,
+            'profile_picture'=>$group->profile_picture,
+        ]);  
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
         $data->update([
-            ['path' => 'members', 'value' => $members],
+            ['path' => 'members', 'value' => array_merge($members, $admin_members)],
             ['path' => 'name', 'value' => $request->name],
             ['path' => 'profile_picture', 'value' => $group->profile_picture],
         ]);
@@ -346,8 +368,67 @@ class GroupController extends Controller
        
         $data  = app('firebase.firestore')->database()->collection('groups')->where('id','=',$id)->documents();;
         $members = $data->rows();
+        // dd($members[0]->data()['id']);
         $groupId = $id;
+        $users = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',false)->documents();
         // dd($members[0]['members'][]);
-        return view('admin.group.member',compact('members','groupId'));
+        return view('admin.group.member',compact('members','groupId','users'));
+    }
+
+    public function groupMemberStore(Request $request)
+    {
+        $request->validate([
+            'add_member' => 'required',
+        ],[
+            'add_member.required'=>'Please select atleast one user.'
+        ]);
+            //    add a new member in group table firebase
+        $group = app('firebase.firestore')->database()->collection('groups')
+        ->where('id', '=', $request->group_id)
+        ->documents();
+        foreach ($group->rows()[0]->data()['members'] as $key => $value) {
+            // echo $value['uid'] .'<br>';
+            // echo $request->add_member;die;
+            if ($value['uid'] == $request->add_member) {
+                return redirect()->back()->with('error', 'User already added in this group!!');
+            } 
+        }
+
+              $count = count($group->rows()[0]->data()['members']);
+               $user = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->add_member)->documents();
+                $new_members[$count+1]['email'] = $user->rows()[0]->data()['email'];
+                $new_members[$count+1]['isAdmin'] = false;
+                $new_members[$count+1]['name'] = $user->rows()[0]->data()['name'];
+                $new_members[$count+1]['uid'] = $request->add_member;
+                $old_members = $group->rows()[0]->data()['members'];
+                $data = app('firebase.firestore')->database()->collection('groups')->document($request->group_id);
+                $data->update([
+                    ['path' => 'members', 'value' => array_merge($old_members,$new_members)],
+                ]);
+                app('firebase.firestore')->database()->collection('users')->document($request->add_member)->collection('groups')->document($request->group_id)->set([
+                    'id'=>$request->group_id,
+                    'name' => $group->rows()[0]->data()['name'],
+                    'profile_picture'=>$group->rows()[0]->data()['profile_picture'],
+                ]);
+                return redirect()->back()->with('message', 'User added in this group!!');
+    }
+
+    public function groupMemberDelete($user_id, $group_id)
+    {
+        $group = app('firebase.firestore')->database()->collection('groups')
+        ->where('id', '=', $group_id)
+        ->documents();
+        $members = $group->rows()[0]->data()['members'];
+        foreach ($members as $key => $value) {
+            if ($value['uid'] == $user_id) {
+                unset($members[$key]);
+            }
+        }
+        $data = app('firebase.firestore')->database()->collection('groups')->document($group_id);
+        $data->update([
+            ['path' => 'members', 'value' => $members],
+        ]);
+        app('firebase.firestore')->database()->collection('users')->document($user_id)->collection('groups')->document($group_id)->delete();
+        return redirect()->back()->with('message', 'User removed from this group!!');
     }
 }

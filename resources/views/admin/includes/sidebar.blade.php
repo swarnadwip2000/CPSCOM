@@ -16,9 +16,9 @@
                         <li class="{{ Request::is('admin/password*') ? 'active' : ' ' }}">
                             <a href="{{ route('admin.password') }}">Change Password</a>
                         </li>
-                        <li class="{{ Request::is('admin/super-admin*') ? 'active' : ' ' }}">
+                        {{-- <li class="{{ Request::is('admin/super-admin*') ? 'active' : ' ' }}">
                             <a href="{{ route('admin.index') }}">Super admin List</a>
-                        </li>                     
+                        </li>                      --}}
                     </ul>
                 </li>
                 <li class="{{ Request::is('admin/admins*') ? 'active' : ' ' }}">

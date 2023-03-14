@@ -25,7 +25,6 @@ class SubAdminController extends Controller
     {
         $data = app('firebase.firestore')->database()->collection('users')->documents();  
         $admins = $data->rows();
-        //  dd($admins);
         return view('admin.sub-admin.list')->with(compact('admins'));
     }
 
@@ -69,6 +68,7 @@ class SubAdminController extends Controller
                 'name'=>$request->name,
                 'uid'=>$createdUser->uid,
                 'isAdmin'=>true,
+                'isSubAdmin'=>false,
             ]);
 
             if ($request->hasFile('profile_picture')) {

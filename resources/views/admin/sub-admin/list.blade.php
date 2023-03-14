@@ -25,7 +25,7 @@
             left: 50%;
             animation: spin 2s linear infinite;
             /* filter: blur(1px);
-            z-index: 9999; */
+                        z-index: 9999; */
         }
 
         @keyframes spin {
@@ -41,9 +41,10 @@
 @endpush
 
 @section('content')
-@php
-    use App\Models\User;
-@endphp
+    @php
+        use App\Models\User;
+        use App\Helpers\Helper;
+    @endphp
     <section id="loading">
         <div id="loading-content"></div>
     </section>
@@ -67,47 +68,74 @@
                 </div>
             </div>
 
-
-            <div class="row staff-grid-row">
-                @foreach ($admins as $admin)
-                        @if ($admin->data()['isAdmin'])
-                            <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-                                <div class="profile-widget">
-                                    <div class="profile-img">
-                                        @php
-                                        $profile = User::profile_picture($admin->data()['uid']);
-                                    @endphp
-                                    <a href="javascript:void(0);" class="avatar">
-                                        @if ( isset($profile->profile_picture))
-                                        <img src="{{ Storage::url($profile->profile_picture) }}" alt="profiole" id="img-{{ $admin->data()['uid'] }}" data-url="{{ Storage::url($profile->profile_picture) }}"></a>
-                                        @else
-                                        <img src="{{ asset('admin_assets/img/profiles/avatar-02.jpg') }}" alt="" id="img-{{ $admin->data()['uid'] }}" data-url="{{ asset('frontend_assets/img/profiles/avatar-02.jpg') }}"></a>
-                                        @endif
-                                    </div>
-                                    <div class="dropdown profile-action">
-                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                                            aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item demote-permission" data-id="{{ $admin->data()['uid'] }}"
-                                                data-route="{{ route('sub-admin.demote-permission', $admin->data()['uid']) }}" href="#"><i
-                                                    class="fas fa-shield-alt m-r-5"></i> Demote as a member</a>
-                                            <a class="dropdown-item edit-admins" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#edit_employee" data-id="{{ $admin->data()['uid'] }}"
-                                                data-route="{{ route('sub-admin.edit', $admin->data()['uid']) }}"><i
-                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a class="dropdown-item admin_delete" data-id="{{ $admin->data()['uid'] }}"
-                                                data-route="{{ route('sub-admin.delete', $admin->data()['uid']) }}" href="#"
-                                                data-bs-toggle="modal" data-bs-target="#delete_employee"><i
-                                                    class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                    <h4 class="admin-name m-t-10 mb-0 text-ellipsis"><a
-                                            href="jsavscript:void(0);">{{ $admin->data()['name'] }}</a></h4>
-                                    <div class="small text-muted">{{ $admin->data()['email'] }}</div>
-                                </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="mb-0">Admin Information</h4>
                             </div>
-                    @endif
-                @endforeach
+
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="table-responsive">
+                        <table id="myTable" class="dd table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Groups</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($admins as $admin)
+                                    @if ($admin->data()['isAdmin'] == true && $admin->data()['isSuperAdmin'] == false)
+                                        <tr>
+                                            <td>{{ $admin->data()['name'] }}</td>
+                                            <td>{{ $admin->data()['email'] }}</td>
+                                            <td>
+                                                @foreach (Helper::adminGroupName($admin->data()['uid']) as $group)
+                                                    <span class="badge bg-inverse-info">{{ $group->data()['name'] }}</span>
+                                                @endforeach
+                                            <td class="text-end">
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle"
+                                                        data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                            class="material-icons">more_vert</i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item demote-permission"
+                                                            data-id="{{ $admin->data()['uid'] }}"
+                                                            data-route="{{ route('sub-admin.demote-permission', $admin->data()['uid']) }}"
+                                                            href="#"><i class="fas fa-shield-alt m-r-5"></i> Demote as
+                                                            a member</a>
+                                                        <a class="dropdown-item edit-admins" href="#"
+                                                            data-bs-toggle="modal" data-bs-target="#edit_employee"
+                                                            data-id="{{ $admin->data()['uid'] }}"
+                                                            data-route="{{ route('sub-admin.edit', $admin->data()['uid']) }}"><i
+                                                                class="fa fa-pencil m-r-5"></i> Edit</a>
+                                                        <a class="dropdown-item admin_delete"
+                                                            data-id="{{ $admin->data()['uid'] }}"
+                                                            data-route="{{ route('sub-admin.delete', $admin->data()['uid']) }}"
+                                                            href="#" data-bs-toggle="modal"
+                                                            data-bs-target="#delete_employee"><i
+                                                                class="fa fa-trash-o m-r-5"></i>
+                                                            Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                    @endforeach
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
             </div>
             <div id="add_employee" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -256,28 +284,28 @@
 @endsection
 
 @push('scripts')
-<script>
-    $(document).on('click', '.demote-permission', function(e) {
-       swal({
-               title: "Are you sure?",
-               text: "To demote this admin to user",
-               type: "warning",
-               confirmButtonText: "Yes",
-               showCancelButton: true
-           })
-           .then((result) => {
-               if (result.value) {
-                   window.location = $(this).data('route');
-               } else if (result.dismiss === 'cancel') {
-                   swal(
-                       'Cancelled',
-                       'Your stay here :)',
-                       'error'
-                   )
-               }
-           })
-   });
-</script>
+    <script>
+        $(document).on('click', '.demote-permission', function(e) {
+            swal({
+                    title: "Are you sure?",
+                    text: "To demote this admin to user",
+                    type: "warning",
+                    confirmButtonText: "Yes",
+                    showCancelButton: true
+                })
+                .then((result) => {
+                    if (result.value) {
+                        window.location = $(this).data('route');
+                    } else if (result.dismiss === 'cancel') {
+                        swal(
+                            'Cancelled',
+                            'Your stay here :)',
+                            'error'
+                        )
+                    }
+                })
+        });
+    </script>
     <script>
         $(document).ready(function() {
             jQuery.validator.addMethod("emailExt", function(value, element, param) {
@@ -338,7 +366,7 @@
             $('.edit-admins').on('click', function() {
                 var id = $(this).data('id');
                 var route = $(this).data('route');
-                var img_url = $('#img-'+id).data('url');
+                var img_url = $('#img-' + id).data('url');
                 $('#loading').addClass('loading');
                 $('#loading-content').addClass('loading-content');
                 $.ajaxSetup({
@@ -359,7 +387,8 @@
                             await $('#hidden_id').val(data.admin.detail.uid);
                             await $('#edit_name').val(data.admin.detail.displayName);
                             await $('#edit_email').val(data.admin.detail.email);
-                            await $('.show-image').html('<img src="'+img_url+'" class="inline-block" alt="admin">');
+                            await $('.show-image').html('<img src="' + img_url +
+                                '" class="inline-block" alt="admin">');
                             await $('#loading').removeClass('loading');
                             await $('#loading-content').removeClass('loading-content');
                         } catch (error) {
@@ -368,6 +397,25 @@
                     }
                 });
             });
+        });
+    </script>
+
+    <script>
+         $(document).ready(function() {
+            //Default data table
+            $('#myTable').DataTable({
+                "aaSorting": [],
+                "columnDefs": [{
+                        "orderable": false,
+                        "targets": [3]
+                    },
+                    {
+                        "orderable": true,
+                        "targets": [0, 1, 2]
+                    }
+                ]
+            });
+
         });
     </script>
 @endpush

@@ -10686,3 +10686,7 @@ button.close {
     text-overflow: ellipsis;
     white-space: nowrap
 }
+
+ .dataTables_filter{
+        margin-bottom: 10px !important;
+    }

@@ -25,7 +25,7 @@
             left: 50%;
             animation: spin 2s linear infinite;
             /* filter: blur(1px);
-            z-index: 9999; */
+                z-index: 9999; */
         }
 
         @keyframes spin {
@@ -41,9 +41,10 @@
 @endpush
 
 @section('content')
-@php
-    use App\Models\User;
-@endphp
+    @php
+        use App\Models\User;
+        use App\Helpers\Helper;
+    @endphp
     <section id="loading">
         <div id="loading-content"></div>
     </section>
@@ -62,57 +63,81 @@
                     </div>
                     <div class="col-auto float-end ms-auto">
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i
-                            class="fa fa-plus"></i> Add a Member</a>
+                                class="fa fa-plus"></i> Add a Member</a>
                     </div>
                 </div>
             </div>
 
-
-            <div class="row staff-grid-row">
-                @foreach ($users as $user)
-                        @if ($user->data()['isAdmin'] == false)
-                            <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-                                <div class="profile-widget">
-                                    <div class="profile-img">
-                                        @php
-                                            $profile = User::profile_picture($user->data()['uid']);
-                                        @endphp
-                                        <a href="javascript:void(0);" class="avatar">
-                                            @if ( isset($profile->profile_picture))
-                                            <img src="{{ Storage::url($profile->profile_picture) }}" alt="profiole" id="img-{{ $user->data()['uid'] }}" data-url="{{ Storage::url($profile->profile_picture) }}"></a>
-                                            @else
-                                            <img src="{{ asset('admin_assets/img/profiles/avatar-02.jpg') }}" alt="" id="img-{{ $user->data()['uid'] }}" data-url="{{ asset('frontend_assets/img/profiles/avatar-02.jpg') }}"></a>
-                                            @endif
-                                            
-                                    </div>
-                                    <div class="dropdown profile-action">
-                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                                            aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" id="admin-permission" href="#" 
-                                                data-id="{{ $user->data()['uid'] }}"
-                                                data-route="{{ route('user.admin-permission', $user->data()['uid']) }}"><i
-                                                    class="fas fa-shield-alt m-r-5"></i>Admin Permission</a>
-
-                                            <a class="dropdown-item edit-users" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#edit_employee" data-id="{{ $user->data()['uid'] }}"
-                                                data-route="{{ route('user.edit', $user->data()['uid']) }}"><i
-                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-
-                                            <a class="dropdown-item user_delete" data-id="{{ $user->data()['uid'] }}"
-                                                data-route="{{ route('user.delete', $user->data()['uid']) }}" href="#"
-                                                data-bs-toggle="modal" data-bs-target="#delete_employee"><i
-                                                    class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                    <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a
-                                            href="jsavscript:void(0);">{{ $user->data()['name'] }}</a></h4>
-                                    <div class="small text-muted">{{ $user->data()['email'] }}</div>
-                                </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="mb-0">User Information</h4>
                             </div>
-                            @endif
-                @endforeach
+
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="table-responsive">
+                        <table id="myTable" class="dd table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Groups</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($users as $user)
+                                    @if ($user->data()['isAdmin'] == false)
+                                        <tr>
+                                            <td>{{ $user->data()['name'] }}</td>
+                                            <td>{{ $user->data()['email'] }}</td>
+                                            <td>
+                                                @foreach (Helper::adminGroupName($user->data()['uid']) as $group)
+                                                    <span class="badge bg-inverse-info">{{ $group->data()['name'] }}</span>
+                                                @endforeach
+                                            <td class="text-end">
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle"
+                                                        data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                            class="material-icons">more_vert</i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" id="admin-permission" href="#"
+                                                            data-id="{{ $user->data()['uid'] }}"
+                                                            data-route="{{ route('user.admin-permission', $user->data()['uid']) }}"><i
+                                                                class="fas fa-shield-alt m-r-5"></i>Admin Permission</a>
+
+                                                        <a class="dropdown-item edit-users" href="#"
+                                                            data-bs-toggle="modal" data-bs-target="#edit_employee"
+                                                            data-id="{{ $user->data()['uid'] }}"
+                                                            data-route="{{ route('user.edit', $user->data()['uid']) }}"><i
+                                                                class="fa fa-pencil m-r-5"></i> Edit</a>
+
+                                                        <a class="dropdown-item user_delete"
+                                                            data-id="{{ $user->data()['uid'] }}"
+                                                            data-route="{{ route('user.delete', $user->data()['uid']) }}"
+                                                            href="#" data-bs-toggle="modal"
+                                                            data-bs-target="#delete_employee"><i
+                                                                class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
             </div>
+
             <div id="add_employee" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
@@ -194,7 +219,7 @@
                                 <input type="hidden" id="hidden_id" name="id" value="">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="profile-img-wrap edit-img" >
+                                        <div class="profile-img-wrap edit-img">
                                             <div class="show-image"></div>
                                             <div class="fileupload btn">
                                                 <span class="btn-text">edit</span>
@@ -309,7 +334,7 @@
         });
     </script>
     <script>
-         $(document).on('click', '#admin-permission', function(e) {
+        $(document).on('click', '#admin-permission', function(e) {
             swal({
                     title: "Are you sure?",
                     text: "To change the permission of member.",
@@ -338,11 +363,11 @@
                 $('#user_destroy').html('<a href="' + route +
                     '" class="btn btn-primary continue-btn">Delete</a>')
             });
-            
+
             $('.edit-users').on('click', function() {
                 var id = $(this).data('id');
                 var route = $(this).data('route');
-                var img_url = $('#img-'+id).data('url');
+                var img_url = $('#img-' + id).data('url');
                 // console.log(route);
                 // console.log(img_url);
                 $('#loading').addClass('loading');
@@ -365,7 +390,8 @@
                             await $('#hidden_id').val(data.user.detail.uid);
                             await $('#edit_name').val(data.user.detail.displayName);
                             await $('#edit_email').val(data.user.detail.email);
-                            await $('.show-image').html('<img src="'+img_url+'" class="inline-block" alt="user">');
+                            await $('.show-image').html('<img src="' + img_url +
+                                '" class="inline-block" alt="user">');
                             await $('#loading').removeClass('loading');
                             await $('#loading-content').removeClass('loading-content');
                         } catch (error) {
@@ -376,4 +402,22 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+           //Default data table
+           $('#myTable').DataTable({
+               "aaSorting": [],
+               "columnDefs": [{
+                       "orderable": false,
+                       "targets": [3]
+                   },
+                   {
+                       "orderable": true,
+                       "targets": [0, 1, 2]
+                   }
+               ]
+           });
+
+       });
+   </script>
 @endpush

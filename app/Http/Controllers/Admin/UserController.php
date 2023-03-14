@@ -70,6 +70,7 @@ class UserController extends Controller
                 'status' => 'Unavalible',
                 'uid' => $createdUser->uid,
                 'isAdmin' => false,
+                'isSuperAdmin' => false,
             ]);
             if ($request->hasFile('profile_picture')) {
                 $data = app('firebase.firestore')->database()->collection('users')->document($createdUser->uid);

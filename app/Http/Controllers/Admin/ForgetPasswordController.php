@@ -14,9 +14,19 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\PasswordReset;
-
+use Kreait\Firebase\Factory;
 class ForgetPasswordController extends Controller
 {
+    protected $auth;
+
+    public function __construct()
+    {
+        $factory = (new Factory)
+                    ->withServiceAccount(__DIR__.'/firebase_credential.json')
+                    ->withDataBaseUri('https://cpscom-acb3c.firebaseio.com');
+        $this->auth = $factory->createAuth();
+    }
+
     public function forgetPasswordShow()
     {
         return view('admin.auth.forgot-password');
@@ -80,9 +90,14 @@ class ForgetPasswordController extends Controller
         // return $request->all();
         try {
             if ($request->id != '') {
+                $properties =[
+                    'password' => $request->password,
+                ];
                 $id = Crypt::decrypt($request->id);
+                $data = User::where('id', $id)->first();
                 User::where('id', $id)->update(['password' => bcrypt($request->password)]);
-                $now_time = Carbon::now()->toDateTimeString();    
+                $now_time = Carbon::now()->toDateTimeString();   
+                $this->auth->updateUser($data->uid, $properties);
                 return redirect()->route('admin.login')->with('message', 'Password has been changed successfully.');
             } else {
                 abort(404);
