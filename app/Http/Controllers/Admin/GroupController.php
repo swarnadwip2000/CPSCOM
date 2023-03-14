@@ -346,7 +346,8 @@ class GroupController extends Controller
        
         $data  = app('firebase.firestore')->database()->collection('groups')->where('id','=',$id)->documents();;
         $members = $data->rows();
-        // dd($members[0]['members']);
-        return view('admin.group.member',compact('members'));
+        $groupId = $id;
+        // dd($members[0]['members'][]);
+        return view('admin.group.member',compact('members','groupId'));
     }
 }

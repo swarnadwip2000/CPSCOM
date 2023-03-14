@@ -31,7 +31,7 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <a href="{{ route('group.create') }}" class="btn add-btn" ><i
+                        <a href="{{ route('group.create',) }}" class="btn add-btn" ><i
                                 class="fa fa-plus"></i> Add Member</a>
                     </div>
                 </div>
@@ -59,8 +59,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($members[0]['members'] as $member)
-                                  
+                                @foreach ($members[0]['members'] as $key =>$member)
+                                @if($member['isAdmin'] == false)
                                     <tr>
                                         <td>{{ $member['name'] }}</td>
                                         <td>{{ $member['email']  }}</td>
@@ -68,7 +68,7 @@
                                                <a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
-                                   
+                                @endif
                                 @endforeach
 
 
@@ -92,11 +92,11 @@
                 "aaSorting": [],
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [3, 4]
+                        "targets": [2]
                     },
                     {
                         "orderable": true,
-                        "targets": [0, 1, 2]
+                        "targets": [0, 1]
                     }
                 ]
             });
