@@ -93,6 +93,14 @@
                             <tbody>
                                 @foreach ($users as $user)
                                     @if ($user->data()['isAdmin'] == false)
+                                    @php
+                                    $profile = User::profile_picture($user->data()['uid']);
+                                    @endphp
+                                        @if ( isset($profile->profile_picture))
+                                        <img style="display:none;" src="{{ Storage::url($profile->profile_picture) }}" alt="profiole" id="img-{{ $user->data()['uid'] }}" data-url="{{ Storage::url($profile->profile_picture) }}">
+                                    @else
+                                    <img style="display:none;" src="{{ asset('admin_assets/img/profiles/avatar-02.jpg') }}" alt="" id="img-{{ $user->data()['uid'] }}" data-url="{{ asset('frontend_assets/img/profiles/avatar-02.jpg') }}">
+                                    @endif
                                         <tr>
                                             <td>{{ $user->data()['name'] }}</td>
                                             <td>{{ $user->data()['email'] }}</td>

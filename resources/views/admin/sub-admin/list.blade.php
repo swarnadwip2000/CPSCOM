@@ -93,9 +93,18 @@
                             <tbody>
                                 @foreach ($admins as $admin)
                                     @if ($admin->data()['isAdmin'] == true && $admin->data()['isSuperAdmin'] == false)
+                                    @php
+                                    $profile = User::profile_picture($admin->data()['uid']);
+                                    @endphp
+                                        @if ( isset($profile->profile_picture))
+                                        <img style="display:none;" src="{{ Storage::url($profile->profile_picture) }}" alt="profiole" id="img-{{ $admin->data()['uid'] }}" data-url="{{ Storage::url($profile->profile_picture) }}">
+                                    @else
+                                    <img style="display:none;" src="{{ asset('admin_assets/img/profiles/avatar-02.jpg') }}" alt="" id="img-{{ $admin->data()['uid'] }}" data-url="{{ asset('frontend_assets/img/profiles/avatar-02.jpg') }}">
+                                    @endif
                                         <tr>
                                             <td>{{ $admin->data()['name'] }}</td>
                                             <td>{{ $admin->data()['email'] }}</td>
+                                          
                                             <td>
                                                 @foreach (Helper::adminGroupName($admin->data()['uid']) as $group)
                                                     <span class="badge bg-inverse-info">{{ $group->data()['name'] }}</span>

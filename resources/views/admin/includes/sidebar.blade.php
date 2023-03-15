@@ -7,7 +7,7 @@
                 </li>
 
                 <li class="submenu">
-                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/super-admin*') ? 'active' : ' ' }}"><i class="la la-user-cog"></i> <span>Manage Account </span> <span
+                    <a href="#" class="{{ Request::is('admin/profile*') || Request::is('admin/password*') || Request::is('admin/super-admin*') ? 'active' : ' ' }}"><i class="la la-user-cog"></i> <span>Super Admin Account </span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         <li class="{{ Request::is('admin/profile*') ? 'active' : ' ' }}">
@@ -20,6 +20,10 @@
                             <a href="{{ route('admin.index') }}">Super admin List</a>
                         </li>                      --}}
                     </ul>
+                </li>
+
+                <li class="menu-title">
+                    <span>User Management</span>
                 </li>
                 <li class="{{ Request::is('admin/admins*') ? 'active' : ' ' }}">
                     <a href="{{ route('sub-admin.index') }}" ><i class="la la-user"></i> <span>Admin</span></a>                 

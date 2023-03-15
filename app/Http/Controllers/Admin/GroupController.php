@@ -300,7 +300,6 @@ class GroupController extends Controller
         $members = [];
         $uid = $request->group_id;
         $group = Group::where('group_id',$uid)->first();
-        $group->group_id = $uid;
         $image = app('firebase.firestore')->database()->collection('groups')
         ->where('id', '=', $uid)
         ->documents();

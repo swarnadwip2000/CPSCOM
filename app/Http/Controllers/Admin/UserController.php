@@ -87,7 +87,7 @@ class UserController extends Controller
             ];
 
             Mail::to($request->email)->send(new RegistrationMail($maildata));
-            return redirect()->back()->with('message', 'Team x Member account has been successfully created.');
+            return redirect()->back()->with('message', 'Member account has been successfully created.');
         } catch (\Throwable $e) {
             return redirect()->back()->with('error',  $e->getMessage());
         }
@@ -104,7 +104,7 @@ class UserController extends Controller
                     $data = app('firebase.firestore')->database()->collection('users')->document($value->id())->delete();
                 }
             }
-            return redirect()->back()->with('error',  'Team x Member account has been deleted!');
+            return redirect()->back()->with('error',  'Member account has been deleted!');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error',  $th->getMessage());
         }
@@ -116,7 +116,7 @@ class UserController extends Controller
         $user['detail'] = $auth->getUser($request->id);
         $user['profile'] = User::where('uid', $request->uid)->first();
 
-        return response()->json(['user' => $user, 'message' => 'Team x Member details found successfully.']);
+        return response()->json(['user' => $user, 'message' => 'Member details found successfully.']);
     }
 
     public function update(Request $request)
@@ -186,7 +186,7 @@ class UserController extends Controller
         }
 
 
-        return redirect()->back()->with('message',  'Team x Member account has been successfully updated.');
+        return redirect()->back()->with('message',  'Member account has been successfully updated.');
     }
 
     public function adminPermission($id)
