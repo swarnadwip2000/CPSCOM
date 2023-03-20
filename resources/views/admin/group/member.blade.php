@@ -77,13 +77,12 @@
                                         <td >
                                                <a href="{{ route('group.members.delete',['user_id'=>$member['uid'], 'group_id'=>$members[0]->data()['id'] ]) }}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                                         </td>
+                                        @else 
+                                        <td></td>
                                         @endif
                                     </tr>
                                 @endforeach
-
-
                             </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -147,6 +146,25 @@
             form.submit();
         }
     });
+
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        //Default data table
+        $('#myTable').DataTable({
+            "aaSorting": [],
+            "columnDefs": [{
+                    "orderable": false,
+                    "targets": [3]
+                },
+                {
+                    "orderable": true,
+                    "targets": [0, 1, 2]
+                }
+            ]
+        });
 
     });
 </script>
