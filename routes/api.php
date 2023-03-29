@@ -34,6 +34,7 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('group')->group(function () {
         Route::post('image-upload', [GroupController::class, 'imageUpload']);
+        Route::post('members', [GroupController::class, 'members']);
     });
 
 
