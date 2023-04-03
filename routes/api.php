@@ -36,6 +36,8 @@ Route::prefix('v1')->group(function () {
         Route::post('image-upload', [GroupController::class, 'imageUpload']);
         Route::post('members', [GroupController::class, 'members']);
         Route::post('create-group', [GroupController::class, 'createGroup']);
+        Route::post('media', [GroupController::class, 'media']);
+        Route::post('media-image-download', [GroupController::class, 'mediaImageDownload']);
     });
 
 

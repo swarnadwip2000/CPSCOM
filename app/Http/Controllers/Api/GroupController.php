@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Factory;
-
+use Str;
 class GroupController extends Controller
 {
     public $successStatus = 200;
@@ -240,4 +241,74 @@ class GroupController extends Controller
             return response()->json(['status' => false, 'statusCode' => 401, 'message' => $th->getMessage()], 401);
         }
     }
+
+    // media api for firebase
+    public function media(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'group_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors['message'] = [];
+            $data = explode(',', $validator->errors());
+
+            for ($i = 0; $i < count($validator->errors()); $i++) {
+                // return $data[$i];
+                $dk = explode('["', $data[$i]);
+                $ck = explode('"]', $dk[1]);
+                $errors['message'][$i] = $ck[0];
+            }
+            return response()->json(['status' => false, 'statusCode' => 401,  'error' => $errors], 401);
+        }
+
+        // get image from firebase group chat by group id
+        $group = app('firebase.firestore')->database()->collection('groups')->document($request->group_id)->collection('chats')
+        ->where('type', '=', 'img')
+        ->documents();
+        // return $group->rows()[0]->data();
+        $message = [];
+        foreach ($group->rows() as $key => $value) {
+            $message[$key] = $value->data()['message'];
+        }
+        
+        if ($group->rows() == null) {
+            return response()->json(['status' => false, 'statusCode' => 401, 'message' => 'Group not found'], 401);
+        } else {
+            return response()->json(['status' => true, 'statusCode' => 200, 'data' => $message], 200);
+        }
+    }
+
+    // media image download by link
+    public function mediaImageDownload(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'url' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors['message'] = [];
+            $data = explode(',', $validator->errors());
+
+            for ($i = 0; $i < count($validator->errors()); $i++) {
+                // return $data[$i];
+                $dk = explode('["', $data[$i]);
+                $ck = explode('"]', $dk[1]);
+                $errors['message'][$i] = $ck[0];
+            }
+            return response()->json(['status' => false, 'statusCode' => 401,  'error' => $errors], 401);
+        }
+
+        // download file by url
+        $path = $request->url;
+        // randowm alphabetic name
+        $name = Str::random(30);
+        Storage::disk('local')->put($name, file_get_contents($path));
+  
+        $path = Storage::path($name);
+  
+        return response()->download($path);
+
+    }
+
 }
