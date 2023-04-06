@@ -115,7 +115,8 @@ class GroupController extends Controller
         }
 
         // group members with profile picture
-        $members = app('firebase.firestore')->database()->collection('groups')
+        try {
+            $members = app('firebase.firestore')->database()->collection('groups')
             ->where('id', '=', $request->id)
             ->documents();
         if (count($members->rows()) > 0) {
@@ -130,12 +131,15 @@ class GroupController extends Controller
                     $data[$key]['name'] = $user->rows()[0]->data()['name'];
                     $data[$key]['email'] =  $user->rows()[0]->data()['email'];
                     $data[$key]['isAdmin'] =  $value['isAdmin'];
-                    $data[$key]['profile_picture'] = $user->rows()[0]->data()['profile_picture'];
+                    $data[$key]['profile_picture'] = $user->rows()[0]->data()['profile_picture'] ?? null;
                 }
             }
             return response()->json(['status' => true, 'statusCode' => 200, 'data' => $data], 200);
         } else {
             return response()->json(['status' => false, 'statusCode' => 401, 'message' => 'Group not found'], 401);
+        }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'statusCode' => 401, 'message' => $th->getMessage() ], 401);
         }
     }
 
@@ -269,7 +273,8 @@ class GroupController extends Controller
         // return $group->rows()[0]->data();
         $message = [];
         foreach ($group->rows() as $key => $value) {
-            $message[$key] = $value->data()['message'];
+            $message[$key]['img'] = $value->data()['message'];
+            $message[$key]['time'] = date('M', strtotime($value->data()['time']));
         }
         
         if ($group->rows() == null) {

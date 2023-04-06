@@ -23,7 +23,7 @@ use App\Http\Controllers\Api\GroupController;
 Route::prefix('v1')->group(function () {
     Route::prefix('user')->group(function () {
         Route::post('get-profile-image', [ProfileController::class, 'getProfileImage']);
-        Route::post('upload-profile-image', [ProfileController::class, 'uploadProfileImage']);
+        Route::post('upload-profile', [ProfileController::class, 'uploadProfile']);
         Route::post('submit-forget-password', [ForgetPasswordController::class, 'submitForgetPassword']);
         Route::post('submit-otp', [ForgetPasswordController::class, 'submitOtp']);
         Route::post('reset-password', [ForgetPasswordController::class, 'resetPassword']);
