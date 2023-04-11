@@ -64,6 +64,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($chats->rows() as $chat)
+                                @if(isset($chat->data()['type']))
                                 @if ($chat->data()['type'] == 'text')
                                 <tr>
                                     <td>@if (isset($chat->data()['sendBy']))
@@ -81,6 +82,24 @@
                                                 class="fas fa-trash"></i></a>
                                     </td> --}}
                                 </tr>
+                                @else
+                                <tr>
+                                    <td>@if (isset($chat->data()['sendBy']))
+                                        {{ $chat->data()['sendBy'] }}
+                                    @endif </td>
+                                    <td> {{ date('d M Y',strtotime($chat->data()['time'])) }}</td>
+                                    <td> {{ date('h : m A',strtotime($chat->data()['time'])) }}</td>
+                                    <td>
+                                        @if (isset( $chat->data()['message']))
+                                        <div><img src="{{ $chat->data()['message'] }}" alt="" style="height: 200px; width: 200px;"></div>
+                                    @endif</td>
+                                    
+                                    {{-- <td align="center">
+                                        <a href="javascript:void(0);" id="delete" data-route="{{ route('group.chat.delete',['chatId'=> $chat->id(), 'groupId'=> $group_id]) }}"><i
+                                                class="fas fa-trash"></i></a>
+                                    </td> --}}
+                                </tr>
+                                @endif
                                 @endif
                                 @endforeach
                             </tbody>
