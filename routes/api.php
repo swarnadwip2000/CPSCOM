@@ -33,6 +33,7 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::prefix('group')->group(function () {
+        Route::post('group-list', [GroupController::class, 'groupList']);
         Route::post('image-upload', [GroupController::class, 'imageUpload']);
         Route::post('members', [GroupController::class, 'members']);
         Route::post('create-group', [GroupController::class, 'createGroup']);

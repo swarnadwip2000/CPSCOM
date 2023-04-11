@@ -316,4 +316,43 @@ class GroupController extends Controller
 
     }
 
+    public function groupList(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'uid' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors['message'] = [];
+            $data = explode(',', $validator->errors());
+
+            for ($i = 0; $i < count($validator->errors()); $i++) {
+                // return $data[$i];
+                $dk = explode('["', $data[$i]);
+                $ck = explode('"]', $dk[1]);
+                $errors['message'][$i] = $ck[0];
+            }
+            return response()->json(['status' => false, 'statusCode' => 401,  'error' => $errors], 401);
+        }
+
+        // get group list by uid
+        $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->documents();
+        $groupList = [];
+        foreach ($group->rows() as $key => $value) {
+            // group admin name
+            $groupAdmin = app('firebase.firestore')->database()->collection('groups')->document($value->data()['id']);
+            foreach ($groupAdmin->snapshot()->data()['members'] as $sd => $admin) {
+               if ($admin['isAdmin'] == true) {
+                     $groupList[$key]['admin'] = $admin['name'];
+                     break;
+               }
+            }
+            $groupList[$key]['id'] = $value->data()['id'];
+            $groupList[$key]['name'] = $value->data()['name'];
+            $groupList[$key]['profile_picture'] = $value->data()['profile_picture'];
+        }
+        
+        return response()->json(['status' => true, 'statusCode' => 200, 'data' => $groupList], 200);
+    }
+    
 }
