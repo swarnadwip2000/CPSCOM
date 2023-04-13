@@ -7,6 +7,9 @@
 @endpush
 
 @section('content')
+<section id="loading">
+    <div id="loading-content"></div>
+</section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     <div class="page-wrapper">
 
         <div class="content container-fluid">
@@ -35,76 +38,79 @@
                                 <h6 class="mb-0 text-uppercase">Create Group</h6>
                                 <hr>
                                 <div class="card border-0 border-4">
-                                    <div class="card-body">
-                                        <form action="{{ route('group.store') }}" method="post"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="border p-4 rounded">
+                                    <form action="{{ route('group.store') }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="border p-4 rounded">
 
-                                                {{-- <label for="inputEnterYourName" class="col-form-label"><h5>Section 1:- </h5></label> --}}
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label for="inputEnterYourName" class="col-form-label">Group Name
-                                                            <span style="color: red;">*</span></label>
-                                                        <input type="text" name="name" id=""
-                                                            class="form-control" value="{{ old('name') }}">
-                                                        @if ($errors->has('name'))
-                                                            <div class="error" style="color:red;">
-                                                                {{ $errors->first('name') }}</div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label for="inputEnterYourName" class="col-form-label">Admin <span
-                                                                style="color: red;">*</span></label>
-                                                        <select name="admin_id" id="" class="form-control">
-                                                            <option value="">Select a Admin</option>
-                                                            @foreach ($admins as $admin)
-                                                                <option value="{{ $admin->data()['uid'] }}">
-                                                                    {{ $admin->data()['name'] }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        @if ($errors->has('admin_id'))
-                                                            <div class="error" style="color:red;">
-                                                                {{ $errors->first('admin_id') }}</div>
-                                                        @endif
-                                                    </div>
+                                            {{-- <label for="inputEnterYourName" class="col-form-label"><h5>Section 1:- </h5></label> --}}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="inputEnterYourName" class="col-form-label">Group Name
+                                                        <span style="color: red;">*</span></label>
+                                                    <input type="text" name="name" id="" class="form-control"
+                                                        value="{{ old('name') }}">
+                                                    @if ($errors->has('name'))
+                                                        <div class="error" style="color:red;">
+                                                            {{ $errors->first('name') }}</div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="inputEnterYourName" class="col-form-label">Admin <span
+                                                            style="color: red;">*</span></label>
+                                                    <select name="admin_id" id="" class="form-control select-admin"
+                                                        data-route="{{ route('groups.get-users') }}">
+                                                        <option value="">Select a Admin</option>
+                                                        @foreach ($admins as $admin)
+                                                            <option value="{{ $admin->data()['uid'] }}">
+                                                                {{ $admin->data()['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('admin_id'))
+                                                        <div class="error" style="color:red;">
+                                                            {{ $errors->first('admin_id') }}</div>
+                                                    @endif
+                                                </div>
 
-                                                    <div class="col-md-6">
-                                                        <label for="inputPhoneNo2" class="col-form-label">Members<span
-                                                                style="color:red">*<span></label>
-                                                        <select name="user_id[]" id=""
-                                                            class="form-control multi-select" multiple>
-                                                            @foreach ($users as $user)
-                                                                <option value="{{ $user->data()['uid'] }}">
-                                                                    {{ $user->data()['name'] }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        @if ($errors->has('user_id'))
-                                                            <div class="error" style="color:red;">
-                                                                {{ $errors->first('user_id') }}</div>
-                                                        @endif
-                                                    </div>
+                                                <div class="col-md-6">
+                                                    <label for="inputPhoneNo2" class="col-form-label">Members<span
+                                                            style="color:red">*<span></label>
+                                                    <select name="user_id[]" id=""
+                                                        class="form-control multi-select get-user" multiple>
 
-                                                    <div class="col-md-6">
-                                                        <label for="inputPhoneNo2" class="col-form-label">Image<span
-                                                                style="color:red">*<span></label>
-                                                        <input type="file" name="image" id=""
-                                                            class="form-control">
-                                                        @if ($errors->has('image'))
-                                                            <div class="error" style="color:red;">
-                                                                {{ $errors->first('image') }}</div>
-                                                        @endif
-                                                    </div>
+                                                    </select>
+                                                    @if ($errors->has('user_id'))
+                                                        <div class="error" style="color:red;">
+                                                            {{ $errors->first('user_id') }}</div>
+                                                    @endif
+                                                </div>
 
-                                                    <div class="row" style="margin-top: 10px;">
-                                                        <div class="col-sm-9">
-                                                            <button type="submit" class="btn btn-info px-5"
-                                                                style="color: white; background-color: #176d9b;">Save</button>
-                                                        </div>
+                                                <div class="col-md-6">
+                                                    <label for="inputPhoneNo2" class="col-form-label">Image<span
+                                                            style="color:red">*<span></label>
+                                                    <input type="file" name="image" id=""
+                                                        class="form-control">
+                                                    @if ($errors->has('image'))
+                                                        <div class="error" style="color:red;">
+                                                            {{ $errors->first('image') }}</div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="inputEnterYourName" class="col-form-label">Group Description
+                                                        <span style="color: red;">*</span></label>
+                                                    <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ old('description') }}</textarea>
+                                                    @if ($errors->has('description'))
+                                                        <div class="error" style="color:red;">
+                                                            {{ $errors->first('description') }}</div>
+                                                    @endif
+                                                </div>
+                                                <div class="row" style="margin-top: 10px;">
+                                                    <div class="col-sm-9">
+                                                        <button type="submit" class="btn btn-info px-5"
+                                                            style="color: white; background-color: #10aafd; border-radius: 30px;">Create</button>
                                                     </div>
                                                 </div>
-                                        </form>
-                                    </div>
+                                            </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -123,6 +129,29 @@
     <script>
         $(".multi-select").select2({
             // maximumSelectionLength: 2
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#loading-bar-spinner').hide();
+            $('.select-admin').on('change', function() {
+                var admin_id = $(this).val();
+                var route = $(this).data('route');
+                $('#loading').addClass('loading');
+                $('#loading-content').addClass('loading-content');
+                $.ajax({
+                    url: route,
+                    type: 'GET',
+                    data: {
+                        admin_id: admin_id
+                    },
+                    success: function(output) {
+                        $('.get-user').html(output);
+                        $('#loading').removeClass('loading');
+                        $('#loading-content').removeClass('loading-content');
+                    }
+                });
+            });
         });
     </script>
 @endpush

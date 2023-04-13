@@ -7,6 +7,9 @@
 @endpush
 
 @section('content')
+<section id="loading">
+    <div id="loading-content"></div>
+</section> 
     <div class="page-wrapper">
 
         <div class="content container-fluid">
@@ -40,7 +43,8 @@
                                             enctype="multipart/form-data">
                                             @csrf
                                             <div class="border p-4 rounded">
-                                                <input type="hidden" name="group_id" value="{{ $groups->rows()[0]->id() }}">
+                                                <input type="hidden" name="group_id"
+                                                    value="{{ $groups->rows()[0]->id() }}">
                                                 {{-- <label for="inputEnterYourName" class="col-form-label"><h5>Section 1:- </h5></label> --}}
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -57,13 +61,13 @@
                                                     <div class="col-md-6">
                                                         <label for="inputEnterYourName" class="col-form-label">Admin <span
                                                                 style="color: red;">*</span></label>
-                                                                {{-- @dd($groups->rows()[0]->data()['members'] ) --}}
-                                                        <select name="admin_id" id="" class="form-control select2">
-                                                            @foreach ($admins as $key=>$admin)
-                                                                <option value="{{ $admin->data()['uid'] }}" @foreach($groups->rows()[0]->data()['members'] as $member) {{ $member['name'] }} @if ($member['uid'] == $admin->data()['uid'])
+                                                        {{-- @dd($groups->rows()[0]->data()['members'] ) --}}
+                                                        <select name="admin_id" id="" class="form-control select2 get-user-edit" data-route="{{ route('groups.edit-get-users') }}" data-group="{{ $groups->rows()[0]->id() }}">
+                                                            @foreach ($admins as $key => $admin)
+                                                                <option value="{{ $admin->data()['uid'] }}"
+                                                                    @foreach ($groups->rows()[0]->data()['members'] as $member) {{ $member['name'] }} @if ($member['uid'] == $admin->data()['uid'])
                                                                     selected
-                                                                    @endif
-                                                                @endforeach >
+                                                                    @endif @endforeach>
                                                                     {{ $admin->data()['name'] }}</option>
                                                             @endforeach
                                                         </select>
@@ -77,14 +81,14 @@
                                                         <label for="inputPhoneNo2" class="col-form-label">Members<span
                                                                 style="color:red">*<span></label>
                                                         <select name="user_id[]" id=""
-                                                            class="form-control multi-select" multiple >
+                                                            class="form-control multi-select show-member" multiple>
                                                             @foreach ($users as $key => $user)
-                                                                    <option value="{{ $user->data()['uid'] }}" @foreach ($groups->rows()[0]->data()['members'] as $member)
-                                                                        @if ($member['uid'] == $user->data()['uid'])
+                                                                <option value="{{ $user->data()['uid'] }}"
+                                                                    @foreach ($groups->rows()[0]->data()['members'] as $member)
+                                                                        @if ($member['uid'] == $user->data()['uid'] && $member['isAdmin'] == false)
                                                                             selected 
-                                                                        @endif   
-                                                                    @endforeach>
-                                                                        {{ $user->data()['name'] }}</option>
+                                                                        @endif @endforeach>
+                                                                    {{ $user->data()['name'] }}</option>
                                                             @endforeach
 
                                                         </select>
@@ -95,30 +99,41 @@
                                                     </div>
 
                                                     <div class="col-md-6">
-                                                        <label for="inputPhoneNo2" class="col-form-label">Image<span
-                                                                style="color:red">*<span></label>
+                                                        <label for="inputPhoneNo2" class="col-form-label">Image</label>
                                                         <input type="file" name="image" id=""
                                                             class="form-control">
                                                         @if ($errors->has('image'))
                                                             <div class="error" style="color:red;">
                                                                 {{ $errors->first('image') }}</div>
                                                         @endif
-
-                                                        @if (isset($groups->rows()[0]->data()['profile_picture']))
-                                                            <div class="col-sm-9" style="display: flex;">
-                                                                <div class="image-area m-4">
-                                                                    <img src="{{ Storage::url($groups->rows()[0]->data()['profile_picture']) }}"
-                                                                        alt="Preview">
-                                                                </div>
-                                                            </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="inputEnterYourName" class="col-form-label">Group
+                                                            Description
+                                                            <span style="color: red;">*</span></label>
+                                                        <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ $groups->rows()[0]->data()['groupDescription'] }}</textarea>
+                                                        @if ($errors->has('description'))
+                                                            <div class="error" style="color:red;">
+                                                                {{ $errors->first('description') }}</div>
                                                         @endif
                                                     </div>
+                                                    @if (isset($groups->rows()[0]->data()['profile_picture']))
+                                                        <div class="col-md-6">
+                                                            <label for="inputEnterYourName" class="col-form-label">Group
+                                                                Image
+                                                            </label>
+                                                            <img src="{{ Storage::url($groups->rows()[0]->data()['profile_picture']) }}"
+                                                                alt="Preview"
+                                                                style="    height: 129px;
+                                                                border-radius: 50%;">
+                                                        </div>
+                                                    @endif
 
 
                                                     <div class="row" style="margin-top: 10px;">
                                                         <div class="col-sm-9">
                                                             <button type="submit" class="btn btn-info px-5"
-                                                                style="color: white; background-color: #176d9b;">Update</button>
+                                                                style="color: white; background-color: #10aafd; border-radius: 30px;">Update</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -144,5 +159,28 @@
             // maximumSelectionLength: 2
         });
     </script>
-
+    <script>
+        $(document).ready(function() {
+            $('.get-user-edit').on('change', function() {
+                var route = $(this).data('route');
+                var admin_id = $(this).val();
+                var group_id = $(this).data('group');
+                $('#loading').addClass('loading');
+                $('#loading-content').addClass('loading-content');
+                $.ajax({
+                    url: route,
+                    type: 'GET',
+                    data: {
+                        admin_id: admin_id,
+                        group_id: group_id
+                    },
+                    success: function(data) {
+                        $('.show-member').html(data);
+                        $('#loading').removeClass('loading');
+                        $('#loading-content').removeClass('loading-content');
+                    }
+                });
+            });
+        });
+    </script>
 @endpush

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use App\Models\User;
 use App\Models\Group;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
@@ -148,7 +148,7 @@ class GroupController extends Controller
 
     public function create()
     {
-        $data1 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',false)->documents();
+        $data1 = app('firebase.firestore')->database()->collection('users')->where('isSuperAdmin','=',false)->documents();
         $users = $data1->rows();
 
         $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->where('isSuperAdmin','=',false)->documents();
@@ -162,6 +162,7 @@ class GroupController extends Controller
             'admin_id' => 'required',
             'user_id' => 'required',
             'name' => 'required',
+            'description' => 'required',
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
         ],[
             'admin_id.required'=>'Please select a admin.',
@@ -231,6 +232,7 @@ class GroupController extends Controller
         $data->set([
             'id'=>$uid,
             'name' => $request->name,
+            'groupDescription' => $request->description,
             'members'=>array_merge($members, $admin_members),
             'profile_picture'=> $group->profile_picture,
         ]);
@@ -247,7 +249,7 @@ class GroupController extends Controller
         $data2 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',true)->where('isSuperAdmin','=',false)->documents();
         $admins = $data2->rows();
 
-        $data1 = app('firebase.firestore')->database()->collection('users')->where('isAdmin','=',false)->documents();
+        $data1 = app('firebase.firestore')->database()->collection('users')->where('isSuperAdmin','=',false)->documents();
         $users = $data1->rows();
         // dd($groups->rows()[0]->data()['profile_picture']);
         // dd($groups->rows()[0]->data()['members']);
@@ -261,6 +263,7 @@ class GroupController extends Controller
             'name' => 'required',
             'user_id' => 'required',
             'admin_id' => 'required',
+            'description' => 'required',
             
         ],[
             'admin_id.required'=>'Please select a admin.',
@@ -357,9 +360,10 @@ class GroupController extends Controller
             ['path' => 'members', 'value' => array_merge($members, $admin_members)],
             ['path' => 'name', 'value' => $request->name],
             ['path' => 'profile_picture', 'value' => $group->profile_picture],
+            ['path' => 'description', 'value' => $request->description],
         ]);
             
-        return redirect()->route('group.index')->with('success', 'Group Details has been updated!!');
+        return redirect()->route('group.index')->with('message', 'Group Details has been updated!!');
     }
 
     public function members($id)
@@ -429,5 +433,66 @@ class GroupController extends Controller
         ]);
         app('firebase.firestore')->database()->collection('users')->document($user_id)->collection('groups')->document($group_id)->delete();
         return redirect()->back()->with('message', 'User removed from this group!!');
+    }
+
+    // get users for group
+    public function getUsers(Request $request)
+    {
+        if($request->ajax())
+        {
+            $output="";
+            $users = app('firebase.firestore')->database()->collection('users')->where('isSuperAdmin','=',false)->documents();
+            if($users)
+            {
+                foreach ($users as $key => $user) {
+                    if($user->data()['uid'] != $request->admin_id)
+                    // select user who is not admin (select option)
+                    {
+                        $output.='<option value="'.$user->data()['uid'].'">'.$user->data()['name'].'</option>';   
+                        
+                    } else {
+                        // select user who is admin (disabled option)
+                        $output.='<option value="'.$user->data()['uid'].'" disabled>'.$user->data()['name'].'</option>';
+                    }
+                    
+                }
+                return Response($output);
+            }
+        }
+    }
+
+    public function editGetUsers(Request $request)
+    {
+       if ($request->ajax()) {
+            $output="";
+            $users = app('firebase.firestore')->database()->collection('users')->where('isSuperAdmin','=',false)->documents();
+            // get group by group id from request
+            $group = app('firebase.firestore')->database()->collection('groups')->where('id','=',$request->group_id)->documents();
+            // get group members
+            $members = $group->rows()[0]->data()['members'];
+            
+            if($users)
+            {
+                foreach ($users as $key => $user) {
+                    if($user->data()['uid'] != $request->admin_id)
+                    // select user who is not admin (select option)
+                    {
+                        $output.='<option value="'.$user->data()['uid'].'"';
+                        foreach ($members as $key => $value) {
+                            if ($value['uid'] == $user->data()['uid'] && $value['isAdmin'] == false) {
+                                $output.='selected';
+                            }
+                        } 
+                        $output.= '>'.$user->data()['name'].'</option>';
+                        
+                    } else {
+                        // select user who is admin (disabled option)
+                        $output.='<option value="'.$user->data()['uid'].'" disabled>'.$user->data()['name'].'</option>';
+                    }
+                    
+                }
+                return Response($output);
+            }
+       }
     }
 }

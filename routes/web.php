@@ -90,6 +90,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/group-image-upload', [GroupController::class, 'groupImageUpload'])->name('group.image.upload');
         Route::post('/member-store', [GroupController::class, 'groupMemberStore'])->name('group.members.store');
         Route::get('/member-delete/{user_id}/{group_id}', [GroupController::class, 'groupMemberDelete'])->name('group.members.delete');
+        // get-user
+        Route::get('/get-user', [GroupController::class, 'getUsers'])->name('groups.get-users');
+        // edit get users
+        Route::get('/edit-get-user', [GroupController::class, 'editGetUsers'])->name('groups.edit-get-users');
     });
 
     Route::prefix('cms')->group(function () {

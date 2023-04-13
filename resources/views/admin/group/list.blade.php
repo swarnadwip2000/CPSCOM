@@ -13,6 +13,7 @@
 @section('content')
     @php
         use App\Models\User;
+        use App\Helpers\Helper;
     @endphp
     <section id="loading">
         <div id="loading-content"></div>
@@ -71,7 +72,7 @@
                                         @endif</td>
                                         <td>@foreach ($group->data()['members'] as $isAdmin)
                                             @if($isAdmin['isAdmin'] == true)
-                                            <span class="badge bg-inverse-info"> {{ $isAdmin['name'] }} </span>
+                                            <span class="badge bg-inverse-info"> {{ Helper::userName($isAdmin['uid']) }} </span>
                                             @endif
                                         @endforeach</td>
                                         @php
