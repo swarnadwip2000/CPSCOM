@@ -1816,8 +1816,8 @@ button.bg-danger:hover {
 }
 
 .btn-warning {
-    background-color: #ffbc34;
-    border: 1px solid #ffbc34
+    background-color: #e96c09;
+    border: 1px solid #e96c09;
 }
 
 .btn-warning:hover,
@@ -10729,3 +10729,9 @@ button.close {
     }
 
     /* end loader */
+
+    table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    background: #e96c09;
+    color: aliceblue;
+}
