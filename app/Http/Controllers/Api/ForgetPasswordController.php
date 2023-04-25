@@ -13,8 +13,14 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpVerificationMail;
 use Kreait\Firebase\Factory;
 
+/**
+ * @group Forget Password APIs
+ *
+ * APIs for Forget Password
+ */
 class ForgetPasswordController extends Controller
 {
+    
     public $successStatus = 200;
     protected $auth;
 
@@ -26,6 +32,35 @@ class ForgetPasswordController extends Controller
         $this->auth = $factory->createAuth();
     }
     
+    /**
+     * Forget Password API
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * @bodyParam email string required Email
+     * @response {
+     *  "status": true,
+     *   "statusCode": 200,
+     *     "message": "OTP sent successfully."
+     *  }
+     * @response 401 {
+     * "status": false,
+     * "statusCode": 401,
+     * "error": {
+     * "message": [
+     * "The email field is required."
+     * ]
+     * }
+     * }
+     * @response 401 {
+     * "message": "Email not found!",
+     * "status": false
+     * }
+     * @response 401 {
+     * "message": "Email not found!",
+     * "status": false
+     * }
+     * 
+     */
     public function submitForgetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -72,6 +107,33 @@ class ForgetPasswordController extends Controller
         }
     }
 
+    /**
+     * OTP Verification API
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * @bodyParam email string required Email
+     * @bodyParam otp string required OTP
+     * @response {
+     * "status": true,
+     * "statusCode": 200,
+     * "message": "OTP verified successfully."
+     * }
+     * @response 401 {
+     *  "message": "OTP expired!",
+     * "status": false
+     * }
+     * @response 401 {
+     * "status": false,
+     * "statusCode": 401,
+     * "error": {
+     * "message": [
+     * "The email field is required.",
+     * "The otp field is required."
+     * ]
+     * }
+     * }
+     * 
+     */
 
     public function submitOtp(Request $request)
     {
@@ -119,6 +181,36 @@ class ForgetPasswordController extends Controller
             return response()->json(['message' => 'OTP not matched!', 'status' => false], 401);
         }
     }
+
+    /**
+     * Reset Password API
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * @bodyParam email string required Email
+     * @bodyParam password string required Password
+     * @bodyParam confirm_password string required Confirm Password
+     * @response {
+     * "status": true,
+     * "statusCode": 200,
+     * "message": "Password reset successfully."
+     * }
+     * @response 401 {
+     * "message": "OTP expired!",
+     * "status": false
+     * }
+     * @response 401 {
+     * "status": false,
+     * "statusCode": 401,
+     * "error": {
+     * "message": [
+     * "The email field is required.",
+     * "The password field is required.",
+     * "The confirm_password field is required."
+     * ]
+     * }
+     * }
+     * 
+     */
 
     public function resetPassword(Request $request)
     {

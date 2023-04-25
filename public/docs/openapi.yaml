@@ -1,0 +1,906 @@
+openapi: 3.0.3
+info:
+  title: CPSCOM
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+paths:
+  /api/v1/cms/get-started:
+    post:
+      summary: 'Get CMS API'
+      operationId: getCMSAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n\"status\": true,\n\"statusCode\": 200,\n\"message\": \"Cms found successfully.\",\n\"data\": {\n\"cms\": {\n\"id\": 2,\n\"title\": \"Join the Conversation: Connect and Collaborate\",\n\"description\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s\",\n\"image\": \"https://excellis.co.in/derick-veliz-admin/public/storage/cms/kapxZ3ZYBkfanBNIF1Uz9gxLKGL7tHsEoDexFeG5.png\n}\n}\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No detail found!'
+                  status: false
+                properties:
+                  message:
+                    type: string
+                    example: 'No detail found!'
+                  status:
+                    type: boolean
+                    example: false
+      tags:
+        - 'CMS APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_panel:
+                  type: string
+                  description: 'user,admin'
+                  example: veritatis
+              required:
+                - is_panel
+      security: []
+  /api/v1/user/submit-forget-password:
+    post:
+      summary: 'Forget Password API'
+      operationId: forgetPasswordAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  message: 'OTP sent successfully.'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: 'OTP sent successfully.'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Email not found!'
+                  status: false
+                properties:
+                  message:
+                    type: string
+                    example: 'Email not found!'
+                  status:
+                    type: boolean
+                    example: false
+      tags:
+        - 'Forget Password APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email
+                  example: mclaughlin.karolann@example.com
+              required:
+                - email
+      security: []
+  /api/v1/user/submit-otp:
+    post:
+      summary: 'OTP Verification API'
+      operationId: oTPVerificationAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  message: 'OTP verified successfully.'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: 'OTP verified successfully.'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  statusCode: 401
+                  error:
+                    message:
+                      - 'The email field is required.'
+                      - 'The otp field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 401
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: array
+                        example:
+                          - 'The email field is required.'
+                          - 'The otp field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Forget Password APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email
+                  example: friesen.marilie@example.com
+                otp:
+                  type: string
+                  description: OTP
+                  example: provident
+              required:
+                - email
+                - otp
+      security: []
+  /api/v1/user/reset-password:
+    post:
+      summary: 'Reset Password API'
+      operationId: resetPasswordAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  message: 'Password reset successfully.'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: 'Password reset successfully.'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  statusCode: 401
+                  error:
+                    message:
+                      - 'The email field is required.'
+                      - 'The password field is required.'
+                      - 'The confirm_password field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 401
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: array
+                        example:
+                          - 'The email field is required.'
+                          - 'The password field is required.'
+                          - 'The confirm_password field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Forget Password APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email
+                  example: karina45@example.org
+                password:
+                  type: string
+                  description: Password
+                  example: 'OO`#fp<w<]0|[*v'
+                confirm_password:
+                  type: string
+                  description: 'Confirm Password'
+                  example: at
+              required:
+                - email
+                - password
+                - confirm_password
+      security: []
+  /api/v1/group/group-list:
+    post:
+      summary: 'Group List'
+      operationId: groupList
+      description: '@bodyParam uid string required The id of the user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  data:
+                    '0':
+                      admin: 'Tony nelson'
+                      id: AJolDjZVXfywCFtjgTVEBSxWaYPudIUHVMhK
+                      name: 'Nurses at Bristol'
+                      profile_picture: group/1qQtvEY71EM76wDJsoNXXCK6tWfGWJtlJaPspRaD.png
+                    '2':
+                      admin: CRClinic
+                      id: fRQDiLq0sMbAmc9QMFmUkL07cAWhIaiW3TVX
+                      name: 'New Group'
+                      profile_picture: group/wiFx4czB5JyNlzTm0nbW5Lhzf0dw2GaRsPe8ZQQZ.png
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      0:
+                        type: object
+                        properties:
+                          admin:
+                            type: string
+                            example: 'Tony nelson'
+                          id:
+                            type: string
+                            example: AJolDjZVXfywCFtjgTVEBSxWaYPudIUHVMhK
+                          name:
+                            type: string
+                            example: 'Nurses at Bristol'
+                          profile_picture:
+                            type: string
+                            example: group/1qQtvEY71EM76wDJsoNXXCK6tWfGWJtlJaPspRaD.png
+                      2:
+                        type: object
+                        properties:
+                          admin:
+                            type: string
+                            example: CRClinic
+                          id:
+                            type: string
+                            example: fRQDiLq0sMbAmc9QMFmUkL07cAWhIaiW3TVX
+                          name:
+                            type: string
+                            example: 'New Group'
+                          profile_picture:
+                            type: string
+                            example: group/wiFx4czB5JyNlzTm0nbW5Lhzf0dw2GaRsPe8ZQQZ.png
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  statusCode: 401
+                  error:
+                    message:
+                      - 'The uid field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 401
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: array
+                        example:
+                          - 'The uid field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Group APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uid:
+                  type: string
+                  description: ''
+                  example: officia
+              required:
+                - uid
+      security: []
+  /api/v1/group/image-upload:
+    post:
+      summary: 'Group Image Upload API'
+      operationId: groupImageUploadAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  message: 'Image uploaded successfully'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: 'Image uploaded successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Group not found!'
+                  status: false
+                properties:
+                  message:
+                    type: string
+                    example: 'Group not found!'
+                  status:
+                    type: boolean
+                    example: false
+      tags:
+        - 'Group APIs'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Image
+                group_id:
+                  type: string
+                  description: 'Group Id'
+                  example: aut
+              required:
+                - image
+                - group_id
+      security: []
+  /api/v1/group/members:
+    post:
+      summary: 'Group Member API'
+      operationId: groupMemberAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  data:
+                    -
+                      uid: 0CBwrNCGBacPQbVl2BJo6qg1VPZ2
+                      name: 'Ronald Urrutia IT'
+                      email: rurrutia@cpsmh.org
+                      isAdmin: false
+                      profile_picture: user/qlbw7dUk022X4vVELvZAHRMSOPiY7woMSHLClbxU.png
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    example:
+                      -
+                        uid: 0CBwrNCGBacPQbVl2BJo6qg1VPZ2
+                        name: 'Ronald Urrutia IT'
+                        email: rurrutia@cpsmh.org
+                        isAdmin: false
+                        profile_picture: user/qlbw7dUk022X4vVELvZAHRMSOPiY7woMSHLClbxU.png
+                    items:
+                      type: object
+                      properties:
+                        uid:
+                          type: string
+                          example: 0CBwrNCGBacPQbVl2BJo6qg1VPZ2
+                        name:
+                          type: string
+                          example: 'Ronald Urrutia IT'
+                        email:
+                          type: string
+                          example: rurrutia@cpsmh.org
+                        isAdmin:
+                          type: boolean
+                          example: false
+                        profile_picture:
+                          type: string
+                          example: user/qlbw7dUk022X4vVELvZAHRMSOPiY7woMSHLClbxU.png
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  statusCode: 401
+                  error:
+                    message:
+                      - 'The id field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 401
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: array
+                        example:
+                          - 'The id field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Group APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: 'Group Id'
+                  example: tempora
+              required:
+                - id
+      security: []
+  /api/v1/group/create-group:
+    post:
+      summary: 'Create Group API'
+      operationId: createGroupAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  message: 'Group created successfully'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: 'Group created successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  statusCode: 401
+                  error:
+                    message:
+                      - 'The group_name field is required.'
+                      - 'The uid.0 field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 401
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: array
+                        example:
+                          - 'The group_name field is required.'
+                          - 'The uid.0 field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Group APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group_name:
+                  type: string
+                  description: 'Group Name'
+                  example: et
+                uid:
+                  type: array
+                  description: 'User Id'
+                  example:
+                    - laboriosam
+                  items:
+                    type: string
+              required:
+                - group_name
+                - uid
+      security: []
+  /api/v1/group/media:
+    post:
+      summary: 'Media Image'
+      operationId: mediaImage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n \"status\": true,\n   \"statusCode\": 200,\n   \"data\": [\n       {\n           \"img\": \"https://firebasestorage.googleapis.com/v0/b/cps-com-c90aa.appspot.com/o/cpscom_admin_images%2F23442a60-cf95-11ed-8210-fb21b722f56f.jpg?alt=media&token=80ad2885-3797-4adc-96de-eb83172e6a52\",\n           \"time\": \"Mar\"\n       }\n   ]\n}\n @response 401 {\n \"status\": false,\n \"statusCode\": 401,\n \"error\": {\n   \"message\": [\n    \"The group id field is required.\"\n  ]\n }\n}"
+      tags:
+        - 'Group APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: string
+                  description: 'The id of the group.'
+                  example: consequuntur
+              required:
+                - group_id
+      security: []
+  /api/v1/group/media-image-download:
+    post:
+      summary: 'Media Image Download'
+      operationId: mediaImageDownload
+      description: '@bodyParam url string required The url of the image.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n \"status\": true,\n  \"statusCode\": 200,\n\n}"
+        401:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The url field is required.\"\n]\n}"
+      tags:
+        - 'Group APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: ''
+                  example: qui
+              required:
+                - url
+      security: []
+  /api/v1/user/get-profile-image:
+    post:
+      summary: 'Get Profile API'
+      operationId: getProfileAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  message: 'Profile found successfully.'
+                  data:
+                    user:
+                      id: 1
+                      name: 'John Doe'
+                      email: johh@yopmail.com
+                      phone: '1234567890'
+                      profile_picture: 'https://cpscom-acb3c.firebaseio.com/user/2021-05-12-1620813781.jpg'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: 'Profile found successfully.'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'John Doe'
+                          email:
+                            type: string
+                            example: johh@yopmail.com
+                          phone:
+                            type: string
+                            example: '1234567890'
+                          profile_picture:
+                            type: string
+                            example: 'https://cpscom-acb3c.firebaseio.com/user/2021-05-12-1620813781.jpg'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No detail found!'
+                  status: false
+                properties:
+                  message:
+                    type: string
+                    example: 'No detail found!'
+                  status:
+                    type: boolean
+                    example: false
+      tags:
+        - 'Profile APIs'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uid:
+                  type: string
+                  description: uid
+                  example: similique
+              required:
+                - uid
+      security: []
+  /api/v1/user/upload-profile:
+    post:
+      summary: 'Update Profile API'
+      operationId: updateProfileAPI
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  statusCode: 200
+                  data:
+                    id: 80
+                    uid: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1
+                    profile_picture: user/GXQaUw5vXxNTXQ4YJ2qJNlJ2O9naz8KDHTJNRyvr.png
+                    name: 'John Doe'
+                    email: john@yopmail.com
+                    status: 1
+                    created_at: '2023-03-15T06:15:27.000000Z'
+                    updated_at: '2023-04-25T06:57:45.000000Z'
+                  message: 'Profile picture updated successfully'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 80
+                      uid:
+                        type: string
+                        example: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1
+                      profile_picture:
+                        type: string
+                        example: user/GXQaUw5vXxNTXQ4YJ2qJNlJ2O9naz8KDHTJNRyvr.png
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john@yopmail.com
+                      status:
+                        type: integer
+                        example: 1
+                      created_at:
+                        type: string
+                        example: '2023-03-15T06:15:27.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2023-04-25T06:57:45.000000Z'
+                  message:
+                    type: string
+                    example: 'Profile picture updated successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No detail found!'
+                  status: false
+                properties:
+                  message:
+                    type: string
+                    example: 'No detail found!'
+                  status:
+                    type: boolean
+                    example: false
+      tags:
+        - 'Profile APIs'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                uid:
+                  type: string
+                  description: uid
+                  example: maxime
+                name:
+                  type: string
+                  description: 'User Name'
+                  example: voluptatem
+                profile_picture:
+                  type: string
+                  format: binary
+                  description: 'User Profile Picture'
+              required:
+                - uid
+                - name
+                - profile_picture
+      security: []
+tags:
+  -
+    name: 'CMS APIs'
+    description: "\nAPIs for CMS"
+  -
+    name: 'Forget Password APIs'
+    description: "\nAPIs for Forget Password"
+  -
+    name: 'Group APIs'
+    description: "\nAPIs for Group"
+  -
+    name: 'Profile APIs'
+    description: "\nAPIs for Profile"

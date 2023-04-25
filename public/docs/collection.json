@@ -1,0 +1,652 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost"
+        }
+    ],
+    "info": {
+        "name": "CPSCOM",
+        "_postman_id": "28951267-066b-424b-a48c-a0ccb3495528",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "CMS APIs",
+            "description": "\nAPIs for CMS",
+            "item": [
+                {
+                    "name": "Get CMS API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/cms\/get-started",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/cms\/get-started"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"is_panel\":\"veritatis\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n\"statusCode\": 200,\n\"message\": \"Cms found successfully.\",\n\"data\": {\n\"cms\": {\n\"id\": 2,\n\"title\": \"Join the Conversation: Connect and Collaborate\",\n\"description\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s\",\n\"image\": \"https:\/\/excellis.co.in\/derick-veliz-admin\/public\/storage\/cms\/kapxZ3ZYBkfanBNIF1Uz9gxLKGL7tHsEoDexFeG5.png\n}\n}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The is panel field is required.\"\n]\n}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"message\": \"No detail found!\",\n\"status\": false\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Forget Password APIs",
+            "description": "\nAPIs for Forget Password",
+            "item": [
+                {
+                    "name": "Forget Password API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/submit-forget-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/submit-forget-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"mclaughlin.karolann@example.com\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"status\": true,\n  \"statusCode\": 200,\n    \"message\": \"OTP sent successfully.\"\n }",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The email field is required.\"\n]\n}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"message\": \"Email not found!\",\n\"status\": false\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"message\": \"Email not found!\",\n\"status\": false\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "OTP Verification API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/submit-otp",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/submit-otp"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"friesen.marilie@example.com\",\"otp\":\"provident\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n\"statusCode\": 200,\n\"message\": \"OTP verified successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n \"message\": \"OTP expired!\",\n\"status\": false\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The email field is required.\",\n\"The otp field is required.\"\n]\n}\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Reset Password API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/reset-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/reset-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"karina45@example.org\",\"password\":\"OO`#fp<w<]0|[*v\",\"confirm_password\":\"at\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n\"statusCode\": 200,\n\"message\": \"Password reset successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"message\": \"OTP expired!\",\n\"status\": false\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The email field is required.\",\n\"The password field is required.\",\n\"The confirm_password field is required.\"\n]\n}\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Group APIs",
+            "description": "\nAPIs for Group",
+            "item": [
+                {
+                    "name": "Group List",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/group\/group-list",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/group\/group-list"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"uid\":\"officia\"}"
+                        },
+                        "description": "@bodyParam uid string required The id of the user.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n  \"statusCode\": 200,\n  \"data\": {\n      \"0\": {\n          \"admin\": \"Tony nelson\",\n          \"id\": \"AJolDjZVXfywCFtjgTVEBSxWaYPudIUHVMhK\",\n          \"name\": \"Nurses at Bristol\",\n          \"profile_picture\": \"group\/1qQtvEY71EM76wDJsoNXXCK6tWfGWJtlJaPspRaD.png\"\n      },\n      \"2\": {\n          \"admin\": \"CRClinic\",\n          \"id\": \"fRQDiLq0sMbAmc9QMFmUkL07cAWhIaiW3TVX\",\n          \"name\": \"New Group\",\n          \"profile_picture\": \"group\/wiFx4czB5JyNlzTm0nbW5Lhzf0dw2GaRsPe8ZQQZ.png\"\n      }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The uid field is required.\"\n]\n}\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Group Image Upload API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/group\/image-upload",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/group\/image-upload"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "group_id",
+                                    "value": "aut",
+                                    "type": "text",
+                                    "description": "Group Id"
+                                },
+                                {
+                                    "key": "image",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n\"statusCode\": 200,\n\"message\": \"Image uploaded successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The image field is required.\",\n\"The group id field is required.\"\n]\n}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The image must be an image.\",\n\"The image must be a file of type: jpeg, png, jpg, gif, svg.\"\n]\n}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"message\": \"Group not found!\",\n\"status\": false\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Group Member API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/group\/members",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/group\/members"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"id\":\"tempora\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n  \"statusCode\": 200,\n  \"data\": [\n      {\n          \"uid\": \"0CBwrNCGBacPQbVl2BJo6qg1VPZ2\",\n          \"name\": \"Ronald Urrutia IT\",\n          \"email\": \"rurrutia@cpsmh.org\",\n          \"isAdmin\": false,\n          \"profile_picture\": \"user\/qlbw7dUk022X4vVELvZAHRMSOPiY7woMSHLClbxU.png\"\n      }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The id field is required.\"\n]\n}\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Group API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/group\/create-group",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/group\/create-group"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"group_name\":\"et\",\"uid\":[\"laboriosam\"]}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n \"statusCode\": 200,\n\"message\": \"Group created successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The group_name field is required.\",\n\"The uid.0 field is required.\"\n]\n}\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Media Image",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/group\/media",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/group\/media"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"group_id\":\"consequuntur\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"status\": true,\n   \"statusCode\": 200,\n   \"data\": [\n       {\n           \"img\": \"https:\/\/firebasestorage.googleapis.com\/v0\/b\/cps-com-c90aa.appspot.com\/o\/cpscom_admin_images%2F23442a60-cf95-11ed-8210-fb21b722f56f.jpg?alt=media&token=80ad2885-3797-4adc-96de-eb83172e6a52\",\n           \"time\": \"Mar\"\n       }\n   ]\n}\n @response 401 {\n \"status\": false,\n \"statusCode\": 401,\n \"error\": {\n   \"message\": [\n    \"The group id field is required.\"\n  ]\n }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Media Image Download",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/group\/media-image-download",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/group\/media-image-download"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"url\":\"qui\"}"
+                        },
+                        "description": "@bodyParam url string required The url of the image.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"status\": true,\n  \"statusCode\": 200,\n\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The url field is required.\"\n]\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Profile APIs",
+            "description": "\nAPIs for Profile",
+            "item": [
+                {
+                    "name": "Get Profile API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/get-profile-image",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/get-profile-image"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"uid\":\"similique\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n\"statusCode\": 200,\n\"message\": \"Profile found successfully.\",\n\"data\": {\n\"user\": {\n\"id\": 1,\n\"name\": \"John Doe\",\n\"email\": \"johh@yopmail.com\",\n\"phone\": \"1234567890\",\n \"profile_picture\": \"https:\/\/cpscom-acb3c.firebaseio.com\/user\/2021-05-12-1620813781.jpg\"\n}\n}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The uid field is required.\"\n]\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"message\": \"No detail found!\",\n\"status\": false\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Profile API",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/upload-profile",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/upload-profile"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "uid",
+                                    "value": "maxime",
+                                    "type": "text",
+                                    "description": "uid"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "voluptatem",
+                                    "type": "text",
+                                    "description": "User Name"
+                                },
+                                {
+                                    "key": "profile_picture",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n\"status\": true,\n\"statusCode\": 200,\n\"data\": {\n    \"id\": 80,\n    \"uid\": \"UbMI7oRh1lQp3AO8Y0zBCPqiNNi1\",\n    \"profile_picture\": \"user\/GXQaUw5vXxNTXQ4YJ2qJNlJ2O9naz8KDHTJNRyvr.png\",\n    \"name\": \"John Doe\",\n    \"email\": \"john@yopmail.com\",\n    \"status\": 1,\n    \"created_at\": \"2023-03-15T06:15:27.000000Z\",\n    \"updated_at\": \"2023-04-25T06:57:45.000000Z\"\n},\n\"message\": \"Profile picture updated successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n\"status\": false,\n\"statusCode\": 401,\n\"error\": {\n\"message\": [\n\"The uid field is required.\",\n\"The name field is required.\"\n]\n}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n \"message\": \"No detail found!\",\n\"status\": false\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "noauth"
+    }
+}

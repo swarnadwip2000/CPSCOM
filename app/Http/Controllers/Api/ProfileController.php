@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Kreait\Firebase\Factory;
-
+/**
+ * @group Profile APIs
+ *
+ * APIs for Profile
+ */
 class ProfileController extends Controller
 {
     public $successStatus = 200;
@@ -21,6 +25,40 @@ class ProfileController extends Controller
             ->withDataBaseUri('https://cpscom-acb3c.firebaseio.com');
         $this->auth = $factory->createAuth();
     }
+
+    /**
+     * Get Profile API
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * @bodyParam uid string required uid
+     * @response {
+     * "status": true,
+     * "statusCode": 200,
+     * "message": "Profile found successfully.",
+     * "data": {
+     * "user": {
+     * "id": 1,
+     * "name": "John Doe",
+     * "email": "johh@yopmail.com",
+     * "phone": "1234567890",
+     *  "profile_picture": "https://cpscom-acb3c.firebaseio.com/user/2021-05-12-1620813781.jpg"
+     * }
+     * }
+     * }
+     * @response 401 {
+     * "status": false,
+     * "statusCode": 401,
+     * "error": {
+     * "message": [
+     * "The uid field is required."
+     * ]
+     *  }
+     * }
+     * @response 401 {
+     * "message": "No detail found!",
+     * "status": false
+     * }
+     */
 
     public function getProfileImage(Request $request)
     {
@@ -56,6 +94,44 @@ class ProfileController extends Controller
             return response()->json(['message' => 'something went wrong', 'status' => false], 401);
         }
     }
+
+    /**
+     * Update Profile API
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * @bodyParam uid string required uid
+     * @bodyParam name string required User Name
+     * @bodyParam profile_picture file required User Profile Picture
+     * @response {
+     * "status": true,
+     * "statusCode": 200,
+     * "data": {
+     *     "id": 80,
+     *     "uid": "UbMI7oRh1lQp3AO8Y0zBCPqiNNi1",
+     *     "profile_picture": "user/GXQaUw5vXxNTXQ4YJ2qJNlJ2O9naz8KDHTJNRyvr.png",
+     *     "name": "John Doe",
+     *     "email": "john@yopmail.com",
+     *     "status": 1,
+     *     "created_at": "2023-03-15T06:15:27.000000Z",
+     *     "updated_at": "2023-04-25T06:57:45.000000Z"
+     * },
+     * "message": "Profile picture updated successfully"
+     * }
+     * @response 401 {
+     * "status": false,
+     * "statusCode": 401,
+     * "error": {
+     * "message": [
+     * "The uid field is required.",
+     * "The name field is required."
+     * ]
+     * }
+     * }
+     * @response 401 {
+     *  "message": "No detail found!",
+     * "status": false
+     * }
+     */ 
 
     public function uploadProfile(Request $request)
     {
@@ -93,9 +169,9 @@ class ProfileController extends Controller
                 $data = app('firebase.firestore')->database()->collection('users')->documents();
                 foreach ($data as $key => $value) {
                     if ($value->data()['uid'] == $request->uid) {
-                        $user = app('firebase.firestore')->database()->collection('users')->document($value->id())
+                        $users = app('firebase.firestore')->database()->collection('users')->document($value->id())
                             ->update([
-                                ['path' => 'profile_picture', 'value' => $image_path],
+                                ['path' => 'profile_picture', 'value' => $image_path ?? null],
                                 ['path' => 'name', 'value' => $request->name],
                             ]);
                     }
@@ -117,9 +193,9 @@ class ProfileController extends Controller
                 $data = app('firebase.firestore')->database()->collection('users')->documents();
                 foreach ($data as $key => $value) {
                     if ($value->data()['uid'] == $request->uid) {
-                        $user = app('firebase.firestore')->database()->collection('users')->document($value->id())
+                        $users = app('firebase.firestore')->database()->collection('users')->document($value->id())
                             ->update([
-                                ['path' => 'profile_picture', 'value' => $image_path],
+                                ['path' => 'profile_picture', 'value' => $image_path ?? null],
                                 ['path' => 'name', 'value' => $request->name],
                             ]);
                     }
@@ -133,7 +209,7 @@ class ProfileController extends Controller
 
             return response()->json(['status' => true, 'statusCode' => 200, 'data' => $user, 'message' => 'Profile picture updated successfully'], $this->successStatus);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'statusCode' => 401, 'message' => 'something went wrong'], 401);
+            return response()->json(['status' => false, 'statusCode' => 401, 'message' =>$e->getMessage()], 401);
         }
     }
 }

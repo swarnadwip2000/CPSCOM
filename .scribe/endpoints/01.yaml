@@ -1,0 +1,270 @@
+name: 'Forget Password APIs'
+description: |-
+
+  APIs for Forget Password
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: api/v1/user/submit-forget-password
+    metadata:
+      groupName: 'Forget Password APIs'
+      groupDescription: |-
+
+        APIs for Forget Password
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Forget Password API'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: Email
+        required: true
+        example: mclaughlin.karolann@example.com
+        type: string
+        custom: []
+    cleanBodyParameters:
+      email: mclaughlin.karolann@example.com
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "status": true,
+            "statusCode": 200,
+              "message": "OTP sent successfully."
+           }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "status": false,
+          "statusCode": 401,
+          "error": {
+          "message": [
+          "The email field is required."
+          ]
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "Email not found!",
+          "status": false
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "Email not found!",
+          "status": false
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/v1/user/submit-otp
+    metadata:
+      groupName: 'Forget Password APIs'
+      groupDescription: |-
+
+        APIs for Forget Password
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'OTP Verification API'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: Email
+        required: true
+        example: friesen.marilie@example.com
+        type: string
+        custom: []
+      otp:
+        name: otp
+        description: OTP
+        required: true
+        example: provident
+        type: string
+        custom: []
+    cleanBodyParameters:
+      email: friesen.marilie@example.com
+      otp: provident
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          "status": true,
+          "statusCode": 200,
+          "message": "OTP verified successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+           "message": "OTP expired!",
+          "status": false
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "status": false,
+          "statusCode": 401,
+          "error": {
+          "message": [
+          "The email field is required.",
+          "The otp field is required."
+          ]
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/v1/user/reset-password
+    metadata:
+      groupName: 'Forget Password APIs'
+      groupDescription: |-
+
+        APIs for Forget Password
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Reset Password API'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: Email
+        required: true
+        example: karina45@example.org
+        type: string
+        custom: []
+      password:
+        name: password
+        description: Password
+        required: true
+        example: 'OO`#fp<w<]0|[*v'
+        type: string
+        custom: []
+      confirm_password:
+        name: confirm_password
+        description: 'Confirm Password'
+        required: true
+        example: at
+        type: string
+        custom: []
+    cleanBodyParameters:
+      email: karina45@example.org
+      password: 'OO`#fp<w<]0|[*v'
+      confirm_password: at
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          "status": true,
+          "statusCode": 200,
+          "message": "Password reset successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "OTP expired!",
+          "status": false
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "status": false,
+          "statusCode": 401,
+          "error": {
+          "message": [
+          "The email field is required.",
+          "The password field is required.",
+          "The confirm_password field is required."
+          ]
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

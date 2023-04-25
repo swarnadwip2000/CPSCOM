@@ -1,0 +1,89 @@
+name: 'CMS APIs'
+description: |-
+
+  APIs for CMS
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: api/v1/cms/get-started
+    metadata:
+      groupName: 'CMS APIs'
+      groupDescription: |-
+
+        APIs for CMS
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get CMS API'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      is_panel:
+        name: is_panel
+        description: 'user,admin'
+        required: true
+        example: veritatis
+        type: string
+        custom: []
+    cleanBodyParameters:
+      is_panel: veritatis
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+          "status": true,
+          "statusCode": 200,
+          "message": "Cms found successfully.",
+          "data": {
+          "cms": {
+          "id": 2,
+          "title": "Join the Conversation: Connect and Collaborate",
+          "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+          "image": "https://excellis.co.in/derick-veliz-admin/public/storage/cms/kapxZ3ZYBkfanBNIF1Uz9gxLKGL7tHsEoDexFeG5.png
+          }
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "status": false,
+          "statusCode": 401,
+          "error": {
+          "message": [
+          "The is panel field is required."
+          ]
+          }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+          "message": "No detail found!",
+          "status": false
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
