@@ -59,7 +59,6 @@
                                     {{-- <th>Name of Group Members</th> --}}
                                     <th>No. of Group Member</th>
                                     <th>Member list</th>
-                                    <th>Chat</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -83,8 +82,7 @@
                                         @endforeach</td> --}}
                                         <td>{{ count($group->data()['members']) }}</td>
                                         <td><a href="{{ route('group.members', $group->data()['id']) }}"><button class="btn btn-warning"><i class="fas fa-eye"></i> View </button></a></td>
-                                        <td><a href="{{ route('group.chat', $group->data()['id']) }}"><i
-                                                    class="fas fa-eye"></i></a></td>
+                                       
                                         <td >
                                             {{-- <a title="Upload Group Image" 
                                                 href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-danger" style="border-radius: 20px; background: linear-gradient(to right, #10acff 0%, #1f1f1f 100%);
@@ -119,7 +117,7 @@
                 "aaSorting": [],
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [3, 4, 5]
+                        "targets": [3, 4]
                     },
                     {
                         "orderable": true,

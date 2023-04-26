@@ -36,7 +36,9 @@
                 <li class="{{ Request::is('admin/group*') ? 'active' : ' ' }}">
                     <a href="{{ route('group.index') }}"><i class="la la-list"></i> <span>Groups</span></a>
                 </li>
-
+                <li>
+                    <a href="{{ env('ADMIN_URL') }}" target="_blank"><i class="far fa-comments"></i> <span>Chat</span></a>
+                </li>
                 <li class="menu-title">
                     <span>Content Management System</span>
                 </li>
