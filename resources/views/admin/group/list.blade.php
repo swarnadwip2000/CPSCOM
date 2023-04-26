@@ -121,7 +121,7 @@
                         "orderable": false,
                         "targets": [3, 4, 5]
                     },
-                    {
+                    { 
                         "orderable": true,
                         "targets": [0, 1, 2]
                     }
