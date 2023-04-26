@@ -135,9 +135,9 @@ return [
     */
 
     // Member url of website
-    'member_url' => env('MEMBER_URL', 'https://excellis.co.in/web/user/#/'),
+    'member_url' => env('MEMBER_URL', 'http://localhost'),
     // Admin url of website
-    'admin_url' => env('ADMIN_URL', 'https://excellis.co.in/web/admin/#/'),
+    'admin_url' => env('ADMIN_URL', 'http://localhost'),
 
     'providers' => [
 
