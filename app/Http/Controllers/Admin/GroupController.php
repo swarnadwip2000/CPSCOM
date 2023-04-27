@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use App\Models\User;
 use App\Models\Group;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
@@ -200,6 +201,8 @@ class GroupController extends Controller
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
+                    //set created at timestamp
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
 
                 
@@ -213,6 +216,7 @@ class GroupController extends Controller
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
             }
         }
@@ -226,6 +230,7 @@ class GroupController extends Controller
             'id'=>$uid,
             'name' => $request->name,
             'profile_picture'=>$group->profile_picture,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
             
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
@@ -328,6 +333,7 @@ class GroupController extends Controller
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
 
                 
@@ -341,6 +347,7 @@ class GroupController extends Controller
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
             }
         }
@@ -354,6 +361,7 @@ class GroupController extends Controller
             'id'=>$uid,
             'name' => $request->name,
             'profile_picture'=>$group->profile_picture,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);  
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
         $data->update([

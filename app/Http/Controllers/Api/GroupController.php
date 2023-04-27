@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Group;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Factory;
 use Str;
@@ -298,6 +299,7 @@ class GroupController extends Controller
                             'id' => $uid,
                             'name' => $request->group_name,
                             'profile_picture' => $group->profile_picture,
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                         ]);
                     } else {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
@@ -308,6 +310,7 @@ class GroupController extends Controller
                             'id' => $uid,
                             'name' => $request->group_name,
                             'profile_picture' => $group->profile_picture,
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                         ]);
                     }
                 } else {
@@ -319,16 +322,18 @@ class GroupController extends Controller
                         'id' => $uid,
                         'name' => $request->group_name,
                         'profile_picture' => $group->profile_picture,
+                        'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                     ]);
                 }
             }
 
-            $group = app('firebase.firestore')->database()->collection('groups')->document($uid)->set([
+            app('firebase.firestore')->database()->collection('groups')->document($uid)->set([
                 'id' => $uid,
                 'members' => $members,
                 'name' => $request->group_name,
                 'group_description' => $request->group_description ?? null,
                 'profile_picture' =>  $group->profile_picture,
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
 
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Group created successfully'], 200);
@@ -502,20 +507,25 @@ class GroupController extends Controller
         }
 
         try {
-            $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->documents();
+            // $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->documents();
+            $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->orderBy('created_at', 'asc')->documents();
+
             $groupList = [];
             foreach ($group->rows() as $key => $value) {
                 // group admin name
+                // return $value->data();
                 $groupAdmin = app('firebase.firestore')->database()->collection('groups')->document($value->data()['id']);
                 foreach ($groupAdmin->snapshot()->data()['members'] as $sd => $admin) {
                     if ($admin['isAdmin'] == true) {
-                        $groupList[$key]['admin'] = $admin['name'];
+                        $admins = app('firebase.firestore')->database()->collection('users')->document($admin['uid'])->snapshot()->data();
+                        $groupList[$key]['admin'] = $admins['name'];
                         break;
                     }
                 }
                 $groupList[$key]['id'] = $value->data()['id'];
                 $groupList[$key]['name'] = $value->data()['name'];
                 $groupList[$key]['profile_picture'] = $value->data()['profile_picture'];
+                $groupList[$key]['created_at'] = $value->data()['created_at'];
             }
 
             if ($request->has('search') && $request->search != null) {
