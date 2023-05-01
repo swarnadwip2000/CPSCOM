@@ -61,6 +61,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if($members[0]['members'] != null)
                                 @foreach ($members[0]['members'] as $key =>$member)
                               
                                     <tr>
@@ -82,6 +83,7 @@
                                         @endif
                                     </tr>
                                 @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -141,7 +143,7 @@
             add_member: {
                 required: "Please select a member",
             },
-        },
+        },00000
         submitHandler: function(form) {
             form.submit();
         }

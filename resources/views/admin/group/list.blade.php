@@ -69,18 +69,23 @@
                                         <td>@if (isset($group->data()['name']))
                                             {{ $group->data()['name'] }}
                                         @endif</td>
-                                        <td>@foreach ($group->data()['members'] as $isAdmin)
+                                        <td>@if($group->data()['members'] != null) @foreach ($group->data()['members'] as $isAdmin)
                                             @if($isAdmin['isAdmin'] == true)
                                             <span class="badge bg-inverse-info"> {{ Helper::userName($isAdmin['uid']) }} </span>
                                             @endif
-                                        @endforeach</td>
+                                        @endforeach @endif </td>
                                         @php
+                                        if ($group->data()['members'] != null) {
                                             $count = count($group->data()['members']);
+                                        } else {
+                                            $count = 0;
+                                        }
+                                            
                                         @endphp
                                         {{-- <td>@foreach ($group->data()['members'] as $key => $isAdmin)
                                             {{ $isAdmin['name'] }} @if($key < $count - 1), @endif
                                         @endforeach</td> --}}
-                                        <td>{{ count($group->data()['members']) }}</td>
+                                        <td>{{ $count }}</td>
                                         <td><a href="{{ route('group.members', $group->data()['id']) }}"><button class="btn btn-warning"><i class="fas fa-eye"></i> View </button></a></td>
                                        
                                         <td >

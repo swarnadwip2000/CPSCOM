@@ -63,11 +63,14 @@
                                                                 style="color: red;">*</span></label>
                                                         {{-- @dd($groups->rows()[0]->data()['members'] ) --}}
                                                         <select name="admin_id" id="" class="form-control select2 get-user-edit" data-route="{{ route('groups.edit-get-users') }}" data-group="{{ $groups->rows()[0]->id() }}">
+                                                            <option value="">Select a admin</option>
+                                                            
                                                             @foreach ($admins as $key => $admin)
                                                                 <option value="{{ $admin->data()['uid'] }}"
+                                                                    @if($groups->rows()[0]->data()['members'] != null)
                                                                     @foreach ($groups->rows()[0]->data()['members'] as $member) {{ $member['name'] }} @if ($member['uid'] == $admin->data()['uid'])
                                                                     selected
-                                                                    @endif @endforeach>
+                                                                    @endif @endforeach @endif>
                                                                     {{ $admin->data()['name'] }}</option>
                                                             @endforeach
                                                         </select>
@@ -82,12 +85,14 @@
                                                                 style="color:red">*<span></label>
                                                         <select name="user_id[]" id=""
                                                             class="form-control multi-select show-member" multiple>
+                                                            <option value="">Select a member</option>
                                                             @foreach ($users as $key => $user)
                                                                 <option value="{{ $user->data()['uid'] }}"
+                                                                    @if($groups->rows()[0]->data()['members'] != null)
                                                                     @foreach ($groups->rows()[0]->data()['members'] as $member)
                                                                         @if ($member['uid'] == $user->data()['uid'] && $member['isAdmin'] == false)
                                                                             selected 
-                                                                        @endif @endforeach>
+                                                                        @endif @endforeach @endif>
                                                                     {{ $user->data()['name'] }}</option>
                                                             @endforeach
 
