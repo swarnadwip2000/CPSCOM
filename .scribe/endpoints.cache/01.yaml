@@ -32,11 +32,11 @@ endpoints:
         name: email
         description: Email
         required: true
-        example: mclaughlin.karolann@example.com
+        example: timothy.macejkovic@example.org
         type: string
         custom: []
     cleanBodyParameters:
-      email: mclaughlin.karolann@example.com
+      email: timothy.macejkovic@example.org
     fileParameters: []
     responses:
       -
@@ -118,19 +118,19 @@ endpoints:
         name: email
         description: Email
         required: true
-        example: friesen.marilie@example.com
+        example: beaulah.thompson@example.org
         type: string
         custom: []
       otp:
         name: otp
         description: OTP
         required: true
-        example: provident
+        example: praesentium
         type: string
         custom: []
     cleanBodyParameters:
-      email: friesen.marilie@example.com
-      otp: provident
+      email: beaulah.thompson@example.org
+      otp: praesentium
     fileParameters: []
     responses:
       -
@@ -203,27 +203,27 @@ endpoints:
         name: email
         description: Email
         required: true
-        example: karina45@example.org
+        example: monserrate.stark@example.com
         type: string
         custom: []
       password:
         name: password
         description: Password
         required: true
-        example: 'OO`#fp<w<]0|[*v'
+        example: Q/rmSlYXS@OU
         type: string
         custom: []
       confirm_password:
         name: confirm_password
         description: 'Confirm Password'
         required: true
-        example: at
+        example: qui
         type: string
         custom: []
     cleanBodyParameters:
-      email: karina45@example.org
-      password: 'OO`#fp<w<]0|[*v'
-      confirm_password: at
+      email: monserrate.stark@example.com
+      password: Q/rmSlYXS@OU
+      confirm_password: qui
     fileParameters: []
     responses:
       -

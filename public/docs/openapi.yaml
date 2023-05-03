@@ -108,7 +108,7 @@ paths:
                 email:
                   type: string
                   description: Email
-                  example: mclaughlin.karolann@example.com
+                  example: timothy.macejkovic@example.org
               required:
                 - email
       security: []
@@ -181,11 +181,11 @@ paths:
                 email:
                   type: string
                   description: Email
-                  example: friesen.marilie@example.com
+                  example: beaulah.thompson@example.org
                 otp:
                   type: string
                   description: OTP
-                  example: provident
+                  example: praesentium
               required:
                 - email
                 - otp
@@ -261,15 +261,15 @@ paths:
                 email:
                   type: string
                   description: Email
-                  example: karina45@example.org
+                  example: monserrate.stark@example.com
                 password:
                   type: string
                   description: Password
-                  example: 'OO`#fp<w<]0|[*v'
+                  example: Q/rmSlYXS@OU
                 confirm_password:
                   type: string
                   description: 'Confirm Password'
-                  example: at
+                  example: qui
               required:
                 - email
                 - password
@@ -382,7 +382,7 @@ paths:
                 uid:
                   type: string
                   description: ''
-                  example: officia
+                  example: ut
               required:
                 - uid
       security: []
@@ -445,7 +445,7 @@ paths:
                 group_id:
                   type: string
                   description: 'Group Id'
-                  example: aut
+                  example: voluptatem
               required:
                 - image
                 - group_id
@@ -547,7 +547,7 @@ paths:
                 id:
                   type: string
                   description: 'Group Id'
-                  example: tempora
+                  example: et
               required:
                 - id
       security: []
@@ -613,21 +613,26 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
                 group_name:
                   type: string
-                  description: 'Group Name'
-                  example: et
+                  description: 'Group Name example: Group 1'
+                  example: quos
                 uid:
-                  type: array
-                  description: 'User Id'
-                  example:
-                    - laboriosam
-                  items:
-                    type: string
+                  type: string
+                  description: 'User Id example: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1,ZqGtqTOOhKY3pPQqQ95Uj5iM2OE3'
+                  example: enim
+                profile_picture:
+                  type: string
+                  format: binary
+                  description: 'optional Profile Picture of Group'
+                group_description:
+                  type: string
+                  description: 'optional Group Description example: Group 1 Description'
+                  example: sed
               required:
                 - group_name
                 - uid
@@ -658,7 +663,7 @@ paths:
                 group_id:
                   type: string
                   description: 'The id of the group.'
-                  example: consequuntur
+                  example: repudiandae
               required:
                 - group_id
       security: []
@@ -695,7 +700,7 @@ paths:
                 url:
                   type: string
                   description: ''
-                  example: qui
+                  example: non
               required:
                 - url
       security: []
@@ -782,7 +787,7 @@ paths:
                 uid:
                   type: string
                   description: uid
-                  example: similique
+                  example: sit
               required:
                 - uid
       security: []
@@ -877,11 +882,11 @@ paths:
                 uid:
                   type: string
                   description: uid
-                  example: maxime
+                  example: quisquam
                 name:
                   type: string
                   description: 'User Name'
-                  example: voluptatem
+                  example: dolores
                 profile_picture:
                   type: string
                   format: binary

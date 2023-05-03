@@ -32,11 +32,11 @@ endpoints:
         name: uid
         description: ''
         required: true
-        example: officia
+        example: ut
         type: string
         custom: []
     cleanBodyParameters:
-      uid: officia
+      uid: ut
     fileParameters: []
     responses:
       -
@@ -118,11 +118,11 @@ endpoints:
         name: group_id
         description: 'Group Id'
         required: true
-        example: aut
+        example: voluptatem
         type: string
         custom: []
     cleanBodyParameters:
-      group_id: aut
+      group_id: voluptatem
     fileParameters:
       image: null
     responses:
@@ -212,11 +212,11 @@ endpoints:
         name: id
         description: 'Group Id'
         required: true
-        example: tempora
+        example: et
         type: string
         custom: []
     cleanBodyParameters:
-      id: tempora
+      id: et
     fileParameters: []
     responses:
       -
@@ -275,7 +275,7 @@ endpoints:
       authenticated: false
       custom: []
     headers:
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
@@ -284,24 +284,38 @@ endpoints:
     bodyParameters:
       group_name:
         name: group_name
-        description: 'Group Name'
+        description: 'Group Name example: Group 1'
         required: true
-        example: et
+        example: quos
         type: string
         custom: []
       uid:
         name: uid
-        description: 'User Id'
+        description: 'User Id example: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1,ZqGtqTOOhKY3pPQqQ95Uj5iM2OE3'
         required: true
-        example:
-          - laboriosam
-        type: 'string[]'
+        example: enim
+        type: string
+        custom: []
+      profile_picture:
+        name: profile_picture
+        description: 'optional Profile Picture of Group'
+        required: false
+        example: null
+        type: file
+        custom: []
+      group_description:
+        name: group_description
+        description: 'optional Group Description example: Group 1 Description'
+        required: false
+        example: sed
+        type: string
         custom: []
     cleanBodyParameters:
-      group_name: et
-      uid:
-        - laboriosam
-    fileParameters: []
+      group_name: quos
+      uid: enim
+      group_description: sed
+    fileParameters:
+      profile_picture: null
     responses:
       -
         status: 200
@@ -363,11 +377,11 @@ endpoints:
         name: group_id
         description: 'The id of the group.'
         required: true
-        example: consequuntur
+        example: repudiandae
         type: string
         custom: []
     cleanBodyParameters:
-      group_id: consequuntur
+      group_id: repudiandae
     fileParameters: []
     responses:
       -
@@ -428,11 +442,11 @@ endpoints:
         name: url
         description: ''
         required: true
-        example: qui
+        example: non
         type: string
         custom: []
     cleanBodyParameters:
-      url: qui
+      url: non
     fileParameters: []
     responses:
       -

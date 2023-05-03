@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "CPSCOM",
-        "_postman_id": "28951267-066b-424b-a48c-a0ccb3495528",
+        "_postman_id": "d0b95af6-cbca-4ce3-aa85-6116716923ef",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -97,7 +97,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"mclaughlin.karolann@example.com\"}"
+                            "raw": "{\"email\":\"timothy.macejkovic@example.org\"}"
                         },
                         "description": "",
                         "auth": {
@@ -153,7 +153,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"friesen.marilie@example.com\",\"otp\":\"provident\"}"
+                            "raw": "{\"email\":\"beaulah.thompson@example.org\",\"otp\":\"praesentium\"}"
                         },
                         "description": "",
                         "auth": {
@@ -203,7 +203,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"karina45@example.org\",\"password\":\"OO`#fp<w<]0|[*v\",\"confirm_password\":\"at\"}"
+                            "raw": "{\"email\":\"monserrate.stark@example.com\",\"password\":\"Q\\\/rmSlYXS@OU\",\"confirm_password\":\"qui\"}"
                         },
                         "description": "",
                         "auth": {
@@ -259,7 +259,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"uid\":\"officia\"}"
+                            "raw": "{\"uid\":\"ut\"}"
                         },
                         "description": "@bodyParam uid string required The id of the user.",
                         "auth": {
@@ -306,7 +306,7 @@
                             "formdata": [
                                 {
                                     "key": "group_id",
-                                    "value": "aut",
+                                    "value": "voluptatem",
                                     "type": "text",
                                     "description": "Group Id"
                                 },
@@ -371,7 +371,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"id\":\"tempora\"}"
+                            "raw": "{\"id\":\"et\"}"
                         },
                         "description": "",
                         "auth": {
@@ -406,7 +406,7 @@
                         "header": [
                             {
                                 "key": "Content-Type",
-                                "value": "application\/json"
+                                "value": "multipart\/form-data"
                             },
                             {
                                 "key": "Accept",
@@ -414,8 +414,32 @@
                             }
                         ],
                         "body": {
-                            "mode": "raw",
-                            "raw": "{\"group_name\":\"et\",\"uid\":[\"laboriosam\"]}"
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "group_name",
+                                    "value": "quos",
+                                    "type": "text",
+                                    "description": "Group Name example: Group 1"
+                                },
+                                {
+                                    "key": "uid",
+                                    "value": "enim",
+                                    "type": "text",
+                                    "description": "User Id example: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1,ZqGtqTOOhKY3pPQqQ95Uj5iM2OE3"
+                                },
+                                {
+                                    "key": "group_description",
+                                    "value": "sed",
+                                    "type": "text",
+                                    "description": "optional Group Description example: Group 1 Description"
+                                },
+                                {
+                                    "key": "profile_picture",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
                         },
                         "description": "",
                         "auth": {
@@ -459,7 +483,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"group_id\":\"consequuntur\"}"
+                            "raw": "{\"group_id\":\"repudiandae\"}"
                         },
                         "description": "",
                         "auth": {
@@ -497,7 +521,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"url\":\"qui\"}"
+                            "raw": "{\"url\":\"non\"}"
                         },
                         "description": "@bodyParam url string required The url of the image.",
                         "auth": {
@@ -547,7 +571,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"uid\":\"similique\"}"
+                            "raw": "{\"uid\":\"sit\"}"
                         },
                         "description": "",
                         "auth": {
@@ -600,13 +624,13 @@
                             "formdata": [
                                 {
                                     "key": "uid",
-                                    "value": "maxime",
+                                    "value": "quisquam",
                                     "type": "text",
                                     "description": "uid"
                                 },
                                 {
                                     "key": "name",
-                                    "value": "voluptatem",
+                                    "value": "dolores",
                                     "type": "text",
                                     "description": "User Name"
                                 },

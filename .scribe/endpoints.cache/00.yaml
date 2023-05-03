@@ -32,11 +32,11 @@ endpoints:
         name: uid
         description: uid
         required: true
-        example: similique
+        example: sit
         type: string
         custom: []
     cleanBodyParameters:
-      uid: similique
+      uid: sit
     fileParameters: []
     responses:
       -
@@ -117,14 +117,14 @@ endpoints:
         name: uid
         description: uid
         required: true
-        example: maxime
+        example: quisquam
         type: string
         custom: []
       name:
         name: name
         description: 'User Name'
         required: true
-        example: voluptatem
+        example: dolores
         type: string
         custom: []
       profile_picture:
@@ -135,8 +135,8 @@ endpoints:
         type: file
         custom: []
     cleanBodyParameters:
-      uid: maxime
-      name: voluptatem
+      uid: quisquam
+      name: dolores
     fileParameters:
       profile_picture: null
     responses:

@@ -103,7 +103,7 @@ class GroupController extends Controller
 
                     foreach ($image->rows()[0]->data()['members'] as $key => $value) {
                         app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($request->group_id)->update([
-                            ['path' => 'profile_picture', 'value' => $image_path ?? null]
+                            ['path' => 'profile_picture', 'value' => $image_path ?? '']
                         ]);
                     }
                 }
@@ -125,7 +125,7 @@ class GroupController extends Controller
 
                     foreach ($image->rows()[0]->data()['members'] as $key => $value) {
                         app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($request->group_id)->update([
-                            ['path' => 'profile_picture', 'value' => $image_path ?? null]
+                            ['path' => 'profile_picture', 'value' => $image_path ?? '']
                         ]);
                     }
                 }
@@ -217,8 +217,10 @@ class GroupController extends Controller
      * Create Group API
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     * @bodyParam group_name string required Group Name
-     * @bodyParam uid array required User Id
+     * @bodyParam group_name string required Group Name example: Group 1
+     * @bodyParam uid string required User Id example: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1,ZqGtqTOOhKY3pPQqQ95Uj5iM2OE3
+     * @bodyParam profile_picture file optional Profile Picture of Group
+     * @bodyParam group_description string optional Group Description example: Group 1 Description
      * @response {
      * "status": true,
      *  "statusCode": 200,
@@ -299,7 +301,7 @@ class GroupController extends Controller
                         app('firebase.firestore')->database()->collection('users')->document($uid_single[$i])->collection('groups')->document($uid)->set([
                             'id' => $uid,
                             'name' => $request->group_name,
-                            'profile_picture' => $group->profile_picture,
+                            'profile_picture' => $group->profile_picture ?? '',
                             'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                         ]);
                     } else {
@@ -310,7 +312,7 @@ class GroupController extends Controller
                         app('firebase.firestore')->database()->collection('users')->document($uid_single[$i])->collection('groups')->document($uid)->set([
                             'id' => $uid,
                             'name' => $request->group_name,
-                            'profile_picture' => $group->profile_picture,
+                            'profile_picture' => $group->profile_picture ?? '',
                             'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                         ]);
                     }
@@ -322,7 +324,7 @@ class GroupController extends Controller
                     app('firebase.firestore')->database()->collection('users')->document($isSuperadmin->rows()[0]->data()['uid'])->collection('groups')->document($uid)->set([
                         'id' => $uid,
                         'name' => $request->group_name,
-                        'profile_picture' => $group->profile_picture,
+                        'profile_picture' => $group->profile_picture ?? '',
                         'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                     ]);
                 }
@@ -332,8 +334,8 @@ class GroupController extends Controller
                 'id' => $uid,
                 'members' => $members,
                 'name' => $request->group_name,
-                'group_description' => $request->group_description ?? null,
-                'profile_picture' =>  $group->profile_picture,
+                'group_description' => $request->group_description ?? '',
+                'profile_picture' =>  $group->profile_picture ?? '',
                 // 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
