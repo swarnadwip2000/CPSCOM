@@ -280,10 +280,11 @@ class GroupController extends Controller
         ->where('id', '=', $request->group_id)
         ->documents();
         // dd($image->rows()[0]->data()['members']);
+        if($image->rows()[0]->data()['members'] != null) {
         foreach ($image->rows()[0]->data()['members'] as $key => $value) {
             app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($request->group_id)->delete();
-        }
-
+         }
+        } 
         // delete old members from group table firebase
         $group = app('firebase.firestore')->database()->collection('groups')->document($request->group_id);
         $group->update([
@@ -486,11 +487,13 @@ class GroupController extends Controller
                     // select user who is not admin (select option)
                     {
                         $output.='<option value="'.$user->data()['uid'].'"';
+                        if($members != null){
                         foreach ($members as $key => $value) {
                             if ($value['uid'] == $user->data()['uid'] && $value['isAdmin'] == false) {
                                 $output.='selected';
                             }
                         } 
+                    }
                         $output.= '>'.$user->data()['name'].'</option>';
                         
                     } else {

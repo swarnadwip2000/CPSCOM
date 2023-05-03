@@ -239,9 +239,9 @@ class GroupController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'group_name' => 'required',
-            'uid.*' => 'required',
+            'uid' => 'required',
         ]);
-
+        // return $request->uid;
         if ($validator->fails()) {
             $errors['message'] = [];
             $data = explode(',', $validator->errors());
@@ -258,8 +258,9 @@ class GroupController extends Controller
         // return $request->uid;
 
         try {
+            $uid_single = explode(',', $request->uid);
             // uid is not valid or not exist
-            foreach ($request->uid as $key => $value) {
+            foreach ($uid_single as $key => $value) {
                 $user = app('firebase.firestore')->database()->collection('users')
                     ->where('uid', '=', $value)
                     ->documents();
@@ -287,15 +288,15 @@ class GroupController extends Controller
                 ->where('isSuperAdmin', '=', true)
                 ->documents();
             $members = [];
-            for ($i = 0; $i <= count($request->uid); $i++) {
-                if (count($request->uid) > $i) {
-                    $getUser = app('firebase.firestore')->database()->collection('users')->where('uid', '=', $request->uid[$i])->documents();
+            for ($i = 0; $i <= count($uid_single); $i++) {
+                if (count($uid_single) > $i) {
+                    $getUser = app('firebase.firestore')->database()->collection('users')->where('uid', '=', $uid_single[$i])->documents();
                     if ($i == 0) {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                         $members[$i]['isAdmin'] = true;
                         $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                         $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                        app('firebase.firestore')->database()->collection('users')->document($request->uid[$i])->collection('groups')->document($uid)->set([
+                        app('firebase.firestore')->database()->collection('users')->document($uid_single[$i])->collection('groups')->document($uid)->set([
                             'id' => $uid,
                             'name' => $request->group_name,
                             'profile_picture' => $group->profile_picture,
@@ -306,7 +307,7 @@ class GroupController extends Controller
                         $members[$i]['isAdmin'] = false;
                         $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                         $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                        app('firebase.firestore')->database()->collection('users')->document($request->uid[$i])->collection('groups')->document($uid)->set([
+                        app('firebase.firestore')->database()->collection('users')->document($uid_single[$i])->collection('groups')->document($uid)->set([
                             'id' => $uid,
                             'name' => $request->group_name,
                             'profile_picture' => $group->profile_picture,
@@ -333,7 +334,7 @@ class GroupController extends Controller
                 'name' => $request->group_name,
                 'group_description' => $request->group_description ?? null,
                 'profile_picture' =>  $group->profile_picture,
-                'created_at' => date('Y-m-d H:i:s'),
+                // 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Group created successfully'], 200);
@@ -508,26 +509,30 @@ class GroupController extends Controller
 
         try {
             // $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->documents();
-            $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->orderBy('created_at', 'asc')->documents();
-
+             $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->orderBy('created_at', 'asc')->documents();
+            
             $groupList = [];
             foreach ($group->rows() as $key => $value) {
                 // group admin name
                 // return $value->data();
                 $groupAdmin = app('firebase.firestore')->database()->collection('groups')->document($value->data()['id']);
-                foreach ($groupAdmin->snapshot()->data()['members'] as $sd => $admin) {
-                    if ($admin['isAdmin'] == true) {
-                        $admins = app('firebase.firestore')->database()->collection('users')->document($admin['uid'])->snapshot()->data();
-                        $groupList[$key]['admin'] = $admins['name'];
-                        break;
+                if($groupAdmin->snapshot()->data()) {
+                    foreach ($groupAdmin->snapshot()->data()['members'] as $sd => $admin) {
+                        if ($admin['isAdmin'] == true) {
+                            $admins = app('firebase.firestore')->database()->collection('users')->document($admin['uid'])->snapshot()->data();
+                            $groupList[$key]['admin'] = $admins['name'] ?? null;
+                            break;
+                        }
                     }
+                } else {
+                    $groupList[$key]['admin'] = null;
                 }
                 $groupList[$key]['id'] = $value->data()['id'];
-                $groupList[$key]['name'] = $value->data()['name'];
-                $groupList[$key]['profile_picture'] = $value->data()['profile_picture'];
-                $groupList[$key]['created_at'] = $value->data()['created_at'];
+                $groupList[$key]['name'] = $value->data()['name'] ?? null;
+                $groupList[$key]['profile_picture'] = $value->data()['profile_picture'] ?? null;
+                $groupList[$key]['created_at'] = $value->data()['created_at'] ?? null;
             }
-
+    
             if ($request->has('search') && $request->search != null) {
                 // array keyword search
                 $search = explode(' ', $request->search);
@@ -540,7 +545,7 @@ class GroupController extends Controller
                     return false;
                 });
             }
-
+            
 
             return response()->json(['status' => true, 'statusCode' => 200, 'data' => $groupList], 200);
         } catch (\Throwable $th) {
