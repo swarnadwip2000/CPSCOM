@@ -202,7 +202,8 @@ class GroupController extends Controller
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
                     //set created at timestamp
-                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'userId' => $request->admin_id,
                 ]);
 
                 
@@ -216,7 +217,8 @@ class GroupController extends Controller
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
-                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'userId' => $request->admin_id,
                 ]);
             }
         }
@@ -230,7 +232,8 @@ class GroupController extends Controller
             'id'=>$uid,
             'name' => $request->name,
             'profile_picture'=>$group->profile_picture,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'userId' => $request->admin_id,
         ]);
             
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
@@ -240,6 +243,7 @@ class GroupController extends Controller
             'groupDescription' => $request->description,
             'members'=>array_merge($members, $admin_members),
             'profile_picture'=> $group->profile_picture,
+            
         ]);
             
        
@@ -334,7 +338,8 @@ class GroupController extends Controller
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
-                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'userId' => $request->admin_id,
                 ]);
 
                 
@@ -348,7 +353,8 @@ class GroupController extends Controller
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
-                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'userId' => $request->admin_id,
                 ]);
             }
         }
@@ -362,7 +368,8 @@ class GroupController extends Controller
             'id'=>$uid,
             'name' => $request->name,
             'profile_picture'=>$group->profile_picture,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'userId' => $request->admin_id,
         ]);  
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
         $data->update([

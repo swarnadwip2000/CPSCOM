@@ -219,6 +219,7 @@ class GroupController extends Controller
      * @return \Illuminate\Http\Response
      * @bodyParam group_name string required Group Name example: Group 1
      * @bodyParam uid string required User Id example: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1,ZqGtqTOOhKY3pPQqQ95Uj5iM2OE3
+     * @bodyParam admin_id string required Admin Id example: UbMI7oRh1lQp3AO8Y0zBCPqiNNi1
      * @bodyParam profile_picture file optional Profile Picture of Group
      * @bodyParam group_description string optional Group Description example: Group 1 Description
      * @response {
@@ -241,6 +242,7 @@ class GroupController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'group_name' => 'required',
+            'admin_id' => 'required',
             'uid' => 'required',
         ]);
         // return $request->uid;
@@ -293,6 +295,7 @@ class GroupController extends Controller
             for ($i = 0; $i <= count($uid_single); $i++) {
                 if (count($uid_single) > $i) {
                     $getUser = app('firebase.firestore')->database()->collection('users')->where('uid', '=', $uid_single[$i])->documents();
+                     $userID = $request->admin_id;
                     if ($i == 0) {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                         $members[$i]['isAdmin'] = true;
@@ -302,7 +305,8 @@ class GroupController extends Controller
                             'id' => $uid,
                             'name' => $request->group_name,
                             'profile_picture' => $group->profile_picture ?? '',
-                            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'userId' => $userID,
                         ]);
                     } else {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
@@ -313,7 +317,8 @@ class GroupController extends Controller
                             'id' => $uid,
                             'name' => $request->group_name,
                             'profile_picture' => $group->profile_picture ?? '',
-                            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'userId' => $userID,
                         ]);
                     }
                 } else {
@@ -325,7 +330,8 @@ class GroupController extends Controller
                         'id' => $uid,
                         'name' => $request->group_name,
                         'profile_picture' => $group->profile_picture ?? '',
-                        'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'userId' => $userID,
                     ]);
                 }
             }
@@ -512,29 +518,8 @@ class GroupController extends Controller
         try {
             // $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->documents();
              $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->orderBy('created_at', 'asc')->documents();
-            
-            $groupList = [];
-            foreach ($group->rows() as $key => $value) {
-                // group admin name
-                // return $value->data();
-                $groupAdmin = app('firebase.firestore')->database()->collection('groups')->document($value->data()['id']);
-                if($groupAdmin->snapshot()->data()) {
-                    foreach ($groupAdmin->snapshot()->data()['members'] as $sd => $admin) {
-                        if ($admin['isAdmin'] == true) {
-                            $admins = app('firebase.firestore')->database()->collection('users')->document($admin['uid'])->snapshot()->data();
-                            $groupList[$key]['admin'] = $admins['name'] ?? null;
-                            break;
-                        }
-                    }
-                } else {
-                    $groupList[$key]['admin'] = null;
-                }
-                $groupList[$key]['id'] = $value->data()['id'];
-                $groupList[$key]['name'] = $value->data()['name'] ?? null;
-                $groupList[$key]['profile_picture'] = $value->data()['profile_picture'] ?? null;
-                $groupList[$key]['created_at'] = $value->data()['created_at'] ?? null;
-            }
-    
+             $groupList = $group->rows()[0]->data();
+             
             if ($request->has('search') && $request->search != null) {
                 // array keyword search
                 $search = explode(' ', $request->search);
