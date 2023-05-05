@@ -85,8 +85,7 @@
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                    <label for="inputPhoneNo2" class="col-form-label">Image<span
-                                                            style="color:red">*<span></label>
+                                                    <label for="inputPhoneNo2" class="col-form-label">Image</label>
                                                     <input type="file" name="image" id=""
                                                         class="form-control">
                                                     @if ($errors->has('image'))
@@ -96,7 +95,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEnterYourName" class="col-form-label">Group Description
-                                                        <span style="color: red;">*</span></label>
+                                                        </label>
                                                     <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ old('description') }}</textarea>
                                                     @if ($errors->has('description'))
                                                         <div class="error" style="color:red;">

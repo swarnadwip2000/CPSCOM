@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Factory;
 use Str;
- 
+
 /**
  * @group Group APIs
  *
@@ -263,6 +263,7 @@ class GroupController extends Controller
 
         try {
             $uid_single = explode(',', $request->uid);
+            $userID = $request->admin_id;
             // uid is not valid or not exist
             foreach ($uid_single as $key => $value) {
                 $user = app('firebase.firestore')->database()->collection('users')
@@ -291,53 +292,41 @@ class GroupController extends Controller
             $isSuperadmin =  app('firebase.firestore')->database()->collection('users')
                 ->where('isSuperAdmin', '=', true)
                 ->documents();
+
             $members = [];
             for ($i = 0; $i <= count($uid_single); $i++) {
-                $userID = $request->admin_id;
+               
                 if (count($uid_single) > $i) {
                     $getUser = app('firebase.firestore')->database()->collection('users')->where('uid', '=', $uid_single[$i])->documents();
-                     
+
                     if ($i == 0) {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                         $members[$i]['isAdmin'] = true;
                         $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                         $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                        app('firebase.firestore')->database()->collection('users')->document($uid_single[$i])->collection('groups')->document($uid)->set([
-                            'id' => $uid,
-                            'name' => $request->group_name,
-                            'profile_picture' => $group->profile_picture ?? '',
-                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                            'userId' => $userID,
-                            'group_description' => $request->group_description ?? '',
-                        ]);
                     } else {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                         $members[$i]['isAdmin'] = false;
                         $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                         $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                        app('firebase.firestore')->database()->collection('users')->document($uid_single[$i])->collection('groups')->document($uid)->set([
-                            'id' => $uid,
-                            'name' => $request->group_name,
-                            'profile_picture' => $group->profile_picture ?? '',
-                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                            'userId' => $userID,
-                            'group_description' => $request->group_description ?? '',
-                        ]);
                     }
                 } else {
                     $members[$i]['email'] = $isSuperadmin->rows()[0]->data()['email'];
                     $members[$i]['isAdmin'] = true;
                     $members[$i]['name'] = $isSuperadmin->rows()[0]->data()['name'];
                     $members[$i]['uid'] = $isSuperadmin->rows()[0]->data()['uid'];
-                    app('firebase.firestore')->database()->collection('users')->document($isSuperadmin->rows()[0]->data()['uid'])->collection('groups')->document($uid)->set([
-                        'id' => $uid,
-                        'name' => $request->group_name,
-                        'profile_picture' => $group->profile_picture ?? '',
-                        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                        'userId' => $userID,
-                        'group_description' => $request->group_description ?? '',
-                    ]);
                 }
+            }
+
+            foreach ($members as $key => $value) {
+                app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($uid)->set([
+                    'id' => $uid,
+                    'name' => $request->group_name,
+                    'profile_picture' => $group->profile_picture ?? '',
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'userId' => $userID,
+                    'group_description' => $request->group_description ?? '',
+                ]);
             }
 
             app('firebase.firestore')->database()->collection('groups')->document($uid)->set([
@@ -521,9 +510,9 @@ class GroupController extends Controller
 
         try {
             // $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->documents();
-             $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->orderBy('created_at', 'asc')->documents();
-             $groupList = $group->rows()[0]->data();
-             
+            $group = app('firebase.firestore')->database()->collection('users')->document($request->uid)->collection('groups')->orderBy('created_at', 'asc')->documents();
+            $groupList = $group->rows()[0]->data();
+
             if ($request->has('search') && $request->search != null) {
                 // array keyword search
                 $search = explode(' ', $request->search);
@@ -536,7 +525,7 @@ class GroupController extends Controller
                     return false;
                 });
             }
-            
+
 
             return response()->json(['status' => true, 'statusCode' => 200, 'data' => $groupList], 200);
         } catch (\Throwable $th) {
