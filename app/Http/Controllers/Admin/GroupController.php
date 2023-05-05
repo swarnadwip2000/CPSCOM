@@ -198,14 +198,15 @@ class GroupController extends Controller
                 $members[$i]['isAdmin'] = true;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
+                $members[$i]['profile_picture'] = $getUser->rows()[0]->data()['profile_picture'] ;
             }else {
                 $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->user_id[$i])->documents();
+                // dd($getUser->rows()[0]->data());
                 $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                 $members[$i]['isAdmin'] = false;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
+                $members[$i]['profile_picture'] = $getUser->rows()[0]->data()['profile_picture'] ?? '' ;
             }
         }
 
@@ -214,7 +215,7 @@ class GroupController extends Controller
         $admin_members[$count+1]['isAdmin'] = true;
         $admin_members[$count+1]['name'] = Auth::user()->name;
         $admin_members[$count+1]['uid'] = Auth::user()->uid;
-        $admin_members[$count+1]['profile_picture'] = $group->profile_picture ?? '';
+        $admin_members[$count+1]['profile_picture'] = Auth::user()->profile_picture ?? '';
 
         // app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->collection('groups')->document($uid)->set([
         //     'id'=>$uid,
@@ -227,12 +228,13 @@ class GroupController extends Controller
         // ]);
 
         $all_members = array_merge($members,$admin_members);
+        // dd($all_members);
         foreach ($all_members as $key => $value) {
             // dd($value);
             app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($uid)->set([
                     'id'=>$uid,
                     'name' => $request->name,
-                    'profile_picture'=>$value['profile_picture'] ?? '',
+                    'profile_picture'=>$group->profile_picture ?? '',
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'userId' => $request->admin_id,
                     'group_description' => $request->description ?? '',
@@ -296,7 +298,14 @@ class GroupController extends Controller
         // update group members
         $members = [];
         $uid = $request->group_id;
-        $group = Group::where('group_id',$uid)->first();
+        $count = Group::where('group_id',$uid)->count();
+        if ($count > 0) {
+            $group = Group::where('group_id',$uid)->first();
+        } else {
+            $group = new Group();
+            $group->group_id = $uid;
+        }
+
         $image = app('firebase.firestore')->database()->collection('groups')
         ->where('id', '=', $uid)
         ->documents();
@@ -305,7 +314,7 @@ class GroupController extends Controller
             $file= $request->file('image');
             $filename= date('YmdHi').$file->getClientOriginalName();
             $image_path = $request->file('image')->store('group', 'public');
-            $group->profile_picture = $image_path;
+            $group->profile_picture = $image_path ?? '';
         }
         $group->save();
 
@@ -317,7 +326,7 @@ class GroupController extends Controller
                 $members[$i]['isAdmin'] = true;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
+                $members[$i]['profile_picture'] = $getUser->rows()[0]->data()['profile_picture'] ?? '';
                 
             }else {
                 $getUser = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->user_id[$i])->documents();
@@ -325,7 +334,7 @@ class GroupController extends Controller
                 $members[$i]['isAdmin'] = false;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
-                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
+                $members[$i]['profile_picture'] = $getUser->rows()[0]->data()['profile_picture'] ?? '';
             }
         }
 
@@ -334,14 +343,14 @@ class GroupController extends Controller
         $admin_members[$count+1]['isAdmin'] = true;
         $admin_members[$count+1]['name'] = Auth::user()->name;
         $admin_members[$count+1]['uid'] = Auth::user()->uid;
-        $admin_members[$count+1]['profile_picture'] = $group->profile_picture ?? '';   
+        $admin_members[$count+1]['profile_picture'] = Auth::user()->profile_picture ?? '';   
 
         $all_members = array_merge($members,$admin_members);
         foreach ($all_members as $key => $value) {
             app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($uid)->set([
                     'id'=>$uid,
                     'name' => $request->name,
-                    'profile_picture'=>$value['profile_picture'] ?? '',
+                    'profile_picture'=>$group->profile_picture ?? '',
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'userId' => $request->admin_id,
                     'group_description' => $request->description ?? '',
@@ -403,6 +412,19 @@ class GroupController extends Controller
 
                 $old_members = $group->rows()[0]->data()['members'];
                 $data = app('firebase.firestore')->database()->collection('groups')->document($request->group_id);
+                foreach ($old_members as $key => $value) {
+                    // update members in user subcollection groups 
+                    app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($request->group_id)->set([
+                        'id'=>$request->group_id,
+                        'name' => $group->rows()[0]->data()['name'],
+                        'profile_picture'=>$group->rows()[0]->data()['profile_picture'],
+                        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'userId' => $request->admin_id,
+                        'group_description' => $group->rows()[0]->data()['group_description'] ?? '',
+                        'members' => array_merge($old_members,$new_members),
+                    ]);
+                }
+
                 $data->update([
                     ['path' => 'members', 'value' => array_merge($old_members,$new_members)],
                 ]);
@@ -427,8 +449,14 @@ class GroupController extends Controller
         foreach ($members as $key => $value) {
             if ($value['uid'] == $user_id) {
                 unset($members[$key]);
-            }
+            }  
         }
+        foreach ($members as $key => $value) {
+            app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($group_id)->update([
+                ['path' => 'members', 'value' => $members]
+            ]);
+        }
+
         $data = app('firebase.firestore')->database()->collection('groups')->document($group_id);
         $data->update([
             ['path' => 'members', 'value' => $members],
