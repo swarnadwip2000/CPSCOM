@@ -103,6 +103,13 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="group_id" value="{{ $members[0]->data()['id'] }}" id="">
+                                {{-- admin_id hidden --}}
+                                @foreach ($members[0]['members'] as $key =>$member)
+                                @if($member['isAdmin'] == true)
+                                <input type="hidden" name="admin_id" value="{{ $member['uid'] }}" id="">
+                                @break
+                                @endif
+                                @endforeach
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">

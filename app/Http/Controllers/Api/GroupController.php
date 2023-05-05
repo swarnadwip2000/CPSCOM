@@ -293,9 +293,10 @@ class GroupController extends Controller
                 ->documents();
             $members = [];
             for ($i = 0; $i <= count($uid_single); $i++) {
+                $userID = $request->admin_id;
                 if (count($uid_single) > $i) {
                     $getUser = app('firebase.firestore')->database()->collection('users')->where('uid', '=', $uid_single[$i])->documents();
-                     $userID = $request->admin_id;
+                     
                     if ($i == 0) {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                         $members[$i]['isAdmin'] = true;
@@ -307,6 +308,7 @@ class GroupController extends Controller
                             'profile_picture' => $group->profile_picture ?? '',
                             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                             'userId' => $userID,
+                            'group_description' => $request->group_description ?? '',
                         ]);
                     } else {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
@@ -319,6 +321,7 @@ class GroupController extends Controller
                             'profile_picture' => $group->profile_picture ?? '',
                             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                             'userId' => $userID,
+                            'group_description' => $request->group_description ?? '',
                         ]);
                     }
                 } else {
@@ -332,6 +335,7 @@ class GroupController extends Controller
                         'profile_picture' => $group->profile_picture ?? '',
                         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                         'userId' => $userID,
+                        'group_description' => $request->group_description ?? '',
                     ]);
                 }
             }
@@ -342,7 +346,7 @@ class GroupController extends Controller
                 'name' => $request->group_name,
                 'group_description' => $request->group_description ?? '',
                 'profile_picture' =>  $group->profile_picture ?? '',
-                // 'created_at' => date('Y-m-d H:i:s'),
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
 
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Group created successfully'], 200);

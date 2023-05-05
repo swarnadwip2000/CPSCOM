@@ -196,6 +196,7 @@ class GroupController extends Controller
                 $members[$i]['isAdmin'] = true;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
                 
                 app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->collection('groups')->document($uid)->set([
                     'id'=>$uid,
@@ -204,6 +205,7 @@ class GroupController extends Controller
                     //set created at timestamp
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'userId' => $request->admin_id,
+                    'group_description' => $request->description ?? '',
                 ]);
 
                 
@@ -213,12 +215,15 @@ class GroupController extends Controller
                 $members[$i]['isAdmin'] = false;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
+
                 app('firebase.firestore')->database()->collection('users')->document($request->user_id[$i])->collection('groups')->document($uid)->set([
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'userId' => $request->admin_id,
+                    'group_description' => $request->description ?? '',
                 ]);
             }
         }
@@ -228,22 +233,25 @@ class GroupController extends Controller
         $admin_members[$count+1]['isAdmin'] = true;
         $admin_members[$count+1]['name'] = Auth::user()->name;
         $admin_members[$count+1]['uid'] = Auth::user()->uid;
+        $admin_members[$count+1]['profile_picture'] = $group->profile_picture ?? '';
+
         app('firebase.firestore')->database()->collection('users')->document(Auth::user()->uid)->collection('groups')->document($uid)->set([
             'id'=>$uid,
             'name' => $request->name,
             'profile_picture'=>$group->profile_picture,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'userId' => $request->admin_id,
+            'group_description' => $request->description ?? '',
         ]);
             
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
         $data->set([
             'id'=>$uid,
             'name' => $request->name,
-            'groupDescription' => $request->description,
+            'group_description' => $request->description,
             'members'=>array_merge($members, $admin_members),
             'profile_picture'=> $group->profile_picture,
-            
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
             
        
@@ -333,6 +341,7 @@ class GroupController extends Controller
                 $members[$i]['isAdmin'] = true;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
                 
                 app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->collection('groups')->document($uid)->set([
                     'id'=>$uid,
@@ -340,6 +349,7 @@ class GroupController extends Controller
                     'profile_picture'=>$group->profile_picture,
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'userId' => $request->admin_id,
+                    'group_description' => $request->description ?? '',
                 ]);
 
                 
@@ -349,12 +359,15 @@ class GroupController extends Controller
                 $members[$i]['isAdmin'] = false;
                 $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                 $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                $members[$i]['profile_picture'] = $group->profile_picture ?? '';
+
                 app('firebase.firestore')->database()->collection('users')->document($request->user_id[$i])->collection('groups')->document($uid)->set([
                     'id'=>$uid,
                     'name' => $request->name,
                     'profile_picture'=>$group->profile_picture,
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'userId' => $request->admin_id,
+                    'group_description' => $request->description ?? '',
                 ]);
             }
         }
@@ -364,19 +377,23 @@ class GroupController extends Controller
         $admin_members[$count+1]['isAdmin'] = true;
         $admin_members[$count+1]['name'] = Auth::user()->name;
         $admin_members[$count+1]['uid'] = Auth::user()->uid;
+        $admin_members[$count+1]['profile_picture'] = $group->profile_picture ?? '';   
+
         app('firebase.firestore')->database()->collection('users')->document(Auth::user()->uid)->collection('groups')->document($uid)->set([
             'id'=>$uid,
             'name' => $request->name,
             'profile_picture'=>$group->profile_picture,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'userId' => $request->admin_id,
+            'group_description' => $request->description ?? '',
         ]);  
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
         $data->update([
             ['path' => 'members', 'value' => array_merge($members, $admin_members)],
             ['path' => 'name', 'value' => $request->name],
             ['path' => 'profile_picture', 'value' => $group->profile_picture],
-            ['path' => 'description', 'value' => $request->description],
+            ['path' => 'group_description', 'value' => $request->description],
+            ['path' => 'created_at', 'value' => Carbon::now()->format('Y-m-d H:i:s')],
         ]);
             
         return redirect()->route('group.index')->with('message', 'Group Details has been updated!!');
@@ -419,6 +436,8 @@ class GroupController extends Controller
                 $new_members[$count+1]['isAdmin'] = false;
                 $new_members[$count+1]['name'] = $user->rows()[0]->data()['name'];
                 $new_members[$count+1]['uid'] = $request->add_member;
+                $new_members[$count+1]['profile_picture'] = $group->rows()[0]->data()['profile_picture'] ?? '';
+
                 $old_members = $group->rows()[0]->data()['members'];
                 $data = app('firebase.firestore')->database()->collection('groups')->document($request->group_id);
                 $data->update([
@@ -428,6 +447,9 @@ class GroupController extends Controller
                     'id'=>$request->group_id,
                     'name' => $group->rows()[0]->data()['name'],
                     'profile_picture'=>$group->rows()[0]->data()['profile_picture'],
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'userId' => $request->admin_id,
+                    'group_description' => $group->rows()[0]->data()['group_description'] ?? '',
                 ]);
                 return redirect()->back()->with('message', 'User added in this group!!');
     }

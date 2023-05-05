@@ -116,7 +116,7 @@
                                                         <label for="inputEnterYourName" class="col-form-label">Group
                                                             Description
                                                             <span style="color: red;">*</span></label>
-                                                        <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ $groups->rows()[0]->data()['groupDescription'] }}</textarea>
+                                                        <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ $groups->rows()[0]->data()['group_description'] ?? '' }}</textarea>
                                                         @if ($errors->has('description'))
                                                             <div class="error" style="color:red;">
                                                                 {{ $errors->first('description') }}</div>
