@@ -25,7 +25,7 @@ class GroupController extends Controller
 
     public function index()
     {
-        $groups = app('firebase.firestore')->database()->collection('groups')->documents();
+        $groups = app('firebase.firestore')->database()->collection('groups')->orderBy('created_at', 'desc')->documents();
         // dd($groups->rows());
         return view('admin.group.list',compact('groups'));
     }
@@ -408,7 +408,7 @@ class GroupController extends Controller
                 $new_members[$count+1]['isAdmin'] = false;
                 $new_members[$count+1]['name'] = $user->rows()[0]->data()['name'];
                 $new_members[$count+1]['uid'] = $request->add_member;
-                $new_members[$count+1]['profile_picture'] = $group->rows()[0]->data()['profile_picture'] ?? '';
+                $new_members[$count+1]['profile_picture'] = $user->rows()[0]->data()['profile_picture'] ?? '';
 
                 $old_members = $group->rows()[0]->data()['members'];
                 $data = app('firebase.firestore')->database()->collection('groups')->document($request->group_id);
