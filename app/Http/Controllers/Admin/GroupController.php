@@ -26,8 +26,15 @@ class GroupController extends Controller
     public function index()
     {
         $groups = app('firebase.firestore')->database()->collection('groups')->orderBy('created_at', 'desc')->documents();
-        // dd($groups->rows());
-        return view('admin.group.list',compact('groups'));
+        // show group with pagination firebase
+        // $pageSize = 10;
+        // $currentPage = request()->input('page', 1);
+        // $offset = ($currentPage - 1) * $pageSize;
+        // $groups = app('firebase.firestore')->database()->collection('groups')->orderBy('created_at', 'desc')->limit($pageSize)->offset($offset)->documents();
+        // $total = app('firebase.firestore')->database()->collection('groups')->documents()->size();
+        // $totalPages = ceil($total / $pageSize);
+        // return view('admin.group.list',compact('groups','currentPage','totalPages'));
+        return view('admin.group.list')->with(compact('groups'));
     }
 
     public function viewChat($id)
@@ -216,16 +223,6 @@ class GroupController extends Controller
         $admin_members[$count+1]['name'] = Auth::user()->name;
         $admin_members[$count+1]['uid'] = Auth::user()->uid;
         $admin_members[$count+1]['profile_picture'] = Auth::user()->profile_picture ?? '';
-
-        // app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->collection('groups')->document($uid)->set([
-        //     'id'=>$uid,
-        //     'name' => $request->name,
-        //     'profile_picture'=>$group->profile_picture,
-        //     //set created at timestamp
-        //     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-        //     'userId' => $request->admin_id,
-        //     'group_description' => $request->description ?? '',
-        // ]);
 
         $all_members = array_merge($members,$admin_members);
         // dd($all_members);

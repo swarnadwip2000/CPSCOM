@@ -3,11 +3,11 @@
     All Group Details - Derick Veliz admin
 @endsection
 @push('styles')
-<style>
-    .dataTables_filter{
-        margin-bottom: 10px !important;
-    }
-</style>
+    <style>
+        .dataTables_filter {
+            margin-bottom: 10px !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -32,8 +32,7 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <a href="{{ route('group.create') }}" class="btn add-btn" ><i
-                                class="fa fa-plus"></i> Add Group</a>
+                        <a href="{{ route('group.create') }}" class="btn add-btn"><i class="fa fa-plus"></i> Add Group</a>
                     </div>
                 </div>
             </div>
@@ -64,38 +63,34 @@
                             </thead>
                             <tbody>
                                 @foreach ($groups as $key => $group)
-                                {{-- @dd($groups)    --}}
+                                    {{-- @dd($groups)    --}}
                                     <tr>
-                                        <td>@if (isset($group->data()['name']))
-                                            {{ $group->data()['name'] }}
-                                        @endif</td>
-                                        <td>@if($group->data()['members'] != null) @foreach ($group->data()['members'] as $isAdmin)
-                                            @if($isAdmin['isAdmin'] == true)
-                                            <span class="badge bg-inverse-info"> {{ Helper::userName($isAdmin['uid']) }} </span>
+                                        <td>
+                                            @if (isset($group->data()['name']))
+                                                {{ $group->data()['name'] }}
                                             @endif
-                                        @endforeach @endif </td>
-                                        @php
-                                        if ($group->data()['members'] != null) {
-                                            $count = count($group->data()['members']);
-                                        } else {
-                                            $count = 0;
-                                        }
-                                            
-                                        @endphp
-                                        {{-- <td>@foreach ($group->data()['members'] as $key => $isAdmin)
-                                            {{ $isAdmin['name'] }} @if($key < $count - 1), @endif
-                                        @endforeach</td> --}}
-                                        <td>{{ $count }}</td>
-                                        <td><a href="{{ route('group.members', $group->data()['id']) }}"><button class="btn btn-warning"><i class="fas fa-eye"></i> View </button></a></td>
-                                       
-                                        <td >
+                                        </td>
+                                        <td>
+                                            @if ($group->data()['members'] != null)
+                                            @foreach (Helper::groupAdminName($group->data()['id']) as $item)
+                                            <span class="badge bg-inverse-info">
+                                                {{ $item['name'] }} </span>
+                                            @endforeach
+                                            @endif
+                                        </td>
+                                        <td>{{ Helper::totalMembers($group->data()['id']) }}</td>
+                                        <td><a href="{{ route('group.members', $group->data()['id']) }}"><button
+                                                    class="btn btn-warning"><i class="fas fa-eye"></i> View </button></a>
+                                        </td>
+
+                                        <td>
                                             {{-- <a title="Upload Group Image" 
                                                 href="{{ route('group.image.update', $group->data()['id']) }}"><button class="btn btn-danger" style="border-radius: 20px; background: linear-gradient(to right, #10acff 0%, #1f1f1f 100%);
                                                 border: none;"><i class="fa fa-upload"></i> Upload Image</button></a> &nbsp;&nbsp; --}}
 
-                                            <a title="Edit Group" 
-                                                href="{{ route('group.edit', $group->id()) }}"><i class="fas fa-edit"></i></a>
-                                                {{-- <a title="Edit Group" 
+                                            <a title="Edit Group" href="{{ route('group.edit', $group->id()) }}"><i
+                                                    class="fas fa-edit"></i></a>
+                                            {{-- <a title="Edit Group" 
                                                 href="{{ route('group.delete', $group->id()) }}"><i class="fas fa-trash"></i></a> --}}
                                         </td>
                                     </tr>
@@ -105,6 +100,40 @@
                             </tbody>
 
                         </table>
+                        {{-- @if ($totalPages > 0)
+                            @php
+                                $page = request()->has('page') ? request()->get('page') : 1;
+                            @endphp
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-6 float-left">
+                                    <span class="current-page text-info mx-2">Page {{ $page }} of {{ $totalPages }}</span>
+                                </div>
+    
+                                <div class="col-md-6" style="float: right">
+                                    <div class="" role="status">
+                                        @if ($page > 1)
+                                            <a href="{{ route('group.index', ['page' => $page - 1]) }}"
+                                                class="btn btn-primary btn-sm">Previous</a>
+                                        @endif
+                                        @for ($i = 1; $i <= $totalPages; $i++)
+                                            @if ($i == $page)
+                                                <a href="{{ route('group.index', ['page' => $i]) }}"
+                                                    class="btn btn-primary btn-sm active"
+                                                    style="width: 50px;">{{ $i }}</a>
+                                            @else
+                                                <a href="{{ route('group.index', ['page' => $i]) }}"
+                                                    class="btn btn-primary btn-sm" style="width: 50px;">{{ $i }}</a>
+                                            @endif
+                                        @endfor
+                                        @if ($page < $totalPages)
+                                            <a href="{{ route('group.index', ['page' => $page + 1]) }}"
+                                                class="btn btn-primary btn-sm">Next</a>
+                                        @endif
+    
+                                    </div>
+                                </div>
+                            </div>
+                        @endif --}}
                     </div>
                 </div>
             </div>
@@ -128,7 +157,11 @@
                         "orderable": true,
                         "targets": [0, 1, 2]
                     }
-                ]
+                ],
+                // off pagination
+                // "bPaginate": false,
+                // off info
+                // "bInfo": false,
             });
 
         });
