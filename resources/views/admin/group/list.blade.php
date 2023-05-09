@@ -66,19 +66,17 @@
                                     {{-- @dd($groups)    --}}
                                     <tr>
                                         <td>
-                                            @if (isset($group->data()['name']))
-                                                {{ $group->data()['name'] }}
-                                            @endif
+                                            {{ $group->data()['name'] ?? '' }}
                                         </td>
                                         <td>
                                             @if ($group->data()['members'] != null)
-                                            @foreach (Helper::groupAdminName($group->data()['id']) as $item)
-                                            <span class="badge bg-inverse-info">
-                                                {{ $item['name'] }} </span>
-                                            @endforeach
+                                                    <span class="badge bg-inverse-info">
+                                                        {{ Helper::groupAdminName($group->data()['id']) }} </span>
                                             @endif
                                         </td>
-                                        <td>{{ Helper::totalMembers($group->data()['id']) }}</td>
+                                        <td>
+                                            {{ Helper::totalMembers($group->data()['id']) }}
+                                        </td>
                                         <td><a href="{{ route('group.members', $group->data()['id']) }}"><button
                                                     class="btn btn-warning"><i class="fas fa-eye"></i> View </button></a>
                                         </td>

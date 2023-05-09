@@ -27,18 +27,22 @@ class Helper
        $admin = array_filter($members, function ($member) {
             return $member['isAdmin'] == true;
         }) ;
-        return $admin; 
+        // only get the name of admin
+        $adminName = array_map(function ($member) {
+            return $member['name'];
+        }, $admin);
+        // return the name of admin
+        return implode(', ', $adminName);
     }
 
     // count total members of a group
     public static function totalMembers($groupId)
     {
         $group = app('firebase.firestore')->database()->collection('groups')->document($groupId)->snapshot()->data();
-        $members = count($group['members']);
-       if ($members > 0) {
-              return $members;
-         } else {
-              return 0;
+       if ($group['members'] != null) {
+           return count($group['members']);
+       } else {
+           return 0;
        }
     }
 }

@@ -90,6 +90,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/group-image-upload', [GroupController::class, 'groupImageUpload'])->name('group.image.upload');
         Route::post('/member-store', [GroupController::class, 'groupMemberStore'])->name('group.members.store');
         Route::get('/member-delete/{user_id}/{group_id}', [GroupController::class, 'groupMemberDelete'])->name('group.members.delete');
+        // group search
+        Route::get('/search', [GroupController::class, 'search'])->name('group.search');
         // get-user
         Route::get('/get-user', [GroupController::class, 'getUsers'])->name('groups.get-users');
         // edit get users
