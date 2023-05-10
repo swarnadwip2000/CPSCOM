@@ -18,11 +18,8 @@ class Helper
     }
 
 
-    public static function groupAdminName($groupId)
+    public static function groupAdminName($members)
     {
-        // get group admin name members array of group collection 
-        $group = app('firebase.firestore')->database()->collection('groups')->document($groupId)->snapshot()->data();
-        $members = $group['members'];
         // get the data which isAdmin is true in array
        $admin = array_filter($members, function ($member) {
             return $member['isAdmin'] == true;
@@ -34,6 +31,7 @@ class Helper
         // return the name of admin
         return implode(', ', $adminName);
     }
+    
 
     // count total members of a group
     public static function totalMembers($groupId)

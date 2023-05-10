@@ -48,7 +48,7 @@
                         </div>
                     </div>
 
-                    <hr />
+                    <hr /> 
                     <div class="table-responsive">
                         <table id="myTable" class="dd table table-striped table-bordered" style="width:100%">
                             <thead>
@@ -71,11 +71,13 @@
                                         <td>
                                             @if ($group->data()['members'] != null)
                                                     <span class="badge bg-inverse-info">
-                                                        {{ Helper::groupAdminName($group->data()['id']) }} </span>
+                                                        {{ Helper::groupAdminName($group->data()['members']) }} </span>
                                             @endif
                                         </td>
                                         <td>
-                                            {{ Helper::totalMembers($group->data()['id']) }}
+                                            @if ($group->data()['members'] != null)
+                                            {{ count($group->data()['members']) }}
+                                            @endif
                                         </td>
                                         <td><a href="{{ route('group.members', $group->data()['id']) }}"><button
                                                     class="btn btn-warning"><i class="fas fa-eye"></i> View </button></a>
