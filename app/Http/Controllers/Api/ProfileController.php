@@ -138,7 +138,6 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'uid' => 'required',
-            'name' => 'required',
         ]);
 
         if ($validator->fails()) {
