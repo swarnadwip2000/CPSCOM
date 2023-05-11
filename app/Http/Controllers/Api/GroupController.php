@@ -278,6 +278,7 @@ class GroupController extends Controller
             $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
             $uid = substr(str_shuffle(str_repeat($pool, 36)), 0, 36);
+            $chatId = substr(str_shuffle(str_repeat($pool, 36)), 0, 36);
             $group = new Group();
             $group->group_id = $uid;
 
@@ -304,17 +305,20 @@ class GroupController extends Controller
                         $members[$i]['isAdmin'] = true;
                         $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                         $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                        $members[$i]['profile_picture'] = $getUser->rows()[0]->data()['profile_picture'] ?? '';
                     } else {
                         $members[$i]['email'] = $getUser->rows()[0]->data()['email'];
                         $members[$i]['isAdmin'] = false;
                         $members[$i]['name'] = $getUser->rows()[0]->data()['name'];
                         $members[$i]['uid'] = $getUser->rows()[0]->data()['uid'];
+                        $members[$i]['profile_picture'] = $getUser->rows()[0]->data()['profile_picture'] ?? '';
                     }
                 } else {
                     $members[$i]['email'] = $isSuperadmin->rows()[0]->data()['email'];
                     $members[$i]['isAdmin'] = true;
                     $members[$i]['name'] = $isSuperadmin->rows()[0]->data()['name'];
                     $members[$i]['uid'] = $isSuperadmin->rows()[0]->data()['uid'];
+                    $members[$i]['profile_picture'] = $isSuperadmin->rows()[0]->data()['profile_picture'] ?? '';
                 }
             }
 
@@ -326,7 +330,17 @@ class GroupController extends Controller
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                     'userId' => $userID,
                     'group_description' => $request->group_description ?? '',
+                    'members' => $members,
                 ]);
+
+                // get name from user collection by uid
+                $name = app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->snapshot()->data()['name'];
+                // set data in subcollection of subcollection of users
+                app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($uid)->collection('chats')->document($chatId)->set([
+                    'type' => 'Notify',
+                    'message' => $name.' has created a group',
+                ]);
+
             }
 
             app('firebase.firestore')->database()->collection('groups')->document($uid)->set([

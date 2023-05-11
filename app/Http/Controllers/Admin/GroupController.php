@@ -178,7 +178,7 @@ class GroupController extends Controller
 
         $uid = substr(str_shuffle(str_repeat($pool, 36)), 0, 36);
         $members = [];
-
+        $chatId = substr(str_shuffle(str_repeat($pool, 36)), 0, 36);
         $group = new Group();
         $group->group_id = $uid;
         $image = app('firebase.firestore')->database()->collection('groups')
@@ -237,6 +237,13 @@ class GroupController extends Controller
                     'group_description' => $request->description ?? '',
                     'members' => $all_members,
                 ]);
+                // get mane from user collection by uid
+                $name = app('firebase.firestore')->database()->collection('users')->document($request->admin_id)->snapshot()->data()['name'];
+                // set data in subcollection of subcollection of users
+                app('firebase.firestore')->database()->collection('users')->document($value['uid'])->collection('groups')->document($uid)->collection('chats')->document($chatId)->set([
+                    'type' => 'Notify',
+                    'message' => $name.' has created a group',
+                ]);
         }
 
         $data = app('firebase.firestore')->database()->collection('groups')->document($uid);
@@ -280,6 +287,7 @@ class GroupController extends Controller
             'admin_id.required'=>'Please select a admin.',
             'user_id.required'=>'Please select atleast one user.'
         ]);
+
         
         // delete group from user table firebase
         $image = app('firebase.firestore')->database()->collection('groups')
@@ -353,6 +361,8 @@ class GroupController extends Controller
                     'group_description' => $request->description ?? '',
                     'members' => $all_members,
                 ]);
+
+               
         }
 
 
@@ -391,6 +401,10 @@ class GroupController extends Controller
         $group = app('firebase.firestore')->database()->collection('groups')
         ->where('id', '=', $request->group_id)
         ->documents();
+
+        $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $chatId = substr(str_shuffle(str_repeat($pool, 36)), 0, 36);
+
         foreach ($group->rows()[0]->data()['members'] as $key => $value) {
             // echo $value['uid'] .'<br>';
             // echo $request->add_member;die;
@@ -399,7 +413,7 @@ class GroupController extends Controller
             } 
         }
 
-              $count = count($group->rows()[0]->data()['members']);
+               $count = count($group->rows()[0]->data()['members']);
                $user = app('firebase.firestore')->database()->collection('users')->where('uid','=',$request->add_member)->documents();
                 $new_members[$count+1]['email'] = $user->rows()[0]->data()['email'];
                 $new_members[$count+1]['isAdmin'] = false;
@@ -433,6 +447,19 @@ class GroupController extends Controller
                     'userId' => $request->admin_id,
                     'group_description' => $group->rows()[0]->data()['group_description'] ?? '',
                     'members' => array_merge($old_members,$new_members),
+                ]); 
+                // get name of admin from members array filter
+                $name = array_filter($old_members, function ($var) {
+                    return $var['isAdmin'] == true;
+                });
+                 $adminName = array_map(function ($var) {
+                    return $var['name'];
+                }, $name);
+            
+                $adminName = array_slice($adminName, 0, 1);
+                app('firebase.firestore')->database()->collection('users')->document($request->add_member)->collection('groups')->document($request->group_id)->collection('chats')->document($chatId)->set([
+                    'type' => 'Notify',
+                    'message' => $adminName[0].' has created a group',
                 ]);
                 return redirect()->back()->with('message', 'User added in this group!!');
     }
