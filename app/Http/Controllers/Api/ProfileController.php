@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Kreait\Firebase\Factory;
+
 /**
  * @group Profile APIs
  *
@@ -131,7 +132,7 @@ class ProfileController extends Controller
      *  "message": "No detail found!",
      * "status": false
      * }
-     */ 
+     */
 
     public function uploadProfile(Request $request)
     {
@@ -156,60 +157,44 @@ class ProfileController extends Controller
 
         try {
 
-            $count = User::where('uid', $request->uid)->count();
-            if ($count > 0) {
-                $user = User::where('uid', $request->uid)->first();
-                if ($request->hasFile('profile_picture')) {
-                    $file = $request->file('profile_picture');
-                    $filename = date('YmdHi') . $file->getClientOriginalName();
-                    $image_path = $request->file('profile_picture')->store('user', 'public');
-                    $user->profile_picture = $image_path;
-                }
-                $user->update();
-                $data = app('firebase.firestore')->database()->collection('users')->documents();
-                foreach ($data as $key => $value) {
-                    if ($value->data()['uid'] == $request->uid) {
-                        $users = app('firebase.firestore')->database()->collection('users')->document($value->id())
-                            ->update([
-                                ['path' => 'profile_picture', 'value' => $image_path ?? null],
-                                ['path' => 'name', 'value' => $request->name],
-                            ]);
-                    }
-                }
+            // get the uid valid or not in user collection
+            $getValidUser = app('firebase.firestore')->database()->collection('users')->document($request->uid)->snapshot()->data();
+            if ($getValidUser == null) {
+                return response()->json(['message' => 'No detail found!', 'status' => false], 401);
             } else {
-                $data = $this->auth->getUser($request->uid);
-                $user = new User;
-                $user->uid =  $request->uid;
-                $user->name =  $data->displayName;
-                $user->email =  $data->email;
-                $user->password =  bcrypt('12345678');
-                if ($request->hasFile('profile_picture')) {
-                    $file = $request->file('profile_picture');
-                    $filename = date('YmdHi') . $file->getClientOriginalName();
-                    $image_path = $request->file('profile_picture')->store('user', 'public');
-                    $user->profile_picture = $image_path;
-                }
-                $user->save();
-                $data = app('firebase.firestore')->database()->collection('users')->documents();
-                foreach ($data as $key => $value) {
-                    if ($value->data()['uid'] == $request->uid) {
-                        $users = app('firebase.firestore')->database()->collection('users')->document($value->id())
-                            ->update([
-                                ['path' => 'profile_picture', 'value' => $image_path ?? null],
-                                ['path' => 'name', 'value' => $request->name],
-                            ]);
+                $count = User::where('uid', $request->uid)->count();
+                if ($count > 0) {
+                    $user = User::where('uid', $request->uid)->first();
+                    if ($request->hasFile('profile_picture')) {
+                        $file = $request->file('profile_picture');
+                        $filename = date('YmdHi') . $file->getClientOriginalName();
+                        $image_path = $request->file('profile_picture')->store('user', 'public');
+                        $user->profile_picture = $image_path;
                     }
+                    $user->update();
+                } else {
+                    $data = $this->auth->getUser($request->uid);
+                    $user = new User;
+                    $user->uid =  $request->uid;
+                    $user->name =  $data->displayName;
+                    $user->email =  $data->email;
+                    $user->password =  bcrypt('12345678');
+                    if ($request->hasFile('profile_picture')) {
+                        $file = $request->file('profile_picture');
+                        $filename = date('YmdHi') . $file->getClientOriginalName();
+                        $image_path = $request->file('profile_picture')->store('user', 'public');
+                        $user->profile_picture = $image_path;
+                    }
+                    $user->save();
                 }
+                app('firebase.firestore')->database()->collection('users')->document($request->uid)
+                    ->update([
+                        ['path' => 'profile_picture', 'value' => $image_path ?? null],
+                    ]);
+                return response()->json(['status' => true, 'statusCode' => 200, 'data' => $user, 'message' => 'Profile picture updated successfully'], $this->successStatus);
             }
-
-            $properties = [
-                'displayName' => $request->name,
-            ];
-            $updatedUser = $this->auth->updateUser($request->uid, $properties);
-
-            return response()->json(['status' => true, 'statusCode' => 200, 'data' => $user, 'message' => 'Profile picture updated successfully'], $this->successStatus);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'statusCode' => 401, 'message' =>$e->getMessage()], 401);
+            return response()->json(['status' => false, 'statusCode' => 401, 'message' => $e->getMessage()], 401);
         }
     }
 }
